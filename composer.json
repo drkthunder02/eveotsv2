@@ -1,0 +1,16 @@
+{
+    "name": "drkthunder02/eveotsv2",
+    "description": "EVEOTS v2",
+    "authors": [
+        {
+            "name": "drkthunder02",
+            "email": "mancuso.christopher@gmail.com"
+        }
+    ],
+    "require": {
+        "PHP": ">=7.0",
+        "simplon/mysql": "dev-master",
+        "planetteamspeak/ts3-php-framework": "1.1.24",
+        "eveseat/eseye": "dev-master"
+    }
+}
