@@ -97,6 +97,27 @@ $db = DBOpen();
                     PrintAdminTable($db, $esi, $admins, $log, $config);
                     break;
                 case "change_password":
+                    if(!isset($_POST['newPassword'])) {
+                        PrintChangePassword();
+                    } else {
+                        if($_POST['newPassword'] == "" || $_POST['newPConfirm'] == "") {
+                            printf("Error: Please fill both fields.<br>");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        } else if ($_POST['newPassword'] != $_POST['newPConfirm']) {
+                            printf("Error: The passwords did not match.<br><br>");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        } else if (preg_match("/^[a-zA-Z0-9]+$/", $_POST["newPassword"]) == 0) {
+                            printf("Error: Passwords can only contain A-Z, a-z and 0-9.<br /><br />");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        } else {
+                            $newPassword = md5(filter_input('POST', 'newPassword'));
+                            $sid = $_SESSION['EVEOTSid'];
+                            ChangePassword($db, $newPassword. $sid, $username);
+                        }
+                    }
                     break;
                 case "logs":
                     break;
@@ -122,12 +143,19 @@ $db = DBOpen();
                     break;
                 case "whitelist_delete":
                     break;
-            }
+            };
+            
+            printf("<div class='footer'>
+                        <br />
+                        <span style='font-size: 11px;'>Teamspeak 3 Registration for EVE Online by ".$link."<br />
+                        Powered by the TS3 PHP Framework & Pheal<br /></span>
+                        <span style='font-size: 10px;'>EVEOTS $v->release</span>
+                    </div>");
         ?>        
         
         
         
-        
+          
         
     </body>
 </html>
