@@ -120,6 +120,18 @@ $db = DBOpen();
                     }
                     break;
                 case "logs":
+                    if($_SESSION['EVEOTSid'] == $config->GetAdminID()) {
+                        printf("<form class=\"form-control\" method=\"POST\" action=\"?menu=logs\">");
+                        printf("<label>Root Administrator Option: </label>");
+                        printf("<input class=\"form-control\" type=\"submit\" value=\"Clear Logs\" onclick=\"return confirm('Are you sure you want clear all logs?')\" />");
+                        printf("</form>");
+                    }
+                    if(isset($_POST['clear_logs'])) {
+                        printf("Clearing logs...<br>");
+                        $db->executeSql('TRUNCATE logs');
+                        printf("Logs cleared.<br><br>");
+                    }
+                    PrintLogs($db);
                     break;
                 case "admins_add":
                     break;
