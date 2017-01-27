@@ -1,0 +1,65 @@
+[20-Jun-2012 12:44:41] PHP Parse error:  syntax error, unexpected '{' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 845
+[20-Jun-2012 13:29:38] PHP Parse error:  syntax error, unexpected '>' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 855
+[20-Jun-2012 13:29:41] PHP Parse error:  syntax error, unexpected '>' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 855
+[20-Jun-2012 13:29:45] PHP Parse error:  syntax error, unexpected '>' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 855
+[20-Jun-2012 13:30:09] PHP Parse error:  syntax error, unexpected T_ELSE in /home/sever/public_html/ts3api/admin/admin_panel.php on line 856
+[20-Jun-2012 23:46:14] PHP Notice:  Undefined property: TeamSpeak3_Adapter_ServerQuery_Exception::$getMessage in /home/sever/public_html/ts3api/admin/admin_panel.php on line 892
+[20-Jun-2012 23:46:38] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 23:46:43] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 23:46:54] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 23:47:12] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 23:47:15] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 23:47:15] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 23:47:16] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 23:47:22] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 23:47:26] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 23:47:26] PHP Notice:  Use of undefined constant tsName - assumed 'tsName' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 893
+[20-Jun-2012 19:19:37] PHP Parse error:  syntax error, unexpected T_ECHO, expecting ',' or ';' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 899
+[21-Jun-2012 01:31:06] PHP Notice:  Undefined index:  id in /home/sever/public_html/ts3api/admin/admin_panel.php on line 745
+[21-Jun-2012 01:31:06] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home/sever/public_html/ts3api/admin/admin_panel.php on line 749
+[21-Jun-2012 01:37:01] PHP Notice:  Undefined index:  id in /home/sever/public_html/ts3api/admin/admin_panel.php on line 750
+[21-Jun-2012 01:37:01] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home/sever/public_html/ts3api/admin/admin_panel.php on line 754
+[21-Jun-2012 01:37:57] PHP Notice:  Undefined index:  id in /home/sever/public_html/ts3api/admin/admin_panel.php on line 750
+[21-Jun-2012 01:37:57] PHP Warning:  mysql_num_rows(): supplied argument is not a valid MySQL result resource in /home/sever/public_html/ts3api/admin/admin_panel.php on line 754
+[20-Jun-2012 20:08:31] PHP Parse error:  syntax error, unexpected '}' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 773
+[21-Jun-2012 02:08:48] PHP Notice:  Undefined index:  discrepancyDelete in /home/sever/public_html/ts3api/admin/admin_panel.php on line 747
+[21-Jun-2012 02:31:43] PHP Warning:  mysql_fetch_array(): supplied argument is not a valid MySQL result resource in /home/sever/public_html/ts3api/admin/admin_panel.php on line 918
+[21-Jun-2012 02:36:27] PHP Warning:  mysql_fetch_array(): supplied argument is not a valid MySQL result resource in /home/sever/public_html/ts3api/admin/admin_panel.php on line 923
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[21-Jun-2012 02:44:58] PHP Notice:  Undefined index:  entryID in /home/sever/public_html/ts3api/admin/admin_panel.php on line 761
+[20-Jun-2012 20:52:17] PHP Parse error:  syntax error, unexpected '}', expecting ',' or ';' in /home/sever/public_html/ts3api/admin/admin_panel.php on line 783
+[26-Jun-2012 19:12:24] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:12:25] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:12:25] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 594
+[26-Jun-2012 19:12:25] PHP Notice:  Undefined variable: securityLevel in /home/sever/public_html/ts3api/admin/admin_panel.php on line 600
+[26-Jun-2012 19:13:17] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:13:23] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:17:26] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:17:28] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:47:04] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:47:08] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:43] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:44] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:46] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:47] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:48] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:49] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:51] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:54] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:55] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[26-Jun-2012 19:55:56] PHP Notice:  Undefined variable: _SESSION in /home/sever/public_html/ts3api/admin/admin_panel.php on line 44
+[28-Jun-2012 04:19:02] PHP Notice:  Undefined index:  EVEOTSusername in /home/sever/public_html/ts3api/admin/admin_panel.php on line 45
+[28-Jun-2012 04:19:02] PHP Notice:  Undefined index:  EVEOTSusername in /home/sever/public_html/ts3api/admin/admin_panel.php on line 595
+[28-Jun-2012 04:19:02] PHP Notice:  Undefined variable: securityLevel in /home/sever/public_html/ts3api/admin/admin_panel.php on line 601
+[28-Jun-2012 04:19:06] PHP Notice:  Undefined index:  EVEOTSusername in /home/sever/public_html/ts3api/admin/admin_panel.php on line 45
+[28-Jun-2012 04:19:06] PHP Notice:  Undefined index:  EVEOTSusername in /home/sever/public_html/ts3api/admin/admin_panel.php on line 595
+[28-Jun-2012 04:19:06] PHP Notice:  Undefined variable: securityLevel in /home/sever/public_html/ts3api/admin/admin_panel.php on line 601
+[28-Jun-2012 04:19:09] PHP Notice:  Undefined index:  EVEOTSusername in /home/sever/public_html/ts3api/admin/admin_panel.php on line 45
