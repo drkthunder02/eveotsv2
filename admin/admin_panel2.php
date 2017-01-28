@@ -356,6 +356,28 @@ $db = DBOpen();
                     }		
                     break;
                 case "members_delete":
+                    //Authorized to access this area?
+                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+                    if($security['SecurityLevel'] != "1" || $security['SecurityID'] != $_SESSION['EVEOTSid']) {
+                        printf("You are not authorized to access this area.");
+                    } else {
+                        if (isset($_GET["discrepancies"])) {
+                            // Delete discrepancies
+                            $discrepancy = $_POST["discrepancyDelete"];
+                            if (empty($discrepancy)) {
+                                printf("Error: No discrepancies selected to be deleted.<br /><br />");
+                                printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-2)\" />");
+                                break;
+                            } else {
+                                PrintDeleteDiscrepancies($db, $discrepancy);
+                            }
+                        } else {
+                            // Delete single user
+                            $id = filter_input('GET', 'id');
+                            //Call the delete single user function
+                            DeleteSingleUser($db, $id, $config);                                
+                        }
+                    }
                     break;
                 case "members_discrepancies":
                     break;

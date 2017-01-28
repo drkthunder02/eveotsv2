@@ -100,6 +100,12 @@ class Config {
         return $info;
     }
     
+    public function GetTSServerQuery() {
+        $query = "serverquery://".$this->tsname.":".$this->tspass."@".$his->tshost.":".$this->tsport."/?server_port=".$this->tscport;
+        
+        return $query;
+    }
+    
     public function GetESIConfig() {
         $info = array(
             'clientid' => $this->clientid,
