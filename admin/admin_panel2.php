@@ -224,6 +224,62 @@ $db = DBOpen();
                     printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
                     break;
                 case "admins_edit":
+                    $id = filter_input('GET', 'id');
+                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+                    if($security['SecurityLevel'] != "1") {
+                        printf("You are not permitted to edit the super admins!<br>");
+                        break;
+                    } else if ($id == $config->GetAdminID() && $_SESSION['EVEOTSid'] != $config->GetAdminID()) {
+                        printf("You are not permitted to edit the super admins!<br>");
+                        break;
+                    }
+                    //Are we going to edit the super admins?
+                    if($id == $config->GetAdminID()) {
+                        $rootAdminEdit = true;
+                    } else {
+                        $rootAdminEdit = false;
+                    }
+                    if(!isset($_POST['newPassword'])) {
+                        PrintAdminEdit($id);
+                    } else if (isset($_POST['newPassword'])) {
+                        // Change the password
+                        if ($_POST["newPassword"] == "" || $_POST["newPConfirm"] == "") {
+                            printf("Error: Please fill both password fields. Type the desired password then confirm it by typing it again in the \"Confirm\" field.<br /><br />");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        } else if ($_POST["newPassword"] != $_POST["newPConfirm"]) {
+                            printf("Error: The new passwords do not match.<br /><br />");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        } else if (preg_match("/^[a-zA-Z0-9]+$/", $_POST["newPassword"]) == 0) {
+                            // Make sure password is only a-z A-Z 0-9
+                            printf("Error: Passwords can only contain A-Z, a-z and 0-9.<br /><br />");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        } else {
+                            printf("Changing password...<br />");
+                            $newPassword = md5($_POST["newPassword"]);
+                            // Connect to the database and UPDATE password
+                            $db->update('Admins', array('id' => $id), array('password' => $newPassword));
+                            //Add a log entry
+                            $timestamp = gmdate('d.m.Y H:i');
+                            $entry = $_SESSION["EVEOTSusername"]." changed ".$username."'s password.";
+                            AddLogEntry($db, $timestamp, $entry);
+                            printf( $username."'s password has been changed.<br />");;
+                        }
+                    }
+                    //Change security level
+                    printf("<strong>Change security level:</strong><br>");
+                    if($rootAdminEdit == true) {
+                        printf("The root admins security level cannot be changed!<br>");
+                    } else if(!isset($_POST['newSL'])) {
+                        PrintChangeSecurityLevel($id);
+                    } else {
+                        printf("Changing security level...</br>");
+                        $newSL = filter_input('POST', 'newSL');
+                        ChangeSecurityLevel($db, $id, $newSL, $_SESSION['EVEOTSusername']);
+                    }
+                    PrintAdminEdit($id);
                     break;
                 case "members_audit":
                     break;
