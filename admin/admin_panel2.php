@@ -282,6 +282,78 @@ $db = DBOpen();
                     PrintAdminEdit($id);
                     break;
                 case "members_audit":
+                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+                    if ($security['SecurityLevel'] != "1" || $security['SecurityID'] != $_SESSION["EVEOTSid"]) {
+                        printf("You are not authorised to access this area.<br />");
+                        break;
+                    } elseif (isset($_POST["search"]) && $_POST["search"] !== "") {
+                        // Search results
+                        $search = filter_input('POST', 'search');
+                        printf("<em>Note: This is an UNRESTRICTED search. ALL hits will be displayed and on one page.</em><br /><br />");
+                        printf("<a href=\"?menu=members_audit\">Reset filter</a><br />");
+                        $query = "SELECT * FROM users WHERE LOWER(tsName) LIKE LOWER(\"%" . $search . "%\") ORDER BY tsName ASC;";
+                        $members = $db->fetchRowMany($query);
+                        if($db->getRowCount() < 1) {
+                            printf("<br><strong>NO RESULTS</strong><br>");
+                        } else {
+                            
+                        }
+                        PrintMemberAudit($db, $members);
+                        printf("<br><a href=\"?menu=members_audit\">Reset filter</a>");
+                    } else {
+                        // Calculate pages
+                        $listAmount = 50;
+                        $blues = $db->fetchColumnMany('SELECT Blue FROM Users');
+                        $userCount = $db->getRowCount();
+                        $blueCount = $db->fetchColumn('SELECT COUNT(Blue) FROM Users WHERE Blue= :b', array('b' => 'YES'));
+                        $userCountMinusBlues = $userCount - $blueCount;
+                        $exactPages = $userCount / $listAmount;
+                        $maxPages = ceil($exactPages);
+                        if (isset($_GET["page"])) {
+                        $page = $_GET["page"];
+                            if ($page == 1 || $page == NULL || $page == 0) {
+                                    $page = 1;
+                                    $listFrom = 0;
+                                    $nextPage = 2;
+                            } else {
+                                    $listFrom = $page * $listAmount - $listAmount;
+                                    $nextPage = $page + 1;
+                                    $backPage = $page - 1;
+                            }
+                        } else {
+                            $page = 1;
+                            $listFrom = 0;
+                            $nextPage = 2;
+                        }
+                        printf($userCount." Registered members.<br />".$userCountMinusBlues." Excluding blues.<br /><br />");
+                        //Search
+                        printf("<form class=\"form-control\" action=\"?menu=members_audit\" method=\"POST\">");
+                        printf("<input class=\"form-control\" name=\"search\" size=\"20\">");
+                        printf("<input class=\"form-control\" name=\"submit\" type=\"submit\" value=\"Submit\">");
+                        printf("</form>");
+                        // BACK / NEXT
+                        if (!isset($backPage)) {
+                            printf("Back | <a href=\"?menu=members_audit&page=".$nextPage."\">Next</a><br />");
+                        } else if (!isset($nextPage)) {
+                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | Next<br />");
+                        } else if ($page >= $maxPages) {
+                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | Next<br />");
+                        } else {
+                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | <a href=\"?menu=members_audit&page=".$nextPage."\">Next</a><br />");
+                        }
+                        printf("<strong>".$page." / ".$maxPages."</strong><br />");
+                        PrintMemberAuditPage($db, $listFrom, $listAmount);
+                        // BACK / NEXT
+                        if (!isset($backPage)) {
+                            printf("Back | <a href=\"?menu=members_audit&page=".$nextPage."\">Next</a><br />");
+                        } else if (!isset($nextPage)) {
+                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | Next<br />");
+                        } else if ($page >= $maxPages) {
+                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | Next<br />");
+                        } else {
+                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | <a href=\"?menu=members_audit&page=".$nextPage."\">Next</a><br />");
+                        }
+                    }		
                     break;
                 case "members_delete":
                     break;

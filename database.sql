@@ -77,9 +77,9 @@ CREATE TABLE IF NOT EXISTS `Logs` (
 --
 
 CREATE TABLE IF NOT EXISTS `Users` (
-    `entry` int(11) NOT NULL AUTO_INCREMENT,
-    `characterID` varchar(20) DEFAULT NULL,
-    `blue` varchar(255) DEFAULT NULL,
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `CharacterID` varchar(20) DEFAULT NULL,
+    `Blue` varchar(255) DEFAULT NULL,
     `TSDatabaseID` int(45) DEFAULT NULL,
     `TSUniqueID` varchar(255) DEFAULT NULL,
     `TSName` varchar(255) DEFAULT NULL,
