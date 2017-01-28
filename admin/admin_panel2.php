@@ -199,6 +199,29 @@ $db = DBOpen();
                     }                    
                     break;
                 case "admins_delete":
+                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+                    if($security['SecurityLevel'] != "1" || $security['SecurityID'] != $_SESSION['EVEOTSid']) {
+                        printf("You are not authorized to access this area.<br>");
+                        break;
+                    }
+                    $id = filter_input('GET', 'id');
+                    if($id == $config->GetAdminID()) {
+                        printf("This is the root admin!  You cannot delete this admin account.<br><br>");
+                        break;
+                    }
+                    $admin = $db->fetchRow('SELECT * FROM Admins WHERE id= :id', array('id' => $id));
+                    if($admin == NULL) {
+                        printf("Error: Couldn't find the admin in the database.<br><br>");
+                        printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                        break;
+                    }
+                    printf("<strong>Deleting administrator...</strong><br>");
+                    $db->delete('Admins', array('id'  => $id));
+                    $timestamp = gmdate('d.m.Y H:i');
+                    $entry = $admin['username'] . "'s administrator account was deleted. by " . $_SESSION['EVEOTSusername'] . ".";
+                    AddLogEntry($db, $timestamp, $entry);
+                    printf("Administrator deleted.<br>");
+                    printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
                     break;
                 case "admins_edit":
                     break;
