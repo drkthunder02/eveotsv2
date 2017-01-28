@@ -134,6 +134,60 @@ $db = DBOpen();
                     PrintLogs($db);
                     break;
                 case "admins_add":
+                    $securityLevel = CheckSecurityLevel($db, $username);
+                    if($securityLevel['SecurityLevel'] != "1" || $securityLevel['SecurityID'] != $_SESSION['EVEOTSid']) {
+                        printf("You are not authorized to access this area.<br>");
+                    } else {
+                        //Trim any spaces either side
+                        $adminCharacterName = trim(filter_input('POST', 'adminCharacterName'));
+                        $adminPassword = trim(filter_input('POST', 'adminPassword'));
+                        $adminSecurityLevel = trim(filter_input('POST', 'adminSecurityLevel'));
+                        //Make sure all fields are filled in
+                        if($adminCharacterName == "") {
+                            printf("Character Name cannot be blank.<br><br>");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        } else if($adminPassword == "") {
+                            printf("Password cannot be blank.<br><br>");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        } else if ($adminSecurityLevel == "") {
+                            printf("Security Level cannot be blank.<br><br>");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        } else if ($adminSecurityLevel != "1" && $adminSecurityLevel != "2") {
+                            printf("Security Level must be 1 or 2.<br><br>");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        }
+                        //Make sure password is only a-z, A-Z, 0-9
+                        if(preg_match("/^[a-zA-Z0-9]+$/", $adminPassword) === 0) {
+                            printf("Error: Passwords can only contain A-Z, a-z and 0-9<br /><br />");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        }
+                        if(AdminNameInUse($db, $adminCharacterName)) {
+                            printf("Error: " . $adminCharacterName . " already has an account.<br><br>");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        }
+                        //Check if the Character Name is legit and get the Character ID
+                        $adminCharacterID = CharacterNameToID($db, $esi, $log, $adminCharacterName);
+                        if($adminCharacterID == 0) {
+                            printf("According to the CCP ESI server the character " . $adminCharacterName . " does not exist.<br><br>");
+                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                            break;
+                        }
+                        printf("<strong>Adding administrator...</strong><br>Character: " . $adminCharacterName . "<br>Password: " . $adminPassword . "<br><Security Level: " . $adminSecurityLevel . "<br>Character ID: " . $adminCharacterID . "<br><br>");
+                        //Insert the admin into the database
+                        $db->insert('Admins', array('username' => $adminCharacterName, 'password' => md5($adminPassword), 'characterID' => $adminCharacterID, 'securityLevel' => $adminSecurityLevel));
+                        //Insert a log entry
+                        $timestamp = gmdate('d.m.Y H:i');
+                        $log = $admincharacterName . "was given an administrator account (SL " . $adminSecurityLevel . ") by " . $_SESSION['EVEOTSusername'] . ".";
+                        AddLogEntry($db, $timestamp, $entry);
+                        printf("Administrator added.<br>");
+                        printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                    }
                     break;
                 case "admins_audit":
                     break;
