@@ -190,6 +190,13 @@ $db = DBOpen();
                     }
                     break;
                 case "admins_audit":
+                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+                    if($security['SecurityLevel'] != "1" || $security['SecurityID'] != $_SESSION['EVEOTSid']) {
+                        printf("You are not authorized to access this area.<br>");
+                        break;
+                    } else {
+                        PrintAdminAdd($db);
+                    }                    
                     break;
                 case "admins_delete":
                     break;
