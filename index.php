@@ -1,7 +1,7 @@
 <?php
 /*
 ========== * EVE ONLINE TEAMSPEAK V2 BY Lowjack Tzetsu * ==========
-========== * EVE ONLINE TEAMSPEAK V2 BASED ON DJ MAVERICK
+========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK
 */
 // PHP debug mode
 ini_set('display_errors', 'On');
@@ -13,7 +13,10 @@ $session = new \Custom\Session\Sessions();
 //Activate the configuration class
 $config = new \EVEOTS\Config\Config();
 $version = new \EVEOTS\Version\Version();
+//Set the default timezone
 date_default_timezone_set('Europe/London');
+
+
 
 if(isset( $_GET["step"] )) {
     $step = filter_input('GET', 'step');

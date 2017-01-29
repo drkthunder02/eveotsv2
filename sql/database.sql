@@ -86,3 +86,16 @@ CREATE TABLE IF NOT EXISTS `Users` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for SSOTokens
+--
+
+CREATE TABLE IF NOT EXISTS `SSOTokens` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `CharacterID` varchar(20) NOT NULL,
+    `AccessToken` varchar(50) NOT NULL,
+    `RefreshToken` varchar(255) NOT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
