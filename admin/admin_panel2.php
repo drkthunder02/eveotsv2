@@ -26,12 +26,12 @@ $version = new \EVEOTS\Version\Version();
 $session = new \Custom\Session\Sessions();
 
 //Prepare logging for ESI API
-$log = new Seat\Eseye\Log\FileLogger();
+//$log = new Seat\Eseye\Log\FileLogger();
 // Prepare an authentication container for ESI
-$authentication = PrepareESIAuthentication();
+//$authentication = PrepareESIAuthentication();
 // Instantiate a new ESI instance.
-$esi = new Eseye($authentication);
-
+//$esi = new Eseye($authentication);
+//ESI instances must be created each time for each refresh token
 
 if(!isset($_SESSION['EVEOTSusername'])) {
     $username = "";
@@ -76,308 +76,22 @@ $db = DBOpen();
             
             switch($menu) {
                 case "main":
-                    if($installAccount == true) {
-                        printf("<div class=\"container\">
-                                    <div class=\"panel-default\">
-                                        <div class=\"panel-heading\">
-                                            <h2>Warning</h2>
-                                        </div>
-                                        <div class=\"panel-body\">
-                                            Warning: Setup not complete!<br>
-                                            User \"admin\" is still in the database.<br>
-                                            This is a massive security risk.<br>
-                                            Please create yourself a new account, set it as the root admin and delete the default \"admin\" account immediately.<br>
-                                            See the readme \"How to Setup A New Root Admin\" for more detailed instructions.                    
-                                        </div>
-                                    </div>
-                                </div>");
-                    }
-                    PrintMainPanel();
-                    $admins = $db->fetchRowMany('SELECT * FROM Admins ORDER BY username');
-                    PrintAdminTable($db, $esi, $admins, $log, $config);
                     break;
                 case "change_password":
-                    if(!isset($_POST['newPassword'])) {
-                        PrintChangePassword();
-                    } else {
-                        if($_POST['newPassword'] == "" || $_POST['newPConfirm'] == "") {
-                            printf("Error: Please fill both fields.<br>");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        } else if ($_POST['newPassword'] != $_POST['newPConfirm']) {
-                            printf("Error: The passwords did not match.<br><br>");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        } else if (preg_match("/^[a-zA-Z0-9]+$/", $_POST["newPassword"]) == 0) {
-                            printf("Error: Passwords can only contain A-Z, a-z and 0-9.<br /><br />");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        } else {
-                            $newPassword = md5(filter_input('POST', 'newPassword'));
-                            $sid = $_SESSION['EVEOTSid'];
-                            ChangePassword($db, $newPassword. $sid, $username);
-                        }
-                    }
                     break;
                 case "logs":
-                    if($_SESSION['EVEOTSid'] == $config->GetAdminID()) {
-                        printf("<form class=\"form-control\" method=\"POST\" action=\"?menu=logs\">");
-                        printf("<label>Root Administrator Option: </label>");
-                        printf("<input class=\"form-control\" type=\"submit\" value=\"Clear Logs\" onclick=\"return confirm('Are you sure you want clear all logs?')\" />");
-                        printf("</form>");
-                    }
-                    if(isset($_POST['clear_logs'])) {
-                        printf("Clearing logs...<br>");
-                        $db->executeSql('TRUNCATE logs');
-                        printf("Logs cleared.<br><br>");
-                    }
-                    PrintLogs($db);
                     break;
                 case "admins_add":
-                    $securityLevel = CheckSecurityLevel($db, $username);
-                    if($securityLevel['SecurityLevel'] != "1" || $securityLevel['SecurityID'] != $_SESSION['EVEOTSid']) {
-                        printf("You are not authorized to access this area.<br>");
-                    } else {
-                        //Trim any spaces either side
-                        $adminCharacterName = trim(filter_input('POST', 'adminCharacterName'));
-                        $adminPassword = trim(filter_input('POST', 'adminPassword'));
-                        $adminSecurityLevel = trim(filter_input('POST', 'adminSecurityLevel'));
-                        //Make sure all fields are filled in
-                        if($adminCharacterName == "") {
-                            printf("Character Name cannot be blank.<br><br>");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        } else if($adminPassword == "") {
-                            printf("Password cannot be blank.<br><br>");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        } else if ($adminSecurityLevel == "") {
-                            printf("Security Level cannot be blank.<br><br>");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        } else if ($adminSecurityLevel != "1" && $adminSecurityLevel != "2") {
-                            printf("Security Level must be 1 or 2.<br><br>");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        }
-                        //Make sure password is only a-z, A-Z, 0-9
-                        if(preg_match("/^[a-zA-Z0-9]+$/", $adminPassword) === 0) {
-                            printf("Error: Passwords can only contain A-Z, a-z and 0-9<br /><br />");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        }
-                        if(AdminNameInUse($db, $adminCharacterName)) {
-                            printf("Error: " . $adminCharacterName . " already has an account.<br><br>");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        }
-                        //Check if the Character Name is legit and get the Character ID
-                        $adminCharacterID = CharacterNameToID($db, $esi, $log, $adminCharacterName);
-                        if($adminCharacterID == 0) {
-                            printf("According to the CCP ESI server the character " . $adminCharacterName . " does not exist.<br><br>");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        }
-                        printf("<strong>Adding administrator...</strong><br>Character: " . $adminCharacterName . "<br>Password: " . $adminPassword . "<br><Security Level: " . $adminSecurityLevel . "<br>Character ID: " . $adminCharacterID . "<br><br>");
-                        //Insert the admin into the database
-                        $db->insert('Admins', array('username' => $adminCharacterName, 'password' => md5($adminPassword), 'characterID' => $adminCharacterID, 'securityLevel' => $adminSecurityLevel));
-                        //Insert a log entry
-                        $timestamp = gmdate('d.m.Y H:i');
-                        $log = $admincharacterName . "was given an administrator account (SL " . $adminSecurityLevel . ") by " . $_SESSION['EVEOTSusername'] . ".";
-                        AddLogEntry($db, $timestamp, $entry);
-                        printf("Administrator added.<br>");
-                        printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                    }
                     break;
-                case "admins_audit":
-                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
-                    if($security['SecurityLevel'] != "1" || $security['SecurityID'] != $_SESSION['EVEOTSid']) {
-                        printf("You are not authorized to access this area.<br>");
-                        break;
-                    } else {
-                        PrintAdminAdd($db);
-                    }                    
+                case "admins_audit":                 
                     break;
                 case "admins_delete":
-                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
-                    if($security['SecurityLevel'] != "1" || $security['SecurityID'] != $_SESSION['EVEOTSid']) {
-                        printf("You are not authorized to access this area.<br>");
-                        break;
-                    }
-                    $id = filter_input('GET', 'id');
-                    if($id == $config->GetAdminID()) {
-                        printf("This is the root admin!  You cannot delete this admin account.<br><br>");
-                        break;
-                    }
-                    $admin = $db->fetchRow('SELECT * FROM Admins WHERE id= :id', array('id' => $id));
-                    if($admin == NULL) {
-                        printf("Error: Couldn't find the admin in the database.<br><br>");
-                        printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                        break;
-                    }
-                    printf("<strong>Deleting administrator...</strong><br>");
-                    $db->delete('Admins', array('id'  => $id));
-                    $timestamp = gmdate('d.m.Y H:i');
-                    $entry = $admin['username'] . "'s administrator account was deleted. by " . $_SESSION['EVEOTSusername'] . ".";
-                    AddLogEntry($db, $timestamp, $entry);
-                    printf("Administrator deleted.<br>");
-                    printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
                     break;
                 case "admins_edit":
-                    $id = filter_input('GET', 'id');
-                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
-                    if($security['SecurityLevel'] != "1") {
-                        printf("You are not permitted to edit the super admins!<br>");
-                        break;
-                    } else if ($id == $config->GetAdminID() && $_SESSION['EVEOTSid'] != $config->GetAdminID()) {
-                        printf("You are not permitted to edit the super admins!<br>");
-                        break;
-                    }
-                    //Are we going to edit the super admins?
-                    if($id == $config->GetAdminID()) {
-                        $rootAdminEdit = true;
-                    } else {
-                        $rootAdminEdit = false;
-                    }
-                    if(!isset($_POST['newPassword'])) {
-                        PrintAdminEdit($id);
-                    } else if (isset($_POST['newPassword'])) {
-                        // Change the password
-                        if ($_POST["newPassword"] == "" || $_POST["newPConfirm"] == "") {
-                            printf("Error: Please fill both password fields. Type the desired password then confirm it by typing it again in the \"Confirm\" field.<br /><br />");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        } else if ($_POST["newPassword"] != $_POST["newPConfirm"]) {
-                            printf("Error: The new passwords do not match.<br /><br />");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        } else if (preg_match("/^[a-zA-Z0-9]+$/", $_POST["newPassword"]) == 0) {
-                            // Make sure password is only a-z A-Z 0-9
-                            printf("Error: Passwords can only contain A-Z, a-z and 0-9.<br /><br />");
-                            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
-                            break;
-                        } else {
-                            printf("Changing password...<br />");
-                            $newPassword = md5($_POST["newPassword"]);
-                            // Connect to the database and UPDATE password
-                            $db->update('Admins', array('id' => $id), array('password' => $newPassword));
-                            //Add a log entry
-                            $timestamp = gmdate('d.m.Y H:i');
-                            $entry = $_SESSION["EVEOTSusername"]." changed ".$username."'s password.";
-                            AddLogEntry($db, $timestamp, $entry);
-                            printf( $username."'s password has been changed.<br />");;
-                        }
-                    }
-                    //Change security level
-                    printf("<strong>Change security level:</strong><br>");
-                    if($rootAdminEdit == true) {
-                        printf("The root admins security level cannot be changed!<br>");
-                    } else if(!isset($_POST['newSL'])) {
-                        PrintChangeSecurityLevel($id);
-                    } else {
-                        printf("Changing security level...</br>");
-                        $newSL = filter_input('POST', 'newSL');
-                        ChangeSecurityLevel($db, $id, $newSL, $_SESSION['EVEOTSusername']);
-                    }
-                    PrintAdminEdit($id);
                     break;
                 case "members_audit":
-                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
-                    if ($security['SecurityLevel'] != "1" || $security['SecurityID'] != $_SESSION["EVEOTSid"]) {
-                        printf("You are not authorised to access this area.<br />");
-                        break;
-                    } elseif (isset($_POST["search"]) && $_POST["search"] !== "") {
-                        // Search results
-                        $search = filter_input('POST', 'search');
-                        printf("<em>Note: This is an UNRESTRICTED search. ALL hits will be displayed and on one page.</em><br /><br />");
-                        printf("<a href=\"?menu=members_audit\">Reset filter</a><br />");
-                        $query = "SELECT * FROM users WHERE LOWER(tsName) LIKE LOWER(\"%" . $search . "%\") ORDER BY tsName ASC;";
-                        $members = $db->fetchRowMany($query);
-                        if($db->getRowCount() < 1) {
-                            printf("<br><strong>NO RESULTS</strong><br>");
-                        } else {
-                            
-                        }
-                        PrintMemberAudit($db, $members);
-                        printf("<br><a href=\"?menu=members_audit\">Reset filter</a>");
-                    } else {
-                        // Calculate pages
-                        $listAmount = 50;
-                        $blues = $db->fetchColumnMany('SELECT Blue FROM Users');
-                        $userCount = $db->getRowCount();
-                        $blueCount = $db->fetchColumn('SELECT COUNT(Blue) FROM Users WHERE Blue= :b', array('b' => 'YES'));
-                        $userCountMinusBlues = $userCount - $blueCount;
-                        $exactPages = $userCount / $listAmount;
-                        $maxPages = ceil($exactPages);
-                        if (isset($_GET["page"])) {
-                        $page = $_GET["page"];
-                            if ($page == 1 || $page == NULL || $page == 0) {
-                                    $page = 1;
-                                    $listFrom = 0;
-                                    $nextPage = 2;
-                            } else {
-                                    $listFrom = $page * $listAmount - $listAmount;
-                                    $nextPage = $page + 1;
-                                    $backPage = $page - 1;
-                            }
-                        } else {
-                            $page = 1;
-                            $listFrom = 0;
-                            $nextPage = 2;
-                        }
-                        printf($userCount." Registered members.<br />".$userCountMinusBlues." Excluding blues.<br /><br />");
-                        //Search
-                        printf("<form class=\"form-control\" action=\"?menu=members_audit\" method=\"POST\">");
-                        printf("<input class=\"form-control\" name=\"search\" size=\"20\">");
-                        printf("<input class=\"form-control\" name=\"submit\" type=\"submit\" value=\"Submit\">");
-                        printf("</form>");
-                        // BACK / NEXT
-                        if (!isset($backPage)) {
-                            printf("Back | <a href=\"?menu=members_audit&page=".$nextPage."\">Next</a><br />");
-                        } else if (!isset($nextPage)) {
-                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | Next<br />");
-                        } else if ($page >= $maxPages) {
-                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | Next<br />");
-                        } else {
-                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | <a href=\"?menu=members_audit&page=".$nextPage."\">Next</a><br />");
-                        }
-                        printf("<strong>".$page." / ".$maxPages."</strong><br />");
-                        PrintMemberAuditPage($db, $listFrom, $listAmount);
-                        // BACK / NEXT
-                        if (!isset($backPage)) {
-                            printf("Back | <a href=\"?menu=members_audit&page=".$nextPage."\">Next</a><br />");
-                        } else if (!isset($nextPage)) {
-                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | Next<br />");
-                        } else if ($page >= $maxPages) {
-                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | Next<br />");
-                        } else {
-                            printf("<a href=\"?menu=members_audit&page=".$backPage."\">Back</a> | <a href=\"?menu=members_audit&page=".$nextPage."\">Next</a><br />");
-                        }
-                    }		
                     break;
                 case "members_delete":
-                    //Authorized to access this area?
-                    $security = CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
-                    if($security['SecurityLevel'] != "1" || $security['SecurityID'] != $_SESSION['EVEOTSid']) {
-                        printf("You are not authorized to access this area.");
-                    } else {
-                        if (isset($_GET["discrepancies"])) {
-                            // Delete discrepancies
-                            $discrepancy = $_POST["discrepancyDelete"];
-                            if (empty($discrepancy)) {
-                                printf("Error: No discrepancies selected to be deleted.<br /><br />");
-                                printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-2)\" />");
-                                break;
-                            } else {
-                                PrintDeleteDiscrepancies($db, $discrepancy);
-                            }
-                        } else {
-                            // Delete single user
-                            $id = filter_input('GET', 'id');
-                            //Call the delete single user function
-                            DeleteSingleUser($db, $id, $config);                                
-                        }
-                    }
                     break;
                 case "members_discrepancies":
                     break;
