@@ -18,5 +18,6 @@ require_once __DIR__.'/../../functions/database/sqlchecknames.php';
 require_once __DIR__.'/../../functions/class/sessions.php';
 
 //HTML Functions
+require_once _DIR__.'/../functions/html/printhtmlheader.php';
 require_once __DIR__.'/../functions/html/printmainpanel.php';
 require_once __DIR__.'/../functions/html/printnavbar.php';
