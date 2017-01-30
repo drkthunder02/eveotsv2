@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `Admins` (
     UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `admins` VALUES(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL, 1);
+INSERT INTO `Admins` VALUES(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL, 1);
 
 --
 -- Table structure for `Alliances`
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `Characters` (
 CREATE TABLE IF NOT EXISTS `Logs` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `time` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-    `entry` varchar(255) COLLATE utf9_unicode_ci NOT NULL,
+    `entry` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

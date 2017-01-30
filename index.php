@@ -32,7 +32,7 @@ switch($_GET['action']) {
         printf("<div class=\"jumbotron\">");
         printf("<a href=\"https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri=\"" . 
                 urldecode(GetSSOCallbackURL()) . "&client_id=" . 
-                $clientID . "&scope=" . "&state" . $_SESSION['state'] . ">");
+                $clientID . "&scope=publicData" . "&state" . $_SESSION['state'] . ">");
         printf("<img src=\"images/EVE_SSO_Login_Buttons_Large_Black.png\">");
         printf("</a>");
         printf("</div>");
