@@ -1,22 +1,12 @@
 <?php
 
-namespace Custom\Session;
+namespace Custom\Sessions;
 
-class Sessions {
+class session {
     //The database object in order to store the session data in a mysql database
     private $db;
     
     public function __construct(){
-        $config = parse_ini_file('/../configuration/database.ini');
-        
-        //Setup our db object
-        $this->db = new \Simplon\Mysql\Mysql(
-            $config['server'],
-            $config['username'],
-            $config['password'],
-            $config['database']
-        );
-        
         // Set handler to overide SESSION
         session_set_save_handler(
             array($this, "_open"),
@@ -31,6 +21,15 @@ class Sessions {
     }
     
     public function _open() {
+        $config = parse_ini_file(__DIR__.'/../configuration/database.ini');
+        //Setup our db object
+        $this->db = new \Simplon\Mysql\Mysql(
+            'localhost',
+            'root',
+            'P@55w0rd!',
+            'eveotsv2'
+        );
+        
         if($this->db) {
             return true;
         } else {
@@ -51,7 +50,7 @@ class Sessions {
         $row = $this->db->fetchRow('SELECT data FROM sessions WHERE id= :id', array('id' => $id));
         
         if($row) {
-            return $row;
+            return $row['data'];
         } else {
             return '';
         }

@@ -7,7 +7,7 @@
  */
 
 function DBOpen() {
-    $config = parse_ini_file('/../configuration/config.ini');
+    $config = parse_ini_file(__DIR__.'/../configuration/database.ini');
     
 
     $dbh = new \Simplon\Mysql\Mysql(

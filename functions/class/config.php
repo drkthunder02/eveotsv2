@@ -38,12 +38,12 @@ class Config {
     
     public function __construct() {
         //Parse the data for the ESI configuration
-        $esi = parse_ini_file('/../configuration/esi.ini');
+        $esi = parse_ini_file(__DIR__.'/../configuration/esi.ini');
         $this->clientid = $esi['client_id'];
         $this->secret = $esi['secret'];
         
         //Parse the data for Teamspeak configuration
-        $ts = parse_init_file('/../configuration/teamspeak.ini');
+        $ts = parse_ini_file(__DIR__.'/../configuration/teamspeak.ini');
         $this->tshost = $ts['tshost'];
         $this->tsname = $ts['tsname'];
         $this->tspass = $ts['tspass'];
@@ -52,7 +52,7 @@ class Config {
         $this->tspassword = $ts['tspassword'];
         
         //parse the data for EVEOTS Configuration
-        $eveots = parse_ini_file('/../configuration/eveots.ini');
+        $eveots = parse_ini_file(__DIR__.'/../configuration/eveots.ini');
         $this->admin = $eveots['admin'];
         $this->adminID = $eveots['adminID'];
         $this->ourname = $eveots['ourname'];
@@ -122,7 +122,7 @@ class Config {
     public function GetESIConfig() {
         $info = array(
             'clientid' => $this->clientid,
-            'secret' => $this->secret
+            'secretkey' => $this->secret
         );
         
         return $info;

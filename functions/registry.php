@@ -1,5 +1,8 @@
 <?php
 
+//Autoload Functions
+require_once __DIR__.'/../vendor/autoload.php';
+
 //Classes
 require_once __DIR__.'/../functions/class/config.php';
 require_once __DIR__.'/../functions/class/sessions.php';
@@ -15,6 +18,7 @@ require_once __DIR__.'/../functions/database/sqlchecknames.php';
 require_once __DIR__.'/../functions/esi/storecharacterinfo.php';
 
 //HTML Functions
+require_once __DIR__.'/../functions/html/printhtmlheader.php';
 require_once __DIR__.'/../functions/html/printssosuccess.php';
 
 //Member Functions
