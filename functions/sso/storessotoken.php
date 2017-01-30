@@ -5,7 +5,7 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-function StoreSSOToken($accessToken, $refreshToken, $clientid, $secretKey) {
+function StoreSSOToken($accessToken, $refreshToken, $clientid, $secretkey) {
     //Make a curl call to the eve online servers to get the character id
     //Start a curl session
     $ch = curl_init("https://login.eveonline.com/oauth/verify");
@@ -13,7 +13,7 @@ function StoreSSOToken($accessToken, $refreshToken, $clientid, $secretKey) {
         'Authorization: Basic ' . base64_decode($clientid . ":" . $secretkey),
         'Content-Type: application/json',
     ];
-    curl_setop_array($ch, [
+    curl_setopt_array($ch, [
         CURLOPT_URL => 'https://login.eveonline.com/oauth/verify',
         CURLOPT_POST => true,
         CURLOPT_POST => false,

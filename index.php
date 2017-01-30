@@ -30,7 +30,6 @@ if(!isset($_SESSION['state'])) {
 }
 
 PrintHTMLHeader();
-var_dump(GetSSOCallbackURL());
 
 switch($_REQUEST['action']) {
     //If we are the start of the SSO process, then print a box to login into EVE via the SSO
@@ -39,9 +38,9 @@ switch($_REQUEST['action']) {
         printf("<div class=\"container\">");
         printf("<div class=\"jumbotron\">");
         printf("<p align=\"center\">");
-        printf("<a href=\"https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri=\"" . 
-                GetSSOCallbackURL() . "&client_id=" . 
-                $clientid . "&scope=publicData" . "&state" . $_SESSION['state'] . ">");
+        printf("<a href=\"https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri=" . 
+                urldecode(GetSSOCallbackURL()) . "&client_id=" . 
+                $clientid . "&scope=publicData" . "&state=" . $_SESSION['state'] . "\">");
         printf("<img src=\"images/EVE_SSO_Login_Buttons_Large_Black.png\">");
         printf("</a>");
         printf("</p>");
@@ -56,6 +55,7 @@ switch($_REQUEST['action']) {
             printf("Invalid State!  You will have to start again.");
             printf("<a href=\"" . $_SERVER['PHP_SELF'] . "?action=new\">Start again!</a>");
             printf("</div>");
+            unset($_SESSION['state']);
             die();
         }
         
@@ -68,28 +68,31 @@ switch($_REQUEST['action']) {
         ];
         //Prep the fields for the curl call
         $fields = ([
-            'grent_type' => 'authorization_code',
+            'grant_type' => "authorization_code",
             'code' => $_REQUEST['code'],
         ]);
         //Start a curl session
-        $ch = curl_init("https://login.eveonline.com/oauth/token");
+        $ch = curl_init('https://login.eveonline.com/oauth/token');
         //Set the curl options
         curl_setopt_array($ch, [
-            CURLOPT_URL => 'https://login.eveonline.com/oauth/token',
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => $fields,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_USERAGENT => 'EVEOTSV2',
-            CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_SSL_CIPER_LIST => 'TLSv1',
+            CURLOPT_URL             => 'https://login.eveonline.com/oauth/token',
+            CURLOPT_POST            => true,
+            CURLOPT_POSTFIELDS      => $fields,
+            CURLOPT_HTTPHEADER      => $headers,
+            CURLOPT_RETURNTRANSFER  => true,
+            CURLOPT_USERAGENT       => 'drkthunder02/eveotsv2',
+            CURLOPT_SSL_VERIFYPEER  => true,
+            CURLOPT_SSL_CIPHER_LIST => 'TLSv1',
         ]);
         //Execute the curl call
         $result = curl_exec($ch);
+        
         //Get the resultant data from the curl call
         $data = json_decode($result);
+        var_dump($data);
         //With the access token, and refresh token, store it in the database
-        StoreSSOToken($data->access_token, $data->refresh_token, $clientid, $secretkey);
-        PrintSSOSuccess();
+        //StoreSSOToken($data->access_token, $data->refresh_token, $clientid, $secretkey);
+        //PrintSSOSuccess();
         break;
     //If we don't know what state we are in then go back to the beginning
     default:
