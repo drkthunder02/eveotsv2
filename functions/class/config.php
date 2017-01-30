@@ -10,44 +10,57 @@ namespace EVEOTS\Config;
 
 class Config {
     //Teamspeak3 Server Info
-    private $tshost = ""; //Teamspeak3 Server URL
-    private $tsname = ""; //Teamspeak3 ServerQuery User Name
-    private $tspass = ""; //Teamspeak3 ServerQuery User Password
-    private $tsport = "10011"; // ServerQuery Port
-    private $tscport = "9987"; // Teamspeak3 Client Port
-    private $tspassword = ""; //(OPTIONAL) Teamspeak3 Client Connect Password
+    private $tshost;
+    private $tsname;
+    private $tspass;
+    private $tsport; 
+    private $tscport; 
+    private $tspassword;
 
-    //ESI Configuration
-    private $clientid = "";
-    private $secret = "";
-    private $accessToken = "";
-    private $refreshToken = "";
-
-    //Administrators Character
-    private $admin = "";
-    //Database ID of the ROOT admin (from "admins" table), this admin cannot be deleted by a rogue.  Make it your ID.
-    private $adminID = 1;
+    private $admin;
+    private $adminID;
     
     //Test Character ID and Character Name.
     //Must be the character id and character name fo the same character respectively
     private $testid = 9353338328;
     private $testname = "MJ Maverick";
 	
-    // (REQUIRED) Your alliance / corp name
-    private $ourname = "";
-    //Debug Mode?
-    private $verbose = false;
-    //(REQUIRED) Teamspeak3 group for alliance / corp members
-    private $group = 0;
-    //(REQUIRED) Teamspeak3 group for people on whitelist but not in your alliance / corp
-    private $bluegroup = 0;
-    //Banner Image
-    private $banner = "images/banner.jpg";
-    //(OPTIONAL) Ticker Spacers. - Example for "IRNP | MJ Maverick" use "|".  Leave blank for "IRNP MJ Maverick".
-    private $spacer = "";
+    private $ourname;
+    private $verbose;
+    private $group;
+    private $bluegroup;
+    private $banner;
+    private $spacer;
+    
+    //ESI Configuration
+    private $clientid;
+    private $secret;
     
     public function __construct() {
+        //Parse the data for the ESI configuration
+        $esi = parse_ini_file('/../configuration/esi.ini');
+        $this->clientid = $esi['client_id'];
+        $this->secret = $esi['secret'];
         
+        //Parse the data for Teamspeak configuration
+        $ts = parse_init_file('/../configuration/teamspeak.ini');
+        $this->tshost = $ts['tshost'];
+        $this->tsname = $ts['tsname'];
+        $this->tspass = $ts['tspass'];
+        $this->tsport = $ts['tsport'];
+        $this->tscport = $ts['tscport'];
+        $this->tspassword = $ts['tspassword'];
+        
+        //parse the data for EVEOTS Configuration
+        $eveots = parse_ini_file('/../configuration/eveots.ini');
+        $this->admin = $eveots['admin'];
+        $this->adminID = $eveots['adminID'];
+        $this->ourname = $eveots['ourname'];
+        $this->verbose = $eveots['verbose'];
+        $this->group = $eveots['group'];
+        $this->bluegroup = $eveots['bluegroup'];
+        $this->banner = $eveots['banner'];
+        $this->spacer = $eveots['spacer'];
     }
     
     public function GetAdminID() {
@@ -109,9 +122,7 @@ class Config {
     public function GetESIConfig() {
         $info = array(
             'clientid' => $this->clientid,
-            'secret' => $this->secret,
-            'accessToken' => $this->accessToken,
-            'refreshToken' => $this->refreshToken
+            'secret' => $this->secret
         );
         
         return $info;

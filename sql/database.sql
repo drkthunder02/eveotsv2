@@ -48,10 +48,10 @@ CREATE TABLE IF NOT EXISTS `Corporations` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Table structure for Members
+-- Table structure for Characters
 --
 
-CREATE TABLE IF NOT EXISTS `Members` (
+CREATE TABLE IF NOT EXISTS `Characters` (
     `Corporation` varchar(255) NOT NULL,
     `CorporationID` varchar(20) NOT NULL,
     `Character` varchar(255) NOT NULL,
