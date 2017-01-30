@@ -9,22 +9,29 @@
 // 2 - https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri=https%3A%2F%2F3rdpartysite.com%2Fcallback&client_id=3rdpartyClientId&scope=characterContactsRead%20characterContactsWrite&state=uniquestate123
 // 3 - Verify the Authorization Code and retrieve the access token and refresh token
 // 4 - Store the access token and refresh token in the database
-// 
-// 
+
+require_once __DIR__.'/functions/registry.php';
+
 //Start a session
 $session = new \Custom\Session\Sessions();
+printf("Started a session.<br>");
 //Get the configuration data from the class
 $config = new \EVEOTS\Config\Config();
+printf("Got the configuration.<br>");
 $esiconfig = $config->GetESIConfig();
+printf("Got the ESI Configuration.");
 $clientid = $esiconfig['clientid'];
 $secretkey = $esiconfig['secretkey'];
+printf("Loaded the clientid and secretkey,<br>");
 
 //If the state is not set then set it to NULL
 if(!isset($_SESSION['state'])) {
     $_SESSION['state'] = uniqid();
 }
 
-switch($_GET['action']) {
+PrintHTMLHeader();
+
+switch($_REQUEST['action']) {
     //If we are the start of the SSO process, then print a box to login into EVE via the SSO
     case 'new':
         //https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri=https%3A%2F%2F3rdpartysite.com%2Fcallback&client_id=3rdpartyClientId&scope=characterContactsRead%20characterContactsWrite&state=uniquestate123

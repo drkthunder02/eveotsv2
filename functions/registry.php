@@ -11,6 +11,9 @@ require_once __DIR__.'/../functions/database/dbopen.php';
 require_once __DIR__.'/../functions/database/sqlcheck.php';
 require_once __DIR__.'/../functions/database/sqlchecknames.php';
 
+//ESI Functions
+require_once __DIR__.'/../functions/esi/storecharacterinfo.php';
+
 //HTML Functions
 require_once __DIR__.'/../functions/html/printssosuccess.php';
 
