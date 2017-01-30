@@ -12,6 +12,10 @@
 
 require_once __DIR__.'/functions/registry.php';
 
+// PHP debug mode
+ini_set('display_errors', 'On');
+error_reporting(E_ALL | E_STRICT);
+
 //Start a session
 $session = new \Custom\Session\Sessions();
 printf("Started a session.<br>");
