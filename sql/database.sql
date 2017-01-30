@@ -99,3 +99,14 @@ CREATE TABLE IF NOT EXISTS `SSOTokens` (
     PRIMARY KEY (`id`),
     UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for `sessions`
+--
+
+CREATE TABLE IF NOT EXISTS `sessions` (
+    `id` varchar(32) NOT NULL,
+    `access` int(10) unsigned DEFAULT NULL,
+    `data` text,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
