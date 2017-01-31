@@ -10,11 +10,23 @@
 // 3 - Verify the Authorization Code and retrieve the access token and refresh token
 // 4 - Store the access token and refresh token in the database
 
+//Classes used by $configuration variable
+use Seat\Eseye\Cache\NullCache;
+use Seat\Eseye\Configuration;
+use Seat\Eseye\Containers\EsiAuthentication;
+use Seat\Eseye\Eseye;
+
 // PHP debug mode
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 //Get the required files from the function registry
 require_once __DIR__.'/functions/registry.php';
+
+// Disable all caching by setting the NullCache as the
+// preferred cache handler. By default, Eseye will use the
+// FileCache.
+$configuration = Configuration::getInstance();
+$configuration->cache = NullCache::class;
 
 //Start a session
 $session = new \Custom\Sessions\session();

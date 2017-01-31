@@ -5,17 +5,21 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
+
 function StoreCharacterInfo($characterID) {
+
     //Open the database connection
     $db = DBOpen();
     $authentication = PrepareESIAuthentication($characterID);
-    $config = new \EVEOTS\Config\Config();
-    $esiConfig = $config->GetESIConfig();
     $esi = new \Seat\Eseye\Eseye($authentication);
+    //Declare our variables before ESI attempts to write to them
+    $character = NULL;
+    $corporation = NULL;
+    $alliance = NULL;
     
     //Try to get the character info from ESI API
     try {
-        $character = $esi->invoke('GET', '/character/{character_id}/', [
+        $character = $esi->invoke('get', '/characters/{character_id}/', [
             'character_id' => $characterID,
         ]);
     } catch (\Seat\Eseye\Exceptions\RequestFailedException $e) {
@@ -26,7 +30,7 @@ function StoreCharacterInfo($characterID) {
     }
     //Try to get the corporation info from ESI API
     try {
-       $corporation = $esi->invoke('GET', '/corporation/{corporation_id}/', [
+       $corporation = $esi->invoke('get', '/corporations/{corporation_id}/', [
            'corporation_id' => $character->corporation_id,
        ]); 
     } catch (\Seat\Eseye\Exceptions\RequestFailedException $e) {
@@ -37,7 +41,7 @@ function StoreCharacterInfo($characterID) {
     }
     //Try to get the alliance info from ESI API
     try {
-        $alliance = $esi->invoke('GET', '/alliance/{alliance_id}/', [
+        $alliance = $esi->invoke('get', '/alliances/{alliance_id}/', [
             'alliance_id' => $corporation->alliance_id,
         ]);
     } catch (\Seat\Eseye\Exceptions\RequestFailedException $e) {
@@ -46,32 +50,32 @@ function StoreCharacterInfo($characterID) {
         print $e->getCode() . PHP_EOL;
         print $e->getMessage() . PHP_EOL;
     }
-    
+    if($character)
     //Open the database connection
     //Insert the character information into the table
     $db->replace('Characters', array(
         'Character' => $character->name,
         'CharacterID' => $characterID,
         'CorporationID' => $character->corporation_id,
-        'Corporation' => $corporation->corporation_name,
+        'Corporation' => $corporation->corporation_name
     ));
-    if($corporation) {
+    if($corporation && $character) {
         //Insert the corporation information into the table
         $db->replace('Corporations', array(
-            'CorporationID' => $corporation->corporation_id,
-            'Corporation' => $corporation->corporation_name,
             'AllianceID' => $corporation->alliance_id,
-            'MemberCount' => $corporation->member_count,
+            'Corporation' => $corporation->corporation_name,
+            'CorporationID' => $character->corporation_id,
+            'MemberCount' => $corporation->member_count
         ));    
     }
     
     
-    if($alliance) {
+    if($alliance && $corporation) {
         //Insert the alliance information into the table
         $db->replace('Alliances', array(
-            'AllianceID' => $alliance->alliance_id,
+            'AllianceID' => $corporation->alliance_id,
             'Alliance' => $alliance->alliance_name,
-            'Ticker' => $alliance->ticker,
+            'Ticker' => $alliance->ticker
         )); 
     }
     

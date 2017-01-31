@@ -6,15 +6,17 @@
  */
 
 function PrepareESIAuthentication($characterID) {
-    $config = parse_ini_file(__DIR__.'/../configuration/esi.ini');
+    //Read configuration parameters from the ini file to pre
+    $conf = new EVEOTS\Config\Config();
+    $config = $conf->GetESIConfig();
     
     $db = DBOpen();
     $esiInfo = $db->fetchRow('SELECT * FROM SSOTokens WHERE CharacterID= :char', array('char' => $characterID));
     DBClose($db);
         
     $authentication = new \Seat\Eseye\Containers\EsiAuthentication([
-        'client_id' => $config['client_id'],
-        'secret' => $config['secret'],
+        'client_id' => $config['clientid'],
+        'secret' => $config['secretkey'],
         'access_token' => $esiInfo['AccessToken'],
         'refresh_token' => $esiInfo['RefreshToken'],
     ]);

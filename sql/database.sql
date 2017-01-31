@@ -27,9 +27,9 @@ INSERT INTO `Admins` VALUES(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL
 --
 
 CREATE TABLE IF NOT EXISTS `Alliances` (
-    `Alliance` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-    `AllianceID` int(11) NOT NULL DEFAULT 0,
-    `Ticker` varchar(10) NOT NULL DEFAULT "",
+    `Alliance` varchar(255) DEFAULT "",
+    `AllianceID` int(11) DEFAULT 0,
+    `Ticker` varchar(10) DEFAULT "",
     PRIMARY KEY (`AllianceID`),
     UNIQUE KEY `AllianceID` (`AllianceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -39,10 +39,11 @@ CREATE TABLE IF NOT EXISTS `Alliances` (
 --
 
 CREATE TABLE IF NOT EXISTS `Corporations` (
-    `AllianceID` varchar(20) NOT NULL DEFAULT 0,
-    `Corporation` varchar(255) NOT NULL DEFAULT "",
-    `CorporationID` varchar(20) NOT NULL DEFAULT 0,
-    `MemberCount` int(11) NOT NULL DEFAULT 0,
+    `AllianceID` varchar(20) DEFAULT "0",
+    `Corporation` varchar(255) DEFAULT "",
+    `CorporationID` varchar(20) DEFAULT "0",
+    `MemberCount` int(11) DEFAULT 0,
+    `Ticker` varchar(20) DEFAULT "",
     PRIMARY KEY (`CorporationID`),
     UNIQUE KEY `CorporationID` (`CorporationID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -52,10 +53,9 @@ CREATE TABLE IF NOT EXISTS `Corporations` (
 --
 
 CREATE TABLE IF NOT EXISTS `Characters` (
-    `Corporation` varchar(255) NOT NULL,
-    `CorporationID` varchar(20) NOT NULL,
-    `Character` varchar(255) NOT NULL,
-    `CharacterID` varchar(20) NOT NULL,
+    `CorporationID` varchar(20) DEFAULT "0",
+    `Character` varchar(255) DEFAULT "",
+    `CharacterID` varchar(20) DEFAULT "0",
     PRIMARY KEY (`CharacterID`),
     UNIQUE KEY `CharacterID` (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
