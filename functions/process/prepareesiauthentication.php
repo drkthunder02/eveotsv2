@@ -6,7 +6,7 @@
  */
 
 function PrepareESIAuthentication($characterID) {
-    $config = parse_ini_file('/../configuration/esi.ini');
+    $config = parse_ini_file(__DIR__.'/../configuration/esi.ini');
     
     $db = DBOpen();
     $esiInfo = $db->fetchRow('SELECT * FROM SSOTokens WHERE CharacterID= :char', array('char' => $characterID));

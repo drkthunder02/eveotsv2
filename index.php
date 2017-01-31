@@ -60,39 +60,39 @@ switch($_REQUEST['action']) {
         }
         
         //Clear the state value.
-        $_SESSION['state'] = NULL;
-        //Prep the authorization header.
-        $headers = [
-            'Authorization: Basic ' . base64_decode($clientid . ":" . $secretkey),
-            'Content-Type: application/json',
-        ];
-        //Prep the fields for the curl call
-        $fields = ([
-            'grant_type' => "authorization_code",
-            'code' => $_REQUEST['code'],
-        ]);
-        //Start a curl session
-        $ch = curl_init('https://login.eveonline.com/oauth/token');
-        //Set the curl options
-        curl_setopt_array($ch, [
-            CURLOPT_URL             => 'https://login.eveonline.com/oauth/token',
-            CURLOPT_POST            => true,
-            CURLOPT_POSTFIELDS      => $fields,
-            CURLOPT_HTTPHEADER      => $headers,
-            CURLOPT_RETURNTRANSFER  => true,
-            CURLOPT_USERAGENT       => 'drkthunder02/eveotsv2',
-            CURLOPT_SSL_VERIFYPEER  => true,
-            CURLOPT_SSL_CIPHER_LIST => 'TLSv1',
-        ]);
-        //Execute the curl call
+        unset($_SESSION['state']);
+        
+        //Do the initial check.
+        $url = 'https://login.eveonline.com/oauth/token';
+        $header = 'Authorization: Basic '.base64_encode($clientid.':'.$secretkey);
+        $fields_string='';
+        $fields=array(
+                    'grant_type' => 'authorization_code',
+                    'code' => $_GET['code']
+                );
+        foreach ($fields as $key => $value) {
+            $fields_string .= $key.'='.$value.'&';
+        }
+        rtrim($fields_string, '&');
+        
+        $useragent = 'W4RP EVEOTSv2 Auth';
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
+        curl_setopt($ch, CURLOPT_POST, count($fields));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $fields_string);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         $result = curl_exec($ch);
         
         //Get the resultant data from the curl call
         $data = json_decode($result);
-        var_dump($data);
         //With the access token, and refresh token, store it in the database
-        //StoreSSOToken($data->access_token, $data->refresh_token, $clientid, $secretkey);
-        //PrintSSOSuccess();
+        StoreSSOToken($data->access_token, $data->refresh_token, $clientid, $secretkey);
+        PrintSSOSuccess();
         break;
     //If we don't know what state we are in then go back to the beginning
     default:

@@ -6,6 +6,8 @@
  */
 
 function StoreCharacterInfo($characterID) {
+    //Open the database connection
+    $db = DBOpen();
     $authentication = PrepareESIAuthentication($characterID);
     $config = new \EVEOTS\Config\Config();
     $esiConfig = $config->GetESIConfig();
@@ -46,7 +48,6 @@ function StoreCharacterInfo($characterID) {
     }
     
     //Open the database connection
-    $db = DBOpen();
     //Insert the character information into the table
     $db->replace('Characters', array(
         'Character' => $character->name,
@@ -54,7 +55,7 @@ function StoreCharacterInfo($characterID) {
         'CorporationID' => $character->corporation_id,
         'Corporation' => $corporation->corporation_name,
     ));
-    if($character->corporation_id) {
+    if($corporation) {
         //Insert the corporation information into the table
         $db->replace('Corporations', array(
             'CorporationID' => $corporation->corporation_id,
@@ -65,10 +66,10 @@ function StoreCharacterInfo($characterID) {
     }
     
     
-    if($corporation->alliance_id) {
+    if($alliance) {
         //Insert the alliance information into the table
         $db->replace('Alliances', array(
-            'AllianceID' => $corporation->alliance_id,
+            'AllianceID' => $alliance->alliance_id,
             'Alliance' => $alliance->alliance_name,
             'Ticker' => $alliance->ticker,
         )); 
