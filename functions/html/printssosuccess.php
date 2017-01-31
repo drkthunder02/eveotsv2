@@ -9,7 +9,7 @@ function PrintSSOSuccess() {
     PrintHTMLHeader();
     printf("<div class=\"container\">");
     printf("<div class=\"jumbotron\">");
-    printf("Success has been achieved.  You may close this screen now.");
+    printf("<2>Success has been achieved.  You may close this screen now.</h2>");
     printf("</div>");
     printf("</div>");
     

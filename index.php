@@ -49,6 +49,10 @@ switch($_REQUEST['action']) {
         //https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri=https%3A%2F%2F3rdpartysite.com%2Fcallback&client_id=3rdpartyClientId&scope=characterContactsRead%20characterContactsWrite&state=uniquestate123
         printf("<div class=\"container\">");
         printf("<div class=\"jumbotron\">");
+        printf("<p><h1>EVEOTS V2 Authentication</h1></p>");
+        printf("<br>");
+        printf("<p><h3>Click on the button below to register for the EVEOTS.  This will bring you to through the eve online single sign on process in order to get registered for this Teamspeak3 server.</h3></p>");
+        printf("<br>");
         printf("<p align=\"center\">");
         printf("<a href=\"https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri=" . 
                 urldecode(GetSSOCallbackURL()) . "&client_id=" . 
@@ -111,4 +115,7 @@ switch($_REQUEST['action']) {
         RedirectToNew();
         break;
 }
+
+printf("</body>");
+printf("</html>");
 
