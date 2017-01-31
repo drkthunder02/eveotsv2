@@ -35,8 +35,16 @@ function StoreSSOToken($accessToken, $refreshToken, $clientid, $secretkey) {
     
     //Open a connection to the database
     $db = DBOpen();
-    //Insert the data into the SSOTokens table.  Use replace as it tries to replace, then insert into the database if the replace doesn't work.
-    $db->replace('SSOTokens', array('CharacterID' => $characterID, 'AccessToken' => $accessToken, 'RefreshToken' => $refreshToken));
+    //Try to search for the character in the SSOTokens table.
+    //If not found do a normal insertion.
+    //If found, then delete the data from the database, and insert the new data.
+    $found = $db->fetchColumn('SELECT CharacterID FROM SSOTokens WHERE CharacterID= :id', array('id' => $characterID));
+    if($found == false) {
+        $db->insert('SSOTokens', array('CharacterID' => $characterID, 'AccessToken' => $accessToken, 'RefreshToken' => $refreshToken));
+    } else {
+        $db->delete('SSOTokens', array('CharacterID' => $characterID));
+        $db->insert('SSOTokens', array('CharacterID' => $characterID, 'AccessToken' => $accessToken, 'RefreshToken' => $refreshToken));
+    }
     
     //Close the connection to the database
     DBClose($db);

@@ -50,16 +50,17 @@ function StoreCharacterInfo($characterID) {
         print $e->getCode() . PHP_EOL;
         print $e->getMessage() . PHP_EOL;
     }
-    if($character)
-    //Open the database connection
-    //Insert the character information into the table
-    $db->replace('Characters', array(
-        'Character' => $character->name,
-        'CharacterID' => $characterID,
-        'CorporationID' => $character->corporation_id,
-        'Corporation' => $corporation->corporation_name
-    ));
-    if($corporation && $character) {
+    if($character != NULL && $corporation != NULL) {
+        //Insert the character information into the table
+        $db->replace('Characters', array(
+            'Character' => $character->name,
+            'CharacterID' => $characterID,
+            'CorporationID' => $character->corporation_id,
+            'Corporation' => $corporation->corporation_name
+        ));
+    }
+    
+    if($corporation != NULL && $character != NULL) {
         //Insert the corporation information into the table
         $db->replace('Corporations', array(
             'AllianceID' => $corporation->alliance_id,
@@ -70,7 +71,7 @@ function StoreCharacterInfo($characterID) {
     }
     
     
-    if($alliance && $corporation) {
+    if($alliance != NULL && $corporation != NULL) {
         //Insert the alliance information into the table
         $db->replace('Alliances', array(
             'AllianceID' => $corporation->alliance_id,
