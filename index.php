@@ -107,8 +107,8 @@ switch($_REQUEST['action']) {
         //Get the resultant data from the curl call
         $data = json_decode($result);
         //With the access token, and refresh token, store it in the database
-        StoreSSOToken($data->access_token, $data->refresh_token, $clientid, $secretkey);
-        PrintSSOSuccess();
+        $characterID = StoreSSOToken($data->access_token, $data->refresh_token, $clientid, $secretkey);
+        PrintSSOSuccess($characterID);
         break;
     //If we don't know what state we are in then go back to the beginning
     default:

@@ -79,10 +79,22 @@ CREATE TABLE IF NOT EXISTS `Logs` (
 CREATE TABLE IF NOT EXISTS `Users` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `CharacterID` varchar(20) DEFAULT NULL,
-    `Blue` varchar(255) DEFAULT NULL,
+    `Blue` boolean DEFAULT FALSE,
     `TSDatabaseID` int(45) DEFAULT NULL,
     `TSUniqueID` varchar(255) DEFAULT NULL,
     `TSName` varchar(255) DEFAULT NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for Blues
+--
+
+CREATE TABLE IF NOT EXISTS `Blues` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `EntityID` varchar(20) DEFAULT NULL,
+    `EntityType` tinyint(1) DEFAULT 0,
     PRIMARY KEY (`id`),
     UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

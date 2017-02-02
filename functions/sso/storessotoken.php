@@ -50,4 +50,6 @@ function StoreSSOToken($accessToken, $refreshToken, $clientid, $secretkey) {
     DBClose($db);
     //Store the character info in the character table of the database
     StoreCharacterInfo($characterID, $accessToken, $refreshToken);
+    
+    return $characterID;
 }

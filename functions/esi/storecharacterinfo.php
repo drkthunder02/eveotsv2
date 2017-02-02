@@ -52,34 +52,61 @@ function StoreCharacterInfo($characterID) {
     }
     if($character != NULL && $corporation != NULL) {
         //Insert the character information into the table
-        $db->replace('Characters', array(
-            'Character' => $character->name,
-            'CharacterID' => $characterID,
-            'CorporationID' => $character->corporation_id,
-            'Corporation' => $corporation->corporation_name
-        ));
+        $charFound = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :id', array('id' => $characterID));
+        if($charFound == false) {
+            $db->insert('Characters', array(
+                'Character' => $character->name,
+                'CharacterID' => $hcaracterID,
+                'CorporationID' => $character->corporation_id
+            ));
+        } else {
+            $db->delete('Characters', array('CharacterID' => $hcaracterID));
+            $db->insert('Characters', array(
+                'Character' => $character->name,
+                'CharacterID' => $hcaracterID,
+                'CorporationID' => $character->corporation_id
+            ));
+        }
     }
     
     if($corporation != NULL && $character != NULL) {
         //Insert the corporation information into the table
-        $db->replace('Corporations', array(
-            'AllianceID' => $corporation->alliance_id,
-            'Corporation' => $corporation->corporation_name,
-            'CorporationID' => $character->corporation_id,
-            'MemberCount' => $corporation->member_count
-        ));    
+        $corpFound = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $character->corporation_id));
+        if($corpFound == false) {
+            $db->insert('Corporations', array(
+                'AllianceID' => $corporation->alliance_id,
+                'Corporation' => $corporation->corporation_name,
+                'CorporationID' => $character->corporation_id,
+                'MemberCount' => $corporation->member_count
+            ));
+        } else {
+            $db->delete('Corporations', array('CorporationID' => $hcaracter->corporation_id));
+            $db->insert('Corporations', array(
+                'AllianceID' => $corporation->alliance_id,
+                'Corporation' => $corporation->corporation_name,
+                'CorporationID' => $character->corporation_id,
+                'MemberCount' => $corporation->member_count,
+                'Ticker' => $corporation->ticker
+            ));
+        } 
     }
-    
     
     if($alliance != NULL && $corporation != NULL) {
         //Insert the alliance information into the table
-        $db->replace('Alliances', array(
-            'AllianceID' => $corporation->alliance_id,
-            'Alliance' => $alliance->alliance_name,
-            'Ticker' => $alliance->ticker
-        )); 
-    }
-    
-    //Close the database connection
-    DBClose($db);
+        $allyFound = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $corporation->alliance_id));
+        if($allyFound == false) {
+            $db->insert('Alliances', array(
+                'Alliance' => $alliance->alliance_name,
+                'AllianceID' => $corporation->alliance_id,
+                'Ticker' => $alliance->ticker
+            ));
+        } else {
+            $db->delete('Alliances', array('AllianceID' => $corporation->alliance_id));
+            $db->insert('Alliances', array(
+                'Alliance' => $alliance->alliance_name,
+                'AllianceID' => $corporation->alliance_id,
+                'Ticker' => $alliance->ticker
+            ));
+        }
+    }    
 }
