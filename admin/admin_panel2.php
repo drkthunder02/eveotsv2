@@ -109,6 +109,15 @@ switch($menu) {
                             <td colspan=\"2\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Add Corporation\" /></td>
                         </tr>
                     </table>
+                    </form>
+                    <form class=\"form-control\" action=\"?menu=whitelist_add&type=char\" method=\"post\">
+                    <table>
+                        <tr>
+                            <td style=\"text-align: right;\"><font size=\"2\">Character Name:</font></td>
+                            <td style=\"text-align: left;\"><input class=\"form-control\" name=\"charName\" size=\"16\"/></td>
+                            <td colspan=\"2\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Add Character\" /></td>
+                        </tr>
+                    </table>
                     </form>");
         printf("</div>");
         
@@ -151,7 +160,31 @@ switch($menu) {
         printf("</div>");
         break;
     case "whitelist_add":
+        $type = $_GET["type"];
+        if (!isset($_POST["corpName"])) {
+            $corporationName = "";
+        } else {
+            $corporationName = filter_input('POST', 'corpName');
+        }
+        if (!isset($_POST["allianceName"])) {
+            $allianceName = "";
+        } else {
+            $allianceName = filter_input('POST', 'allianceName');
+        }
+        if(!isset($_POST['charName'])) {
+            $characterName = "";
+        } else {
+            $characterName = filter_input('POST', 'charName');
+        }
+        if ($corporationName == "" && $allianceName == "" && $characterName == "") {
+            printf("<div class=\"container\">");
+            printf("Error: No Alliance or Corporation defined.<br /><br />");
+            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+            printf("</div>");
+            break;
+        }
         //Add to the whitelist
+        WhiteListAdd($allianceName, $corporationName, $characterName, $type);
         break;
     case "whitelist_delete":
         //Delete from the whitelist
