@@ -47,7 +47,7 @@ $db = DBOpen();
 printf("<html>");
 PrintHTMLHeader();
 printf("<body>");
-
+//Print the navigation bar
 PrintNavBar($username); 
 $queryAdmin = $db->fetchColumn('SELECT username FROM Admins WHERE username=: user', array('user' => 'admin'));
 $count = $db->getRowCount();
@@ -86,10 +86,75 @@ switch($menu) {
     case "members_edit":
         break;
     case "whitelist":
+        printf("<div class=\"container\">");
+        printf("<div class=\"jumbotron\">");
+        printf("<h2>If a corporation is in an alliance it is advised <em>not</em> to give the corporation access, but to give the alliance the access. Also remember to keep an eye out for corporations with access joining alliances that shouldn't have it, you should remove these corporations.<br /><strong>TL;DR:</strong> All corporations in your corporation list should NOT be in an alliance.</h2>");
+        printf("</div>");
+        printf("</div>");
+        printf("<div class=\"container\">");
+        printf("<form class=\"form-control\" action=\"?menu=whitelist_add&type=alliance\" method=\"post\">
+                    <table class=\"table>
+                        <tr>
+                            <td style=\"text-align: right;\"><font size=\"2\">Alliance Name:</font></td>
+                            <td style=\"text-align: left;\"><input class=\"form-control\" name=\"allianceName\" size=\"16\"/></td>
+                            <td colspan=\"2\" style=\"text-align: right;\"><input class=\"form-control\" name=\"submit\" type=\"submit\" value=\"Add Alliance\" /></td>
+                        </tr>
+                    </table>
+                    </form>
+                    <form class=\"form-control\" action=\"?menu=whitelist_add&type=corp\" method=\"post\">
+                    <table>
+                        <tr>
+                            <td style=\"text-align: right;\"><font size=\"2\">Corporation Name:</font></td>
+                            <td style=\"text-align: left;\"><input class=\"form-control\" name=\"corpName\" size=\"16\"/></td>
+                            <td colspan=\"2\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Add Corporation\" /></td>
+                        </tr>
+                    </table>
+                    </form>");
+        printf("</div>");
+        
+        //Build the white list to print out on the screen
+        $whiteList = $db->fetchRowMany('SELECT * FROM Blues');
+        $allyList = array();
+        $corpList = array();
+        $charList = array();
+        $allyNum = 0;
+        $corpNum = 0;
+        $charNum = 0;
+        foreach($whiteList as $list) {
+            if($list['EntityType'] == 3) {
+                $allyList[$allyNum] = $list['EntityID'];
+                $allyNum++;
+            } else if($list['EntityType'] == 2) {
+                $corpList[$corpNum] = $list['EntityID'];
+                $corpNum++;
+            } else if($list['EntityType'] ==1) {
+                $charList[$charNum] = $list['EntityID'];
+                $charNum++;
+            }
+        }
+        printf("<div class=\"container\">");
+        printf("<table class=\"table-striped\">");
+        printf("<tr><td><Type/td><td>Name</td><td>Members</td></tr>");
+        for($i = 0; $i < $allyNum; $i++) {
+            $ally = $db->fetchRow('SELECT Alliance,Members FROM Alliances WHERE AllianceID= :id', array('id' => $allyList[$i]));
+            printf("<tr><td>Alliance</td><td>" . $ally['Alliance'] . "</td><td>" . $ally['Members'] . "</td></tr>");
+        }
+        for($i = 0; $i < $corpNum; $i++) {
+            $corp = $db->fetchRow('SELECT Corporation,Members FROM Corporations WHERE CorporationID= :id', array('id' => $corpList[$i]));
+            printf("<tr><td>Corporation</td><td>" . $corp['Corporation'] . "</td><td>" . $corp['Members'] . "</td></tr>");
+        }
+        for($i = 0; $i < $charNum; $i++) {
+            $char = $db->fetchColumn('SELECT Character FROM Characters WHERE CharacterID= :id', array('id' => $charList[$i]));
+            printf("<tr><td>Character</td><td>" . $char . "</td><td>N/A</td></tr>.");
+        }
+        printf("</table>");
+        printf("</div>");
         break;
     case "whitelist_add":
+        //Add to the whitelist
         break;
     case "whitelist_delete":
+        //Delete from the whitelist
         break;
 };
 
