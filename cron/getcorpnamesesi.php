@@ -13,8 +13,8 @@ use Monolog\Handler\StreamHandler;
 $db = DBOpen();
 
 // create a log channel
-$log = new Logger('ESI-Character');
-$log->pushHandler(new StreamHandler('esi-character.log', Logger::WARNING));
+$log = new Logger('ESI-Corporation');
+$log->pushHandler(new StreamHandler('esi-corporation.log', Logger::WARNING));
 
 //Get the EVEOTS configuration so we can call the config parameters for client_id and secretkey for ESI
 $conf = new EVEOTS\Config\Config();
