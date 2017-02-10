@@ -88,7 +88,11 @@ class Config {
     }
     
     public function GetDebugMode() {
-        return $this->verbose;
+        if($this->verbose == "true") {
+            return true;
+        } else {
+            return false;
+        }
     }
     
     public function GetTestCharacter() {

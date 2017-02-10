@@ -27,10 +27,11 @@ INSERT INTO `Admins` VALUES(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL
 --
 
 CREATE TABLE IF NOT EXISTS `Alliances` (
+    `id` int(11) AUTO_INCREMENT,
     `Alliance` varchar(255) DEFAULT "",
     `AllianceID` int(11) DEFAULT 0,
     `Ticker` varchar(10) DEFAULT "",
-    PRIMARY KEY (`AllianceID`),
+    PRIMARY KEY (`id`),
     UNIQUE KEY `AllianceID` (`AllianceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -39,12 +40,13 @@ CREATE TABLE IF NOT EXISTS `Alliances` (
 --
 
 CREATE TABLE IF NOT EXISTS `Corporations` (
+    `id` int(11) AUTO_INCREMENT,
     `AllianceID` varchar(20) DEFAULT "0",
     `Corporation` varchar(255) DEFAULT "",
-    `CorporationID` varchar(20) DEFAULT "0",
-    `MemberCount` int(11) DEFAULT 0,
+    `CorporationID` varchar(20) DEFAULT "",
+    `MemberCount` int(11) DEFAULT NULL,
     `Ticker` varchar(20) DEFAULT "",
-    PRIMARY KEY (`CorporationID`),
+    PRIMARY KEY (`id`),
     UNIQUE KEY `CorporationID` (`CorporationID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -53,10 +55,11 @@ CREATE TABLE IF NOT EXISTS `Corporations` (
 --
 
 CREATE TABLE IF NOT EXISTS `Characters` (
+    `id` int(11) AUTO_INCREMENT,
     `CorporationID` varchar(20) DEFAULT "0",
     `Character` varchar(255) DEFAULT "",
     `CharacterID` varchar(20) DEFAULT "0",
-    PRIMARY KEY (`CharacterID`),
+    PRIMARY KEY (`id`),
     UNIQUE KEY `CharacterID` (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -121,4 +124,60 @@ CREATE TABLE IF NOT EXISTS `sessions` (
     `access` int(10) unsigned DEFAULT NULL,
     `data` text,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for ESICallsAlliance
+--
+
+CREATE TABLE IF NOT EXISTS `ESICallsAlliance` (
+    `id` int(11) DEFAULT 1,
+    `NextAllianceIdCheck` int(11) DEFAULT 0,
+    `NextAllianceIdBuild` int(11) DEFAULT 0,
+    `NextAllianceNameCheck` int(11) DEFAULT 0,
+    `NextAllianceNameBuild` int(11) DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `ESICallsAlliance` VALUES(1, 0, 0, 0, 0);
+
+--
+-- Table structure for ESICallsCorporation
+--
+
+CREATE TABLE IF NOT EXISTS `ESICallsCorporation` (
+    `id` int(11) DEFAULT 1,
+    `NextCorporationIdCheck` int(11) DEFAULT 0,
+    `NextCorporationIdBuild` int(11) DEFAULT 0,
+    `NextCorporationNameCheck` int(11) DEFAULT 0,
+    `NextCorporationNameBuild` int(11) DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `ESICallsCorporation` VALUES(1, 0, 0, 0, 0);
+
+--
+-- Table structure for ESICallsCharacter
+--
+
+CREATE TABLE IF NOT EXISTS `ESICallsCharacter` (
+    `id` int(11) DEFAULT 1,
+    `NextCharacterIdCheck` int(11) DEFAULT 0,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO ESICallsCharacter VALUES (1, 0);
+
+--
+-- Table structure for `ESILogs`
+--
+
+CREATE TABLE IF NOT EXISTS `ESILogs` (
+    `id` int(11) AUTO_INCREMENT,
+    `Time` varchar(100),
+    `Type` varchar(100),
+    `Call` varchar(100),
+    `Entry` text,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
