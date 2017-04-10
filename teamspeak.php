@@ -12,17 +12,27 @@ $foundName = false;     //For if we have found the name of the client on the ser
 
 //Get our POST values from the previous form
 if(isset($_POST['characterID'])) {
-    $characterID = filter_input('POST', 'characterID');
+    $characterID = filter_input(INPUT_POST, 'characterID');
 } else {
     $characterID = 0;
 }
+if(isset($_POST['corporationID'])) {
+    $corporationID = filter_input(INPUT_POST, 'corporationID');
+} else {
+    $corporationID = 0;
+}
+if(isset($_POST['allianceID'])) {
+    $allianceID = filter_input(INPUT_POST, 'allianceID');
+} else {
+    $allianceID = 0;
+}
 if(isset($_POST['blue'])) {
-    $blue = filter_input('POST', 'blue');
+    $blue = filter_input(INPUT_POST, 'blue');
 } else {
     $blue = false;
 }
 if(isset($_POST['tsname'])) {
-    $tsname = filter_input('POST', 'tsname');
+    $tsname = filter_input(INPUT_POST, 'tsname');
 } else {
     $tsname = '';
 }
@@ -75,11 +85,6 @@ if($foundName == true) {
         die("An error occured: ".$e->getMessage()." [B".__LINE__."]");
     }
 }
-
-
-
-
-
 
 //Print the header for the page
 PrintHTMLHeader();

@@ -126,7 +126,9 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     printf("<div class=\"container\">");
     printf("<div class=\"jumbotron\">");
     printf("<form class=\"form-goup\" method=\"POST\" action=\"teamspeak.php\">
-                <input class=\"form-control\" type=\"hidden\" name=\"characterID\" value=\"" . $characterID . "\">
+                <input class=\"form-control\" type=\"hidden\" name=\"characterID\" value=\"" . $CharacterID . "\">
+                <input class=\"form-control\" type=\"hidden\" name=\"corporationID\" value=\"" . $CorporationID . "\">
+                <input class=\"form-control\" type=\"hidden\" name=\"allianceID\" value=\"" . $AllianceID . "\">
                 <input class=\"form-control\" type=\"hidden\" name=\"blue\" value=\"" . $blue . "\">
                 <input class=\"form-control\" type=\"hidden\" name=\"tsname\" value=\"" . $name . "\">
                 <input class=\"form-conotrol\" type=\"submit\" value=\"Update TS Permissions\">
