@@ -64,8 +64,6 @@ for($row = $nextCorpRow; $row <= $maxCorpRow; $row++) {
         
         //Close the curl channel to reset it
         curl_close($ch);
-        //Sleep for 2 seconds
-        sleep(2);
     }
 }
 

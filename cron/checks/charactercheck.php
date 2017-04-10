@@ -57,8 +57,6 @@ for($row = $nextCharacterRow; $row <= $maxCharacterRow; $row++) {
     
     //Close the curl call
     curl_close($ch);
-    //Sleep for 1 second
-    sleep(1);
 }
 
 //Close the database connection after the script is completed
