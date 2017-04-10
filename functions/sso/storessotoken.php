@@ -29,8 +29,6 @@ function StoreSSOToken($accessToken, $refreshToken, $clientid, $secretkey) {
     //Decode the json response
     $data=json_decode($result);
     
-    //Get the resultant data from the curl call
-    $data = json_decode($result);
     $characterID = $data->CharacterID;
     
     //Open a connection to the database

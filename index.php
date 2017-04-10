@@ -10,23 +10,11 @@
 // 3 - Verify the Authorization Code and retrieve the access token and refresh token
 // 4 - Store the access token and refresh token in the database
 
-//Classes used by $configuration variable
-use Seat\Eseye\Cache\NullCache;
-use Seat\Eseye\Configuration;
-use Seat\Eseye\Containers\EsiAuthentication;
-use Seat\Eseye\Eseye;
-
 // PHP debug mode
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 //Get the required files from the function registry
 require_once __DIR__.'/functions/registry.php';
-
-// Disable all caching by setting the NullCache as the
-// preferred cache handler. By default, Eseye will use the
-// FileCache.
-$configuration = Configuration::getInstance();
-$configuration->cache = NullCache::class;
 
 //Start a session
 $session = new \Custom\Sessions\session();
@@ -35,6 +23,9 @@ $config = new \EVEOTS\Config\Config();
 $esiconfig = $config->GetESIConfig();
 $clientid = $esiconfig['clientid'];
 $secretkey = $esiconfig['secretkey'];
+$useragent = $esiconfig['useragent'];
+//Setup the ESI class
+$esi = new \EVEOTS\ESI\ESI($useragent);
 
 //If the state is not set then set it to NULL
 if(!isset($_SESSION['state'])) {
@@ -77,7 +68,6 @@ switch($_REQUEST['action']) {
         
         //Clear the state value.
         unset($_SESSION['state']);
-        
         //Do the initial check.
         $url = 'https://login.eveonline.com/oauth/token';
         $header = 'Authorization: Basic '.base64_encode($clientid.':'.$secretkey);
@@ -90,9 +80,7 @@ switch($_REQUEST['action']) {
             $fields_string .= $key.'='.$value.'&';
         }
         rtrim($fields_string, '&');
-        
-        $useragent = 'W4RP EVEOTSv2 Auth';
-        
+        //Initialize the curl channel
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
@@ -103,12 +91,40 @@ switch($_REQUEST['action']) {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         $result = curl_exec($ch);
-        
-        //Get the resultant data from the curl call
+        //Close the curl channel
+        curl_close($ch);
+        //Get the resultant data from the curl call and put it into array format
         $data = json_decode($result);
-        //With the access token, and refresh token, store it in the database
-        $characterID = StoreSSOToken($data->access_token, $data->refresh_token, $clientid, $secretkey);
-        PrintSSOSuccess($characterID);
+        $AccessToken = $data['access_token'];
+        $RefreshToken = $data['refresh_token'];
+        
+        //With the access Token and Refresh Token make the cURL call to get the Character ID
+        $url = 'https://login.eveonline.com/oauth/verify';
+        $header = 'Authorization: Bearer ' . $AccessToken;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        //Get the result
+        $result = curl_exec($ch);
+        //Close the curl channel
+        curl_close($ch);
+        //Get the resultant data from the curl call
+        $data = json_decode($result, true);
+        $CharacterID = $data['CharacterID'];
+        $CharacterName = $data['CharacterName'];
+        $TokenType = $data['TokenType'];
+        
+        $character = $esi->GetCharacterInfo($CharacterID);
+        $corporation = $esi->GetCorporationInfo($character['corporation_id']);
+        $alliance = $esi->GetAllianceInfo($corporation['alliance_id']);
+        
+        StoreSSOData($CharacterID, $character, $corporation, $alliance);
+     
+        PrintSSOSuccess($CharacterID, $character['corporation_id'], $corporation['alliance_id']);
         break;
     //If we don't know what state we are in then go back to the beginning
     default:

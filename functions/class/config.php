@@ -35,12 +35,14 @@ class Config {
     //ESI Configuration
     private $clientid;
     private $secret;
+    private $useragent;
     
     public function __construct() {
         //Parse the data for the ESI configuration
         $esi = parse_ini_file(__DIR__.'/../configuration/esi.ini');
         $this->clientid = $esi['client_id'];
         $this->secret = $esi['secret'];
+        $this->useragent = $esi['useragent'];
         
         //Parse the data for Teamspeak configuration
         $ts = parse_ini_file(__DIR__.'/../configuration/teamspeak.ini');
@@ -126,7 +128,8 @@ class Config {
     public function GetESIConfig() {
         $info = array(
             'clientid' => $this->clientid,
-            'secretkey' => $this->secret
+            'secretkey' => $this->secret,
+            'useragent' => $this->useragent,
         );
         
         return $info;

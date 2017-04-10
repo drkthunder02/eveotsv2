@@ -7,6 +7,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__.'/../functions/class/config.php';
 require_once __DIR__.'/../functions/class/sessions.php';
 require_once __DIR__.'/../functions/class/version.php';
+require_once __DIR__.'/../functions/class/esi.php';
 
 //Database Functions
 require_once __DIR__.'/../functions/database/dbclose.php';
