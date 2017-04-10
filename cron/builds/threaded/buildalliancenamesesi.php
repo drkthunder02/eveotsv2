@@ -13,6 +13,8 @@ $start = time();
 
 //Get the debug scope from the configuration file
 $config = new \EVEOTS\Config\Config();
+$esi = $config->GetESIConfig();
+$useragent = $esi['useragent'];
 $DEBUG = $config->GetDebugMode();
 
 //Open the database connection
@@ -31,7 +33,6 @@ for($row = $nextAllianceId; $row <= $maxAllianceId; $row++) {
     if($temp['Alliance'] == "" || $temp['Ticker'] == "") {
         $url = 'https://esi.tech.ccp.is/latest/alliances/' . $Alliances[$row]['AllianceID'] . '/?datasource=tranquility';
         $header = 'Accept: application/json';
-        $useragent = 'EVEOTSv2 Auth';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
@@ -69,10 +70,7 @@ for($row = $nextAllianceId; $row <= $maxAllianceId; $row++) {
             }
             $db->insert('ESILogs', array('Type' => 'BuildAlliances', 'Call' => 'buildalliancenamesesi.php', 'Entry' => 'Alliance of name ' . $allianceEsi['alliance_name'] . ' added to the database.'));
             
-        }    
-        
-        //Sleetp for 2 seconds to prevent ESI lock
-        //sleep(2);
+        }
     }
 }
 

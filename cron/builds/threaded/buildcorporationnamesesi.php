@@ -12,6 +12,8 @@ $start = time();
 
 //Get the debug scope from the configuration file
 $config = new \EVEOTS\Config\Config();
+$esi = $config->GetESIConfig();
+$useragent = $esi['useragent'];
 $DEBUG = $config->GetDebugMode();
 
 //Open a database connection
@@ -32,7 +34,6 @@ for($row = $nextCorpName; $row <= $maxCorpName - 1; $row++) {
         //Build the curl call
         $url = 'https://esi.tech.ccp.is/latest/corporations/' . $temp['CorporationID'] . '/?datasource=tranquility';
         $header = 'Accept: application/json';
-        $useragent = 'EVEOTSv2 Auth';
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_USERAGENT, $useragent);

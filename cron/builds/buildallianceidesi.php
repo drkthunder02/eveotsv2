@@ -7,12 +7,15 @@
 
 require_once __DIR__.'/../../functions/registry.php';
 
+$config = new \EVEOTS\Config\Config();
+$esi = $config->GetESIConfig();
+$useragent = $esi['useragent'];
+
 //Open the database connection
 $db = DBOpen();
 
 $url = 'https://esi.tech.ccp.is/latest/alliances/?datasource=tranquility';
 $header = 'Accept: application/json';
-$useragent = 'EVEOTSv2 Auth';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_USERAGENT, $useragent);

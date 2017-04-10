@@ -12,6 +12,8 @@ $start = time();
 
 //Get the debug scope from the configuration file
 $config = new \EVEOTS\Config\Config();
+$esi = $config->GetESIConfig();
+$useragent = $esi['useragent'];
 $DEBUG = $config->GetDebugMode();
 
 //Open the database
@@ -33,7 +35,6 @@ for($row = $nextAllianceId; $row <= $maxAllianceId - 1; $row++) {
     //Build our cURL call
     $url = 'https://esi.tech.ccp.is/latest/alliances/' . $id . '/corporations/?datasource=tranquility';
     $header = 'Accept: application/json';
-    $useragent = 'W4RP EVEOTSv2 Auth';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
@@ -76,9 +77,6 @@ for($row = $nextAllianceId; $row <= $maxAllianceId - 1; $row++) {
     
     //Close the curl channel to reset it
     curl_close($ch);
-    
-    //Sleep for 2 seconds to prevent ESI lockup
-    //sleep(2);
 }
 
 //After all calls are done, then close the database connection
