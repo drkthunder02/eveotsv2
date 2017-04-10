@@ -19,13 +19,16 @@ $db = DBOpen();
 $nextAllianceRow = $db->fetchColumn('SELECT NextAllianceIdCheck FROM ESICallsAlliance');
 $maxAllianceRow = $db->fetchColumn('SELECT COUNT(id) FROM Alliances');
 
+$config = new \EVEOTS\Config\Config();
+$esi = $config->GetESIConfig();
+$useragent = $esi['useragent'];
+
 for($row = $nextAllianceRow; $row <= $maxAllianceRow; $row++) {
      //Get the alliance information from the database
     $allianceDB = $db->fetchRow('SELECT * FROM Alliances WHERE id= :id', array('id' => $row));
     //Let's attempt our ESI Call to the ESI API to get the data for the alliance
     $url = 'https://esi.tech.ccp.is/latest/alliances/' . $allianceDB['AllianceID'] . '/?datasource=tranquility';
     $header = 'Accept: application/json';
-    $useragent = 'EVEOTSv2 Auth';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
@@ -60,8 +63,6 @@ for($row = $nextAllianceRow; $row <= $maxAllianceRow; $row++) {
     
     //Close the curl channel to reset it
     curl_close($ch);
-    //Sleep for 2 seconds
-    sleep(2);
 }
 
 //Close the database connection after the script is completed

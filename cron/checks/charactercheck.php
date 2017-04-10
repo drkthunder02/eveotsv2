@@ -16,13 +16,16 @@ $db = DBOpen();
 $nextCharacterRow = $db->fetchColumn('SELECT NextCharacterIdCheck FROM ESICallsCharacter');
 $maxCharacterRow = $db->fetchColumn('SELECT COUNT(id) FROM Characters');
 
+$config = new \EVEOTS\Config\Config();
+$esi = $config->GetESIConfig();
+$useragent = $esi['useragent'];
+
 for($row = $nextCharacterRow; $row <= $maxCharacterRow; $row++) {
     //Get the character information from the database
     $characterDB = $db->fetchRow('SELECT * FROM Characters WHERE id= :id', array('id' => $row));
     //Let's build the ESI Call
     $url = 'https://esi.tech.ccp.is/latest/characters/' . $characterDB['CharacterID'] . '/?datasource=tranquility';
     $header = 'Accept: application/json';
-    $useragent = 'EVEOTSv2 Auth';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_USERAGENT, $useragent);

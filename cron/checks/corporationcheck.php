@@ -19,13 +19,16 @@ $db = DBOpen();
 $nextCorpRow = $db->fetchColumn('SELECT NextCorporationIdCheck FROM ESICalls');
 $maxCorpRow = $db->fetchColumn('SELECT COUNT(id) FROM Corporations');
 
+$config = new \EVEOTS\Config\Config();
+$esi = $config->GetESIConfig();
+$useragent = $esi['useragent'];
+
 for($row = $nextCorpRow; $row <= $maxCorpRow; $row++) {
     //Get the corporation info from the database
     $corpDB = $db->fetchRow('SELECT * FROM Corporations WHERE id= :id', array('id' => $row));
     //Build the ESI Call for the ESI API
     $url = 'https://esi.tech.ccp.is/latest/alliances/' . $corpDB['CorporationID'] . '/?datasource=tranquility';
     $header = 'Accept: application/json';
-    $useragent = 'EVEOTSv2 Auth';
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
