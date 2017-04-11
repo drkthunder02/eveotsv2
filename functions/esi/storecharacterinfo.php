@@ -7,49 +7,26 @@
 
 
 function StoreCharacterInfo($characterID) {
-
+    //Get the configuration from the config class
+    $config = new \EVEOTS\Config\Config();
+    $configVar = $config->GetESIConfig();
+    //Delcare the esi class to be able to get data without rewriting the functions
+    $esi = new \EVEOTS\ESI\ESI($configVar['useragent'], $configVar['clientid'], $configVar['secretkey']);    
     //Open the database connection
     $db = DBOpen();
-    $authentication = PrepareESIAuthentication($characterID);
-    $esi = new \Seat\Eseye\Eseye($authentication);
     //Declare our variables before ESI attempts to write to them
     $character = NULL;
     $corporation = NULL;
     $alliance = NULL;
     
     //Try to get the character info from ESI API
-    try {
-        $character = $esi->invoke('get', '/characters/{character_id}/', [
-            'character_id' => $characterID,
-        ]);
-    } catch (\Seat\Eseye\Exceptions\RequestFailedException $e) {
-        // The HTTP Response code and message can be retreived
-        // from the exception...
-        print $e->getCode() . PHP_EOL;
-        print $e->getMessage() . PHP_EOL;
-    }
-    //Try to get the corporation info from ESI API
-    try {
-       $corporation = $esi->invoke('get', '/corporations/{corporation_id}/', [
-           'corporation_id' => $character->corporation_id,
-       ]); 
-    } catch (\Seat\Eseye\Exceptions\RequestFailedException $e) {
-        // The HTTP Response code and message can be retreived
-        // from the exception...
-        print $e->getCode() . PHP_EOL;
-        print $e->getMessage() . PHP_EOL;
-    }
-    //Try to get the alliance info from ESI API
-    try {
-        $alliance = $esi->invoke('get', '/alliances/{alliance_id}/', [
-            'alliance_id' => $corporation->alliance_id,
-        ]);
-    } catch (\Seat\Eseye\Exceptions\RequestFailedException $e) {
-        // The HTTP Response code and message can be retreived
-        // from the exception...
-        print $e->getCode() . PHP_EOL;
-        print $e->getMessage() . PHP_EOL;
-    }
+    $character = $esi->GetCharacterInfo($characterID);
+    //try to get the corporation info from ESI API
+    $corporation = $esi->GetCorporationInfo($character['corporation_id']);
+    //try to get the alliance info from ESI API
+    $alliance = $esi->GetAllianceInfo($corporation['alliance_id']);
+    
+    //Try to store the information received from ESI API
     if($character != NULL && $corporation != NULL) {
         //Insert the character information into the table
         $charFound = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :id', array('id' => $characterID));
@@ -68,7 +45,7 @@ function StoreCharacterInfo($characterID) {
             ));
         }
     }
-    
+    //Try to store the information received from ESI API
     if($corporation != NULL && $character != NULL) {
         //Insert the corporation information into the table
         $corpFound = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $character->corporation_id));
@@ -90,7 +67,7 @@ function StoreCharacterInfo($characterID) {
             ));
         } 
     }
-    
+    //Try to store the information received from ESI API
     if($alliance != NULL && $corporation != NULL) {
         //Insert the alliance information into the table
         $allyFound = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $corporation->alliance_id));

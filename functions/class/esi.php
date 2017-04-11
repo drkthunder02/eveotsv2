@@ -113,10 +113,15 @@ class ESI {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         $result = curl_exec($ch);
-        curl_close($ch);
-        $character = json_decode($result, true);
-        
-        return $character;
+        //Check for a curl error
+        if(curl_error($ch)) {
+            return null;
+        } else {
+            curl_close($ch);
+            $character = json_decode($result, true);
+
+            return $character;
+        }
     }
     
     public function GetCorporationInfo($corporationId) {
@@ -130,10 +135,14 @@ class ESI {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         $result = curl_exec($ch);
-        curl_close($ch);
-        $corporation = json_decode($result, true);
-        
-        return $corporation;
+        if(curl_error($ch)) {
+            return null;
+        } else {
+            curl_close($ch);
+            $corporation = json_decode($result, true);
+
+            return $corporation;
+        }
     }
     
     public function GetAllianceInfo($allianceId) {
@@ -147,10 +156,14 @@ class ESI {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
         $result = curl_exec($ch);
-        curl_close($ch);
-        $alliance = json_decode($result, true);
-        
-        return $alliance;
+        if(curl_error($ch)) {
+            return null;
+        } else {
+            curl_close($ch);
+            $alliance = json_decode($result, true);
+
+            return $alliance;
+        }
     }
     
     
