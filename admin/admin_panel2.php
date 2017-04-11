@@ -13,25 +13,10 @@ error_reporting(E_ALL | E_STRICT);
 //Required files
 require_once __DIR__.'/../functions/registry.php';
 
-//Activate ESI API Namepsaces
-use Seat\Eseye\Cache\NullCache;
-use Seat\Eseye\Configuration;
-use Seat\Eseye\Containers\EsiAuthentication;
-use Seat\Eseye\Eseye;
-use Seat\Eseye\Log;
-
 //Activate Classes
 $config = new \EVEOTS\Config\Config();
 $version = new \EVEOTS\Version\Version();
 $session = new \Custom\Session\Sessions();
-
-//Prepare logging for ESI API
-//$log = new Seat\Eseye\Log\FileLogger();
-// Prepare an authentication container for ESI
-//$authentication = PrepareESIAuthentication();
-// Instantiate a new ESI instance.
-//$esi = new Eseye($authentication);
-//ESI instances must be created each time for each refresh token
 
 if(!isset($_SESSION['EVEOTSusername'])) {
     $username = "";
