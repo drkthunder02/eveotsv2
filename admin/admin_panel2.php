@@ -15,7 +15,8 @@ require_once __DIR__.'/../functions/registry.php';
 
 //Activate Classes
 $config = new \EVEOTS\Config\Config();
-$version = new \EVEOTS\Version\Version();
+$v = new \EVEOTS\Version\Version();
+$version = $v->version;
 $session = new \Custom\Session\Sessions();
 
 if(!isset($_SESSION['EVEOTSusername'])) {
