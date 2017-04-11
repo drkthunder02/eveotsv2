@@ -1,6 +1,11 @@
 <?php
-session_start();
+
+require_once __DIR__.'/../functions/registry.php';
+require_once __DIR__.'/functions/registry.php';
+
+$session = new \Custom\Sessions\session();
 session_destroy();
+
 ?>
 <html>
 <head>

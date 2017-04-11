@@ -6,10 +6,11 @@
 //ini_set('display_errors', 'On');
 //error_reporting(E_ALL | E_STRICT);
 // Required files
-require_once("config.php");
-require_once("version.php");
-$c = new Config;
-$v = new Version;
+require_once __DIR__.'/functions/registry.php';
+
+$config = new \EVEOTS\Config\Config();
+
+
 //--------------------------------------------------------------------------------------------------------
 ?>
 <head>

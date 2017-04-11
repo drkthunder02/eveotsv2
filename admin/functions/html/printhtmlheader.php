@@ -5,7 +5,7 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-function PrintHTMLHeader() {
+function PrintAdminHTMLHeader() {
     printf("<head>
                 <!--metas-->
                 <meta content=\"text/html\" charset=\"utf-8\" http-equiv=\"Content-Type\">
