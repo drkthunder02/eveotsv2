@@ -16,34 +16,22 @@ $db = DBOpen();
 $nextCharacterRow = $db->fetchColumn('SELECT NextCharacterIdCheck FROM ESICallsCharacter');
 $maxCharacterRow = $db->fetchColumn('SELECT COUNT(id) FROM Characters');
 
-$config = new \EVEOTS\Config\Config();
-$esi = $config->GetESIConfig();
-$useragent = $esi['useragent'];
+$configClass = new \EVEOTS\Config\Config();
+$config = $configClass->GetESIConfig();
+
+$esiCall = new \EVEOTS\ESI\ESI($config['useragent'], $config['clientid'], $config['secretkey']);
 
 for($row = $nextCharacterRow; $row <= $maxCharacterRow; $row++) {
     //Get the character information from the database
     $characterDB = $db->fetchRow('SELECT * FROM Characters WHERE id= :id', array('id' => $row));
-    //Let's build the ESI Call
-    $url = 'https://esi.tech.ccp.is/latest/characters/' . $characterDB['CharacterID'] . '/?datasource=tranquility';
-    $header = 'Accept: application/json';
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
-    curl_setopt($ch, CURLOPT_HTTPGET, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    $result = curl_exec($ch);
-    //If there is a curl error, then error out of the script
-    if(curl_error($ch)) {
+    $Character = $esiCall->GetCharacterInfo($characterDB['CharacterID']);
+    if($Character == null) {
         die();
     } else {
-        $charEsi = json_decode($result, true);
-        if(($characterDB['CorporationID'] != $charEsi['corporation_id'] || $characterDB['Character'] != $charEsi['character_name']) && !isset($charEsi['error'])) {
+        if(($characterDB['CorporationID'] != $Character['corporation_id'] || $characterDB['Character'] != $Character['character_name']) && !isset($Character['error'])) {
             $db->update('Characters', array('CharacterID' => $charEsi['character_id']), array(
-                'Character' => $charEsi['character_name'],
-                'CorporationID' => $charEsi['corporation_id']
+                'Character' => $Character['character_name'],
+                'CorporationID' => $Character['corporation_id']
             ));
         }
         //Update the last row modified for ESI
@@ -54,9 +42,6 @@ for($row = $nextCharacterRow; $row <= $maxCharacterRow; $row++) {
             $db->replace('ESICallsCharacter', array('NextCharacterIdChec' => $nextRow));
         }
     }
-    
-    //Close the curl call
-    curl_close($ch);
 }
 
 //Close the database connection after the script is completed

@@ -5,10 +5,6 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-/*
- * This file will get 100 alliances at a time, and check their information against ESI
- */
-
 require_once __DIR__.'/../functions/registry.php';
 
 $start = time();
@@ -33,8 +29,8 @@ for($row = $nextAllianceRow; $row <= $maxAllianceRow; $row++) {
     } else {
         if(($allianceDB['Alliance'] != $Alliance['alliance_name'] || $allianceDB['Ticker'] != $Alliance['ticker']) && !isset($Alliance['error'])) {
             $db->update('Alliances', array('AllianceID' => $allianceDB['AllianceID']), array(
-                'Alliance' => $allianceEsi['alliance_name'],
-                'Ticker' => $allianceEsi['ticker']
+                'Alliance' => $Alliance['alliance_name'],
+                'Ticker' => $Alliance['ticker']
             ));
         }
         //Update the last row modified for ESI
@@ -45,7 +41,6 @@ for($row = $nextAllianceRow; $row <= $maxAllianceRow; $row++) {
             $db->update('ESICallsAlliance', array('id' => 1), array('NextAllianceIdCheck' => $nextRow));
         }
     }
-    
 }
 
 //Close the database connection after the script is completed
