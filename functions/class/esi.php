@@ -165,6 +165,4 @@ class ESI {
             return $alliance;
         }
     }
-    
-    
 }
