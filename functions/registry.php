@@ -27,7 +27,6 @@ require_once __DIR__.'/../functions/members/savemember.php';
 
 //Process Functions
 require_once __DIR__.'/../functions/process/format.php';
-require_once __DIR__.'/../functions/process/prepareesiauthentication.php';
 
 //SSO Functions
 require_once __DIR__.'/../functions/sso/getfooter.php';
