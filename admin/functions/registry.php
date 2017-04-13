@@ -18,6 +18,16 @@ require_once __DIR__.'/../../functions/database/sqlchecknames.php';
 require_once __DIR__.'/../../functions/class/sessions.php';
 
 //HTML Functions
-require_once _DIR__.'/../functions/html/printhtmlheader.php';
+require_once __DIR__.'/../functions/html/printadminindexlogin.php';
+require_once __DIR__.'/../functions/html/printadmintable.php';
+require_once __DIR__.'/../functions/html/printhtmlheader.php';
 require_once __DIR__.'/../functions/html/printmainpanel.php';
 require_once __DIR__.'/../functions/html/printnavbar.php';
+require_once __DIR__.'/../functions/html/printwhitelist.php';
+require_once __DIR__.'/../functions/html/printwhitelistform.php';
+
+//Process Functions
+require_once __DIR__.'/../functions/process/addlogentry.php';
+require_once __DIR__.'/../functions/process/adminchangepassword.php';
+require_once __DIR__.'/../functions/process/checksecuritylevel.php';
+require_once __DIR__.'/../functions/process/whitelistadd.php';

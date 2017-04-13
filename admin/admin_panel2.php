@@ -15,9 +15,11 @@ require_once __DIR__.'/../functions/registry.php';
 
 //Activate Classes
 $config = new \EVEOTS\Config\Config();
+$esiConfig = $config->GetESIConfig();
 $v = new \EVEOTS\Version\Version();
 $version = $v->version;
 $session = new \Custom\Session\Sessions();
+$esi = new \EVEOTS\ESI\ESI();
 
 if(!isset($_SESSION['EVEOTSusername'])) {
     $username = "";
@@ -50,10 +52,62 @@ if(isset($_GET['menu'])) {
 
 switch($menu) {
     case "main":
+        if($installAccount == true) {
+            printf("<div class=\"container\">");
+            printf("Warning: Setup not complete.<br>Users \"admin\" is still in the database.<br>");
+            printf("This is a massive security risk.<br>");
+            printf("Please create yourself a new account, set it as the root admin, then delete the default \"admin\" account immediately.<br>");
+            printf("</div>");
+        }
+        printf("<div class=\"container\">");
+        printf("Welcome to your EVEOTS admin panel, here you can manage admins along with which Corporations and Alliances can access your Teamspeak 3 server.<br /><br />");
+        printf("Here are a few things you should know:<br />");
+        printf("<ul>");
+        printf("<li><strong>Root Administrator -</strong> This person should be the main administrator. This user cannot be deleted or edited by other administrators. This person will be highlighted wherever administrators are listed.<br /><font size=\"2\">To change the root admin from default (recommended) you need to go into the \"admins\" table in the database and get the \"id\" number of the root admin to-be. Then open config.php and set \$adminID as that number.</font><br /><br /></li>");
+        printf("<li><strong>Security Level (SL) -</strong> This is the level of control someone has.<br /> 1 = Super admin. Able to edit, delete and create others via the Audit menus.<br /> 2 = Normal admin. Can only make changes to the whitelist. Cannot access the audit menus (recommended).<br /><br /></li>");
+        printf("<li><strong>Administrator Lists -</strong> The corporation/alliance listed is LIVE. So keep an eye out for one of your admins leaving your corporation or alliance and still having access.<br /><br /></li>");
+        printf("</ul>");
+        printf("<strong>Administrators:</strong><br />");
+        printf("</div>");
+        //Print out a container with a list of admins in it
+        $admins = $db->fetchRowMany('SELECT * FROM Admins ORDER BY username');
+        PrintAdminTable($admins, $esi);
         break;
     case "change_password":
+        if(!isset($_POST["newPassword"])) {
+            printf("<div class=\"container\">");
+            printf("Passwords can only contain A-Z, a-z, and 0-9.<br><br>");
+            printf("<form class=\"form-group\" action=\"?menu=change_password\" method=\"POST\">");
+            printf("<label for=\"newPassword\">Password:</label>");
+            printf("<input class=\"form-control\" type=\"password\" name=\"newPassword\" id=\"newPassword\" size=\"16\">");
+            printf("<label for=\"newPConfirm\">Confirm:</label>");
+            printf("<input class=\"form-control\" type=\"password\" name=\"newPConfirm\" id=\"newPConfirm\" size=\"16\">");
+            printf("<br>");
+            printf("<input class=\"form-control\" name=\"submit\" type=\"submit\" value=\"Change PW\">");
+            printf("</form>");
+            printf("</div>");
+        } else {
+            $newPassword = filter_input(INPUT_POST, "newPassword");
+            $newPConfirm = filter_input(INPUT_POST, "newPConfirm");
+            AdminChangePassword($newPassword, $newPConfirm, $db);
+        }
         break;
     case "logs":
+        if($_SESSION["EVEOTSid"] == $config->GetAdminID()) {
+            printf("<div class=\"container\">");
+            printf("<form class=\"form-group\" action=\"?menu=logs\" method=\"post\">");
+            printf("<label for=\"clear_logs\">Root Administrator Option:</label>");
+            printf("<input class=\"form-control\" name=\"clear_logs\" id=\"clear_logs\" type=\"submit\" value=\"Clear Logs\" onclick=\"return confirm('Are you sure you want to clear all logs\">");
+            printf("</form>");
+            printf("</div>");
+        }
+        if(isset($_POST["clear_logs"])) {
+            printf("<div class=\"container\">");
+            $db->executeSql('TRUNCATE logs');
+            printf("Logs cleared.<br><br>");
+            printf("</div>");
+        }
+        PrintAdminLogs($db);
         break;
     case "admins_add":
         break;
@@ -72,78 +126,12 @@ switch($menu) {
     case "members_edit":
         break;
     case "whitelist":
-        printf("<div class=\"container\">");
-        printf("<div class=\"jumbotron\">");
-        printf("<h2>If a corporation is in an alliance it is advised <em>not</em> to give the corporation access, but to give the alliance the access. Also remember to keep an eye out for corporations with access joining alliances that shouldn't have it, you should remove these corporations.<br /><strong>TL;DR:</strong> All corporations in your corporation list should NOT be in an alliance.</h2>");
-        printf("</div>");
-        printf("</div>");
-        printf("<div class=\"container\">");
-        printf("<form class=\"form-control\" action=\"?menu=whitelist_add&type=alliance\" method=\"post\">
-                    <table class=\"table>
-                        <tr>
-                            <td style=\"text-align: right;\"><font size=\"2\">Alliance Name:</font></td>
-                            <td style=\"text-align: left;\"><input class=\"form-control\" name=\"allianceName\" size=\"16\"/></td>
-                            <td colspan=\"2\" style=\"text-align: right;\"><input class=\"form-control\" name=\"submit\" type=\"submit\" value=\"Add Alliance\" /></td>
-                        </tr>
-                    </table>
-                    </form>
-                    <form class=\"form-control\" action=\"?menu=whitelist_add&type=corp\" method=\"post\">
-                    <table>
-                        <tr>
-                            <td style=\"text-align: right;\"><font size=\"2\">Corporation Name:</font></td>
-                            <td style=\"text-align: left;\"><input class=\"form-control\" name=\"corpName\" size=\"16\"/></td>
-                            <td colspan=\"2\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Add Corporation\" /></td>
-                        </tr>
-                    </table>
-                    </form>
-                    <form class=\"form-control\" action=\"?menu=whitelist_add&type=char\" method=\"post\">
-                    <table>
-                        <tr>
-                            <td style=\"text-align: right;\"><font size=\"2\">Character Name:</font></td>
-                            <td style=\"text-align: left;\"><input class=\"form-control\" name=\"charName\" size=\"16\"/></td>
-                            <td colspan=\"2\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Add Character\" /></td>
-                        </tr>
-                    </table>
-                    </form>");
-        printf("</div>");
+        //Print out the white list form
+        PrintWhiteListForm();
         
         //Build the white list to print out on the screen
         $whiteList = $db->fetchRowMany('SELECT * FROM Blues');
-        $allyList = array();
-        $corpList = array();
-        $charList = array();
-        $allyNum = 0;
-        $corpNum = 0;
-        $charNum = 0;
-        foreach($whiteList as $list) {
-            if($list['EntityType'] == 3) {
-                $allyList[$allyNum] = $list['EntityID'];
-                $allyNum++;
-            } else if($list['EntityType'] == 2) {
-                $corpList[$corpNum] = $list['EntityID'];
-                $corpNum++;
-            } else if($list['EntityType'] ==1) {
-                $charList[$charNum] = $list['EntityID'];
-                $charNum++;
-            }
-        }
-        printf("<div class=\"container\">");
-        printf("<table class=\"table-striped\">");
-        printf("<tr><td><Type/td><td>Name</td><td>Members</td></tr>");
-        for($i = 0; $i < $allyNum; $i++) {
-            $ally = $db->fetchRow('SELECT Alliance,Members FROM Alliances WHERE AllianceID= :id', array('id' => $allyList[$i]));
-            printf("<tr><td>Alliance</td><td>" . $ally['Alliance'] . "</td><td>" . $ally['Members'] . "</td></tr>");
-        }
-        for($i = 0; $i < $corpNum; $i++) {
-            $corp = $db->fetchRow('SELECT Corporation,Members FROM Corporations WHERE CorporationID= :id', array('id' => $corpList[$i]));
-            printf("<tr><td>Corporation</td><td>" . $corp['Corporation'] . "</td><td>" . $corp['Members'] . "</td></tr>");
-        }
-        for($i = 0; $i < $charNum; $i++) {
-            $char = $db->fetchColumn('SELECT Character FROM Characters WHERE CharacterID= :id', array('id' => $charList[$i]));
-            printf("<tr><td>Character</td><td>" . $char . "</td><td>N/A</td></tr>.");
-        }
-        printf("</table>");
-        printf("</div>");
+        PrintWhiteList($whiteList);
         break;
     case "whitelist_add":
         $type = $_GET["type"];
@@ -189,3 +177,7 @@ printf("</body>");
 printf("</html>");
 
 ?> 
+
+<table class="table table-striped">
+    
+</table>
