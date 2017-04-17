@@ -111,7 +111,49 @@ switch($menu) {
         break;
     case "admins_add":
         break;
-    case "admins_audit":                 
+    case "admins_audit":
+        CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+        // Audit
+        printf("<div class=\"container\">");
+        printf("<strong>Add Administrator:</strong><br>");
+        printf("Enter the Character ID you wish to add as an Administrator in the form below.<br>");
+        printf("<form class=\"form-group\" action=\"?menu=admins_add\" method=\"POST\">");
+        printf("<label for=\"adminCharacterId\">Character ID:</label>");
+        printf("<input class=\"form-control\" type=\"text\" name=\"adminCharacterId\" id=\"adminCharacterId\">");
+        printf("<label for=\"adminPassword\">Password:</label>");
+        printf("<input class=\"form-control\" type=\"text\" name=\"adminPassword\" id=\"adminPasswrd\">");
+        printf("<label for=\"adminSecurityLevel\">Security Level (1/2):</label>");
+        printf("<input class=\"form-control\" type=\"text\" name=\"adminSecurityLevel\" id=\"adminSecurityLevel\">");
+        printf("<br>");
+        printf("<input class=\"form-control\" type=\"submit\" name=\"submit\ id=\"submit\" value=\"Add\">");
+        printf("</form>");
+        printf("</div>");
+        $admins = $db->fetchRowMany('SELECT * FROM admins ORDER BY username');
+        printf("<table class=\"table table-striped\">");
+        printf("<thead>");
+        printf("<tr>");
+        printf("<td></td><td>Username</td><td>Security Level</td><td></td>");
+        printf("</tr>");
+        printf("</thead>");
+        foreach($admins as $admin) {
+            printf("<tr>");
+            if($admin['characterID'] == "") {
+                printf("<td><img src=\"images/admin.png\" border=\"0\">");
+            } else {
+                printf("<td><img src=\"http://image.eveonline.com/Character/" . $admin['characterID'] . "_32.jpg\" border=\"0\"></td>");
+            }
+            printf("<td>" . $admin['username'] . "</td>");
+            printf("<td>" . $admin['securityLevel'] . "</td>");
+            if($admin['characterID'] == $config->GetAdminID() && $admin['characterID'] == $_SESSION['EVEOTSid']) {
+                printf("<td><a href=\"?menu=admins_edit&id=\"" . $admin['characterID'] . "\"><img src=\"images/edit.png\" border=\"0\" title=\"Edit\"></a></td>");
+            } else if ($admin['characterID'] == $config->GetAdminID()) {
+                printf("<td></td>");
+            } else {
+                printf("<td><a href=\"?menu=admins_edit&id=\"" . $admin['characterID'] . "\"><img src=\"images/edit.png\" border=\"0\" title=\"Edit\"></a><a href=\"?menu=admins_delete&id=\"" . $admin['characterID'] . "\" onclick=\"return confirm('Are you sure you want to delete " . $admin['username'] . "?')\"><img src=\"images/delete.png\" border=\"0\" title=\"Delete\"></a></td>");
+            }
+            printf("</tr>");
+        }
+        printf("</table>");
         break;
     case "admins_delete":
         break;
