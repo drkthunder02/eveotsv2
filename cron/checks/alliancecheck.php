@@ -8,6 +8,14 @@
 require_once __DIR__.'/../functions/registry.php';
 
 $start = time();
+$configClass = new \EVEOTS\Config\Config();
+$config = $configClass->GetESIConfig();
+$useragent = $config['useragent'];
+$DEBUG = $configClass->GetDebugMode();
+$maxEntities = $configClass->GetMaxESICalls();
+$urls = array();
+$data = array();
+$results = array();
 
 //Open the database connection
 $db = DBOpen();
@@ -15,30 +23,53 @@ $db = DBOpen();
 $nextAllianceRow = $db->fetchColumn('SELECT NextAllianceIdCheck FROM ESICallsAlliance');
 $maxAllianceRow = $db->fetchColumn('SELECT COUNT(id) FROM Alliances');
 
-$configClass = new \EVEOTS\Config\Config();
-$config = $configClass->GetESIConfig();
+$Alliances = $db->fetchRowMany('SELECT * FROM Alliances WHERE id>= :next', array('next' => $nextAllianceRow));
+//Calculate the pages we need to call
+$pages = ceil(sizeof($Alliances) / $maxEntities);
 
-$esiCall = new \EVEOTS\ESI\ESI($config['useragent'], $config['clientid'], $config['secretkey']);
+//Build the urls to be sent to the api server
+for($i = 0; $i < sizeof($Alliances); $i++) {
+    $urls[$i] = 'https://esi.tech.ccp.is/latset/alliances/' . $Alliances[$i]['AllianceID'] . '/?datasource=tranquility';  
+}
 
-for($row = $nextAllianceRow; $row <= $maxAllianceRow; $row++) {
-     //Get the alliance information from the database
-    $allianceDB = $db->fetchRow('SELECT * FROM Alliances WHERE id= :id', array('id' => $row));
-    $Alliance = $esiCall->GetAllianceInfo($allianceDB['AllianceID']);
-    if($Alliance == null) {
-        die();
-    } else {
-        if(($allianceDB['Alliance'] != $Alliance['alliance_name'] || $allianceDB['Ticker'] != $Alliance['ticker']) && !isset($Alliance['error'])) {
-            $db->update('Alliances', array('AllianceID' => $allianceDB['AllianceID']), array(
-                'Alliance' => $Alliance['alliance_name'],
-                'Ticker' => $Alliance['ticker']
-            ));
+//Send 20 at a time to the server to be processed
+for($i = 0; $i < $pages; $i++) {
+    for($j = 0; $j < $maxEntities; $j++) {
+        //Calculate the index being curently built
+        $urlIndex = ($i * $maxEntities) + $j;
+        if($urlIndex == $maxAllianceRow) {
+            break;
         }
+        //Add the url index to the data to be sent
+        $data[$j] = $urls[$urlIndex];
+    }
+    //Make the multiple cURL calls
+    $results = MultipleCURLRequest($data, $useragent);
+    
+    //Insert the data into the database
+    for($j = 0; $j < $maxEntities; $j++) {
+        $index = ($i * $maxEntities) + $j;
+        if($index == $maxAllianceId) {
+            break;
+        }
+        //Update the alliance information
+        $db->update('Alliances', array('AllianceID' => $Alliances[$index]['AllianceID']), array(
+            'Alliance' => $results[$j]['alliance_name'],
+            'Ticker' => $results[$j]['ticker']
+        ));
+        //Add an entry to the ESI Logs
+        $db->insert('ESILogs', array(
+            'Time' => gmdate('d.m.Y H:is'),
+            'Type' => 'AllianceCheck',
+            'Call' => 'alliancecheck.php',
+            'Entry' => 'Updated Alliance of ID ' . $Alliances[$index]['AllianceID'] . '.'
+        ));
         //Update the last row modified for ESI
-        $nextRow = $row + 1;
-        if($row == $maxAllianceRow) {
-            $db->update('ESICallsAlliance', array('id' => 1), array('NextAllianceIdCheck' => 0));
+        if($nextAllianceRow == $maxAllianceRow) {
+            $db->replace('ESICallsAlliance', array('NextAllianceIdCheck' => 1));
         } else {
-            $db->update('ESICallsAlliance', array('id' => 1), array('NextAllianceIdCheck' => $nextRow));
+            $nextAllianceRow++;
+            $db->replace('ESICallsAlliance', array('NextAllianceIdCheck' => $nextAllianceRow));
         }
     }
 }

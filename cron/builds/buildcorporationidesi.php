@@ -15,6 +15,10 @@ $config = new \EVEOTS\Config\Config();
 $esi = $config->GetESIConfig();
 $useragent = $esi['useragent'];
 $DEBUG = $config->GetDebugMode();
+$maxEntities = $config->GetMaxESICalls();
+$data = array();
+$urls = array();
+$results = array();
 
 //Open the database
 $db = DBOpen();
@@ -23,41 +27,44 @@ $db = DBOpen();
 $nextAllianceId = $db->fetchColumn('SELECT NextCorporationIdBuild FROM ESICallsCorporation');
 $maxAllianceId = $db->fetchColumn('SELECT COUNT(id) FROM Alliances');
 
+$pages = ceil($maxAllianceId / $maxEntities);
 
 //Get all of the alliances from the database so we can populate
 //the corporation IDs
 $Alliances = $db->fetchRowMany('SELECT * FROM Alliances');
 
-//Cycle through the alliances, and update the last alliance worked on
+//Build all of the urls and hold them in memory
+for($i = 0; $i < $maxAllianceId; $i++) {
+    $urls[$i] = 'https://esi.tech.ccp.is/latest/alliances' . $Alliances[$i]['AllianceID'] . '/corporations/?datasource=tranquility';
+}
 
-for($row = $nextAllianceId; $row <= $maxAllianceId - 1; $row++) {
-    $id = $Alliances[$row]['AllianceID'];
-    //Build our cURL call
-    $url = 'https://esi.tech.ccp.is/latest/alliances/' . $id . '/corporations/?datasource=tranquility';
-    $header = 'Accept: application/json';
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
-    curl_setopt($ch, CURLOPT_HTTPGET, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-    $result = curl_exec($ch);
-    //If there is a cURL error, then print out the error, otherwise process the data
-    if(curl_error($ch)) {
-        printf("Curl Error: " . curl_error($ch) . "<br>");
-        die();
-    } else {
-        //Get the data into an array format from the json data
-        $corpEsi = json_decode($result, true);
-        foreach($corpEsi as $corpId) {
-            $found = $db->fetchColumn('SELECT CorporationID FROM Corporations WHERE CorporationID= :id', array('id' => $corpId));
+//Send 20 at a time to the server to be processed
+for($i = 0; $i < $pages; $i++) {
+    for($j = 0; $j < $maxEntities; $j++) {
+        //Calculate the index currently building
+        $urlIndex = ($i * $maxEntities) + $j;
+        if($urlIndex == $maxCorpId) {
+            break;
+        }
+        //Add the url index to the data to be send to function
+        $data[$j] = $urls[$urlIndex];
+    }
+    
+    //Make the multiple cURL call
+    $results = MultipleCURLRequest($data, $useragent);
+    
+    //Insert the data into the database
+    for($j = 0; $j < $maxEntities; $j++) {
+        $allianceIndex = ($i * $maxEntities) + $j;
+        foreach($results[$j] as $res) {
+            $found = $db->fetchColumn('SELECT CorporationID FROM Corporations WHERE CorporationID= :id', array('id' => $res));
             if($found == false) {
-                $db->insert('Corporations', array('AllianceID' => $Alliances[$row]['AllianceID'], 'CorporationID' => $corpId));
+                $db->insert('Corporations', array('AllianceID' => $Alliances[$allianceIndex]['AllianceID'], 'CorporationID' => $res));
             }
         }
+        
         //Update the last row worked on
+        $row = ($i * $maxEntities) + $j;
         $nextRow = $row + 1;
         if($row == $maxAllianceId) {
             $db->update('ESICallsCorporation', array('id' => 1), array('NextCorporationIdBuild' => 1));
@@ -79,12 +86,6 @@ for($row = $nextAllianceId; $row <= $maxAllianceId - 1; $row++) {
             printf("Time Taken: " . $seconds . " seconds.\n");
         }
     }
-    
-    //Close the curl channel to reset it
-    curl_close($ch);
-    
-    //Sleep for 2 seconds to prevent ESI lockup
-    //sleep(2);
 }
 
 //After all calls are done, then close the database connection

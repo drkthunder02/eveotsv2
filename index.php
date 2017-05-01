@@ -118,9 +118,9 @@ switch($_REQUEST['action']) {
         $CharacterName = $data['CharacterName'];
         $TokenType = $data['TokenType'];
         
-        $character = $esi->GetCharacterInfo($CharacterID);
-        $corporation = $esi->GetCorporationInfo($character['corporation_id']);
-        $alliance = $esi->GetAllianceInfo($corporation['alliance_id']);
+        $character = $esi->GetESIInfo($CharacterID, 'Character');
+        $corporation = $esi->GetESIInfo($character['corporation_id'], 'Corporation');
+        $alliance = $esi->GetESIInfo($corporation['alliance_id'], 'Alliance');
         
         StoreSSOData($CharacterID, $character, $corporation, $alliance);
      

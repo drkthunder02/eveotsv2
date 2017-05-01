@@ -36,6 +36,7 @@ class Config {
     private $clientid;
     private $secret;
     private $useragent;
+    private $maxCalls = 20.0;
     
     public function __construct() {
         //Parse the data for the ESI configuration
@@ -133,6 +134,10 @@ class Config {
         );
         
         return $info;
+    }
+    
+    public function GetMaxESICalls() {
+        return $this->maxCalls;
     }
     
     public function GetAdminConfig() {

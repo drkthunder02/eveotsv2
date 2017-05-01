@@ -16,6 +16,10 @@ $config = new \EVEOTS\Config\Config();
 $esi = $config->GetESIConfig();
 $useragent = $esi['useragent'];
 $DEBUG = $config->GetDebugMode();
+$maxEntities = $config->GetMaxESICalls();
+$urls = array();
+$data = array();
+$results = array();
 
 //Open the database connection
 $db = DBOpen();
@@ -26,56 +30,59 @@ $maxAllianceId = $db->fetchColumN('SELECT COUNT(id) FROM Alliances');
 
 //Get all of the alliances 
 $Alliances = $db->fetchRowMany('SELECT * FROM Alliances');
+//Calculate the pages
+$pages = ceil($maxAllianceId / $maxEntities);
 
-//Cycle through all of the alliances to check for blanks
-for($row = $nextAllianceId; $row <= $maxAllianceId - 1; $row++) {
-    $temp = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $Alliances[$row]['AllianceID']));
-    if($temp['Alliance'] == "" || $temp['Ticker'] == "") {
-        $url = 'https://esi.tech.ccp.is/latest/alliances/' . $Alliances[$row]['AllianceID'] . '/?datasource=tranquility';
-        $header = 'Accept: application/json';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_USERAGENT, $useragent);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
-        curl_setopt($ch, CURLOPT_HTTPGET, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        $result = curl_exec($ch);
+for($i = 0; $i < $maxAllianceId; $i++) {
+    $urls[$i] = 'https://esi.tech.ccp.is/latest/alliances/' . $Alliances[$i]['AllianceID'] . '/?datasource=tranquility';
+}
+
+//Send 20 at a time to the server to be processed
+for($i = 0; $i < $pages; $i++) {
+    for($j = 0; $j < $maxEntities; $j++) {
+        //Calculate the index being curently built
+        $urlIndex = ($i * $maxEntities) + $j;
+        if($urlIndex == $maxAllianceId) {
+            break;
+        }
+        //Add the url index to the data to be sent
+        $data[$j] = $urls[$urlIndex];
+    }
+    
+    //Make the multiple cURL calls
+    $results = MultipleCURLRequest($data, $useragent);
+    
+    //Insert the data into the database
+    for($j = 0; $j < $maxEntities; $j++) {
+        $allianceIndex = ($i * $maxEntities) + $j;
+        if($allianceIndex == $maxAllianceId) {
+            break;
+        }
+        $db->update('Alliances', array('AllianceID' => $Alliances[$allianceIndex]['AllianceID']), array(
+            'Alliance' => $results[$j]['alliance_name'],
+            'Ticker' => $results[$j]['ticker']
+        ));
         
-        //If a curl error happens, print it out, then die.
-        if(curl_error($ch)) {
-            printf("Curl Error: " . curl_error($ch) . "\n");
-            die();
+        //Update the last row worked on
+        $row = ($i * $maxEntities) + $j;
+        $nextRow = $row + 1;
+        if($row == $maxAllianceId) {
+            $db->update('ESICallsAlliance', array('id' => 1), array('NextAllianceNameBuild' => 0));
         } else {
-            //If no curl error, then continue with the programming
-            $allianceEsi = json_decode($result, true);
-            $db->update('Alliances', array('AllianceID' => $temp['AllianceID']), array('Alliance' => $allianceEsi['alliance_name'], 'Ticker' => $allianceEsi['ticker']));
-            
-            //Close the curl channel
-            curl_close($ch);
-            //Print out debug info if necessary
-            if($DEBUG == true) {
-                var_dump($allianceEsi);
-                $now = time();
-                $seconds = $now - $start;
-                printf("Time Taken: " . $seconds . " seconds.\n");
-            }
-            //Update the last row worked on
-            $nextRow = $row + 1;
-            if($row == $maxAllianceId) {
-                $db->update('ESICallsAlliance', array('id' => 1), array('NextAllianceNameBuild' => 0));
-            } else {
-                $db->update('ESICallsAlliance', array('id' => 1), array('NextAllianceNameBuild' => $nextRow));
-            }
-            $db->insert('ESILogs', array(
-                'Time' => gmdate('d.m.Y H:i'),
-                'Type' => 'BuildAlliances', 
-                'Call' => 'buildalliancenamesesi.php', 
-                'Entry' => 'Alliance of name ' . $allianceEsi['alliance_name'] . ' added to the database.'
-            ));
-            
-        }    
+            $db->update('ESICallsAlliance', array('id' => 1), array('NextAllianceNameBuild' => $nextRow));
+        }
+        $db->insert('ESILogs', array(
+            'Time' => gmdate('d.m.Y H:i'),
+            'Type' => 'BuildAlliances', 
+            'Call' => 'buildalliancenamesesi.php', 
+            'Entry' => 'Alliance of name ' . $results[$j]['alliance_name'] . ' added to the database.'
+        ));
+    }
+    //Check if we need to display stuff for debugging purposes
+    if($DEBUG == true) {
+        $now = time();
+        $seconds = $now - $start;
+        printf("Time Taken: " . $seconds . " seconds.\n");
     }
 }
 

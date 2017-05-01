@@ -9,6 +9,9 @@ require_once __DIR__.'/../functions/class/sessions.php';
 require_once __DIR__.'/../functions/class/version.php';
 require_once __DIR__.'/../functions/class/esi.php';
 
+//cURL Functions
+require_once __DIR__.'/../functions/curl/multicurl.php';
+
 //Database Functions
 require_once __DIR__.'/../functions/database/dbclose.php';
 require_once __DIR__.'/../functions/database/dbopen.php';
