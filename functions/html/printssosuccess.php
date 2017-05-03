@@ -17,6 +17,14 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     $main = false;
     $us = false;
     
+    //Start a new session
+    $session = new Custom\Sessions\session();
+    $_SESSION['us'] = false;
+    $_SESSION['blue'] = false;
+    $_SESSION['CharacterId'] = $CharacterID;
+    $_SESSION['CorporationId'] = $CorporationID;
+    $_SESSION['AllianceId'] = $AllianceID;
+    
     //Open the database
     $db = DBOpen();
     
@@ -112,7 +120,8 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
         return;
     }
     
-    
+    //Set the name in the session
+    $_SESSION['name'] = $name;
     
     
     //Insert the name if it's not '' into the Users table
