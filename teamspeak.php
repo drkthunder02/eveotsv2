@@ -51,6 +51,7 @@ if($blue == false || $tsname == '') {
 
 $config = new EVEOTS\Config\Config();
 $bluegroup = $config->GetBlueGroup();
+$usgroup = $config->GetMainGroup();
 
 //Try to connect to the teamspeak server
 try {
@@ -78,11 +79,17 @@ foreach($clientList as $client) {
     }
 }
 //Set the permissions for the teamspeak3 client
-if($foundName == true) {
+if($foundName == true && $us == false && $blue == true) {
     try {
         $ts3_VirtualServer->serverGroupClientAdd($bluegroup, $tsDatabaseID);
     } catch (TeamSpeak3_Exception $e) {
         die("An error occured: ".$e->getMessage()." [B".__LINE__."]");
+    }
+} else if ($foundName == true && $us == true && $blue == false) {
+    try {
+        $ts3_VirtualServer->serverGroupClientAdd($usgroup, $tsDatabaseID);
+    } catch (TeamSpeak3_Exception $e) {
+        die("An error occured: " . $e->getMessage() . " [B".__LINE__."]");
     }
 }
 

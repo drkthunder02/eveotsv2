@@ -15,6 +15,7 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     $blue = false;
     $success = false;
     $main = false;
+    $us = false;
     
     //Open the database
     $db = DBOpen();
@@ -27,6 +28,7 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     
     //Check if the person is part of the main alliance / corp
     if($CorporationID || $AllianceID == $usWhiteList) {
+        $us = true;
         $blue = true;
     }
     
@@ -129,6 +131,7 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
                 <input class=\"form-control\" type=\"hidden\" name=\"characterID\" value=\"" . $CharacterID . "\">
                 <input class=\"form-control\" type=\"hidden\" name=\"corporationID\" value=\"" . $CorporationID . "\">
                 <input class=\"form-control\" type=\"hidden\" name=\"allianceID\" value=\"" . $AllianceID . "\">
+                <input class=\"form-control\" type=\"hidden\" name=\"us\" value=\"" . $us ."\">
                 <input class=\"form-control\" type=\"hidden\" name=\"blue\" value=\"" . $blue . "\">
                 <input class=\"form-control\" type=\"hidden\" name=\"tsname\" value=\"" . $name . "\">
                 <input class=\"form-conotrol\" type=\"submit\" value=\"Update TS Permissions\">

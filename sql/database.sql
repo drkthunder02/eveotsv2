@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `Logs` (
 CREATE TABLE IF NOT EXISTS `Users` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `CharacterID` varchar(20) DEFAULT NULL,
+    `Us` boolean DEFAULT FALSE,
     `Blue` boolean DEFAULT FALSE,
     `TSDatabaseID` int(45) DEFAULT NULL,
     `TSUniqueID` varchar(255) DEFAULT NULL,

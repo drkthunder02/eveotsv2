@@ -121,7 +121,7 @@ class Config {
     }
     
     public function GetTSServerQuery() {
-        $query = "serverquery://".$this->tsname.":".$this->tspass."@".$his->tshost.":".$this->tsport."/?server_port=".$this->tscport;
+        $query = "serverquery://".$this->tsname.":".$this->tspass."@".$this->tshost.":".$this->tsport."/?server_port=".$this->tscport;
         
         return $query;
     }
