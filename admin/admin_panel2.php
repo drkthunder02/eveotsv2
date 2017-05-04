@@ -178,21 +178,21 @@ switch($menu) {
     case "whitelist_add":
         $type = $_GET["type"];
         if (!isset($_POST["corpName"])) {
-            $corporationName = "";
+            $corporationName = null;
         } else {
             $corporationName = filter_input('POST', 'corpName');
         }
         if (!isset($_POST["allianceName"])) {
-            $allianceName = "";
+            $allianceName = null;
         } else {
             $allianceName = filter_input('POST', 'allianceName');
         }
         if(!isset($_POST['charName'])) {
-            $characterName = "";
+            $characterName = null;
         } else {
             $characterName = filter_input('POST', 'charName');
         }
-        if ($corporationName == "" && $allianceName == "" && $characterName == "") {
+        if ($corporationName == null && $allianceName == null && $characterName == null) {
             printf("<div class=\"container\">");
             printf("Error: No Alliance or Corporation defined.<br /><br />");
             printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
@@ -206,7 +206,14 @@ switch($menu) {
         //Delete from the whitelist
         $id = filter_input(INPUT_GET, 'id');
         $type = filter_input(INPUT_GET, 'type');
-        WhiteListDelete($db, $id, $type);
+        if($type == "alliance") {
+            $entityeType = 3;
+        } else if ($type == "corp") {
+            $entityType = 2;
+        } else if($type == "char") {
+            $entityType = 1;
+    }
+        WhiteListDelete($db, $id, $entityType);
         break;
 };
 
