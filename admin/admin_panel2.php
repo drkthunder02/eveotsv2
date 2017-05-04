@@ -110,6 +110,12 @@ switch($menu) {
         PrintAdminLogs($db);
         break;
     case "admins_add":
+        CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+        //Trim any spaces either side
+        $adminCharacterName = trim(filter_input(INPUT_POST, 'adminCharacterName'));
+        $adminPassword = trim(filter_input(INPUT_POST, 'adminPassword'));
+        $adminSecurityLevel = trim(filter_input(INPUT_POST, 'adminSecurtyLevel'));
+        AdminAdd($db, $adminCharacterName, $adminPassword, $adminSecurityLevel);
         break;
     case "admins_audit":
         CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
