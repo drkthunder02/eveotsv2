@@ -162,8 +162,126 @@ switch($menu) {
         printf("</table>");
         break;
     case "admins_delete":
+        CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+        $id = filter_input(INPUT_GET, "id");
+        if($id == $config->GetAdminID()) {
+            printf("This is the root admin!  You cannot delete this user.");
+        }
+        $admin = $db->fetchRow('SELECT * FROM Admins WHERE id= :id', array('id' => $id));
+        if($db->getRowCount() == 0) {
+            printf("Error: Couldn't find the admin in the database.<br>");
+            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+        }
+        printf("<strong>Deleting administrator...</strong><br>");
+        printf("Character: " . $admin['username'] . "<br>");
+        printf("Security Level: " . $admin['securityLevel'] . "<br><br>");
+        $db->delete('Admins', array('id' => $admin['id']));
+        $entry = $admin['username'] . "'s administrator account was deleted by " . $_SESSION['EVEOTSusername'] . ".";
+        AddLogEntry($db, gmdate('d.m.Y H:i'), $entry);
+        printf("Administrator deleted.<br>");
+        printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
         break;
     case "admins_edit":
+        $id = filter_input(INPUT_GET, "id");
+        CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+        //Are we going to edit the root admin
+        if($id == $config->GetAdminID() && $_SESSION['EVEOTSid'] == $config->GetAdminID()) {
+            printf("You are not permitted to edit the root admin!<br>");
+            break;
+        }
+        //Are we going to edit the root admin
+        if($id == $config->GetAdminID()) {
+            $rootAdminEdit = true;
+        } else {
+            $rootAdminEdit = false;
+        }
+        //Edit admin
+        printf("<strong>Editing user:</strong><br>");
+        //Change password
+        printf("<strong>Change password:</strong><br>");
+        if(!isset($_POST['newPassword'])) {
+            printf("<form action=\"?menu=admin_edit&id=" . $id . "\" method=\"POST\">");
+            printf("<table>
+                        <tr>
+                                <td style=\"text-align: right;\"><font size=\"2\">New Password:</font></td>
+                                <td style=\"text-align: left;\"><input type=\"password\" name=\"newPassword\" size=\"16\" /></td>
+                                <td style=\"text-align: right;\"><font size=\"2\">Confirm:</font></td>
+                                <td style=\"text-align: left;\"><input type=\"password\" name=\"newPConfirm\" size=\"16\"/></td>
+                                <td colspan=\"6\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Change\" /></td>
+                        </tr>
+                    </table>");
+            printf("</form>");
+        } else if(isset($_POST['newPassword'])) {
+            // Change the password
+            $newPassword = filter_input(INPUT_POST, "newPassword");
+            $newPConfirm = filter_input(INPUT_POST, "newPConfirm");
+            if ($newPassword == "" || $newPConfirm == "") {
+                    printf("Error: Please fill both password fields. Type the desired password then confirm it by typing it again in the \"Confirm\" field.<br /><br />");
+                    printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                    break;
+            } else if ($newPassword != $newPConfirm) {
+                    printf("Error: The new passwords do not match.<br /><br />");
+                    printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                    break;
+            } else if (preg_match("/^[a-zA-Z0-9]+$/", $newPassword) == 0) {
+                    // Make sure password is only a-z A-Z 0-9
+                    printf("Error: Passwords can only contain A-Z, a-z and 0-9.<br /><br />");
+                    printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+                    break;
+            } else {
+                    echo "Changing password...<br />";
+                    $newpass = md5($_POST["newPassword"]);
+                    $db->update('Admins', array('id' => $id), array('password' => $newPass));
+                    
+                    $timestamp = gmdate('d.m.Y H:i');
+                    $log = $_SESSION["EVEOTSusername"] . " changed " . $username . "'s password.";
+                    AddLogEntry($db, $timestamp, $log);
+                    printf($username . "'s password has been changed.<br />");
+            }
+        }
+        //Change security level
+        printf("<strong>Change security level:</strong><br>");
+        $newSL = filter_input(INPUT_POST, "newSL");
+        if($rootAdminEdit == true) {
+            printf("The root admins security level cannot be changed.<br>");
+        } else if(!isset($_POST['newSL'])) {
+            printf("Error: Security level was blank. Please input 1 or 2.<br /><br />");
+            printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />");
+            break;
+        } else if($newSL != "1" && $newSL != "2") {
+            printf("Error: Security Level must be 1 or 2.<br>");
+            printf("<form action=\"?menu=admins_edit&id=" . $id . "\" method=\"POST\">");
+            printf("<table>
+                        <tr>
+                            <td style=\"text-align: right;\"><font size=\"2\">New Security Level (1/2):</font></td>
+                            <td style=\"text-align: left;\"><input name=\"newSL\" size=\"1\" /></td>
+                            <td colspan=\"6\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Change\" /></td>
+                        </tr>
+                    </table>");
+            printf("</form>");
+        } else {
+            printf("Changing security level...<br>");
+            $newSL = filter_input(INPUT_POST, "newSL");
+            $currentSL = $db->fetchColumn('SELECT securityLevel FROM Admins WHERE id=: id', array('id' => $id));
+            if($currentSL == $newSL) {
+                printf($username . " already has a security level of " . $newSL . ", nothing was changed.<br>");
+            } else {
+                $db->update('Admins', array('id' => $id), array('securityLevel' => $newSL));
+                $timestamp = gmdate('d.m.Y H:i');
+                $entry = $_SESSION['EVEOTSusername'] . " changed " . $username . "'s security level to " . $newSL . ".";
+                AddLogEntry($db, $timestamp, $entry);
+                printf($username . "'s security level has been changed.<br>");
+                printf("<form action=\"?menu=admins_edit&id=" . $id . "\" method=\"POST\">");
+                printf("<table>
+                            <tr>
+                                <td style=\"text-align: right;\"><font size=\"2\">New Security Level (1/2):</font></td>
+                                <td style=\"text-align: left;\"><input name=\"newSL\" size=\"1\" /></td>
+                                <td colspan=\"6\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Change\" /></td>
+                            </tr>
+                        </table>");
+                printf("</form>");
+            }
+        }
         break;
     case "members_audit":
         break;
