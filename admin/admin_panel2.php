@@ -289,6 +289,106 @@ switch($menu) {
         MembersAudit($db, $search);      
         break;
     case "members_delete":
+        //Authorized access to this server?
+        CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+        if(isset($_GET['discrepancies'])) {
+            $discrepancy = filter_input(INPUT_POST, "discrepancyDelete");
+            if(empty($discrepancy)) {
+                printf("Error: No discrepancies selected to be deleted.<br /><br />");
+                printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-2)\" />");
+                break;
+            } else {
+                printf("Deleting discrepancies...<br /><br />");
+                printf("<table width=\"100%\" border=\"0\"> <tr><td width=\"100\">Deleteing...</td> <td width=\"32\"></td> <td></td> <td width=\"110\">TS Database ID</td> <td></td></tr>");
+                $deleted = 0;
+                foreach($discrepancy as $discrep) {
+                    $row = $db->fetchRow('SELECT CharacterID,Blue,TSDatabaseID,TSUniqueID,TSName FROM Users WHERE id= :dis', array('dis' => $discrep));
+                    $characterID = $row['CharacterID'];
+                    $blue = $row['Blue'];
+                    $tsDatabaseID = $row['TSDatabaseID'];
+                    $tsUniqueID = $row['TSUniqueID'];
+                    $tsName = $row['TSName'];
+                    $queryDelete = "DELETE FROM users WHERE entryID = '".$discrep."';";
+                    $db->delete('Users', array('id' => $discrep));
+                    $deleted++;
+                    //Print
+                    if($blue == "Yes") {
+                        $icon = "images/blue.png";
+                    } else {
+                        $icon = "images/ally.png";
+                    }
+                    printf("<tr bgcolor=\"#151515\"><td>".$discrep."</td> <td><img src=\"http://image.eveonline.com/Character/".$characterID."_32.jpg\" border=\"0\"></td> <td><img src=\"".$icon."\" border\"0\"> ".$tsName."<br /><font size=\"2\">Unique ID: ".$tsUniqueID."</font></td> <td align=\"center\">".$tsDatabaseID."</td> <td align=\"center\">Deleted</td></tr>");
+                }
+                printf("</table><br>");
+                printf("Discrepancies removed: " . $deleted . "<br>");
+            }
+        } else {
+            $id = filter_input(INPUT_GET, "id");
+            //Gather required details for deleting.
+            $row = $db->fetchRow('SELECT tsDatabaseID,tsUniqueID,tsName FROM users WHERE id= :id', array('id' => $id));
+            if($db->getRowCount()) {
+                printf("This client no longer seems to exist.");
+                break;
+            }
+            $entryID = $row['id'];
+            $tsDatabaseID = $row['TSDatabaseID'];
+            $tsUniqueID = $row['TSUniqueID'];
+            $tsName = $row['TSName'];
+            printf("Attempting to remove \"" . $tsName . "\" from Teamspeak.<br><br>");
+            //Connect to Teamspeak
+            try {
+                $ts3_VirtualServer = Teamspeak3::factory($config->GetTSServerQuery());
+            } catch (Teamspeak3_Exception $e) {
+                printf("Error: " . $e->getMessage() . " [A" . __LINE__ . "]");
+                break;
+            }
+            //Check if client is online and kick if they are
+            try {
+                $online = $ts3_VirtualServer->clientGetIdsByUid($tsUniqueID);
+                printf("Client online.  Attemping kick...");
+                try {
+                    $ts3_VirtualServer->clientGetByUid($tsUniqueID)->Kick(TeamSpeak3::KICK_SERVER, "Teamspeak access revoked by ".$_SESSION["EVEOTSusername"].".");
+                    printf("Kicked.<br />Deleting client from Teamspeak... ");
+                } catch (Exception $ex) {
+                    printf("FAILED. (Error: ".$e->getMessage().") [A".__LINE__."]");
+                    break;
+                }
+            } catch (TeamSpeak3_Exception $e) {
+                printf("FAILED> (Error: " . $e->getMessage() . ") [A" . __LINE__ . "]");
+            }
+            //Delete the client from Teamspeak
+            try {
+                $ts3_VirtualServer->clientdeleteDb($tsDatabaseID);
+                printf("Done.<br>");
+                //Delete the client from the database
+                try {
+                    printf("Deleting client from user database...");
+                    $db->delete('Users', array('TSDatabaseID' => $tsDatabaseID));
+                    $timestamp = gmdate('d.m.Y H:i');
+                    $entry = $_SESSION["EVEOTSusername"]." revoked Teamspeak access from \"".$tsName."\". (".$tsDatabaseID.")";
+                    AddLogEntry($db, $timestamp, $entry);
+                } catch (TeamSpeak3_Exception $e) {
+                    printf("FAILED.<br />WARNING: Failed to remove \"".$tsName."\" from the database, entry ".$entryID.". You will need to remove manually. (Error: ".$e->getMessage().") (SQL: ". mysql_error() .") [A".__LINE__."]<br />");
+                }
+            } catch (TeamSpeak3_Exception $e) {
+                if($e->getMessage() == "invalid clientID") {
+                    printf("Client did not exist on Teamspeak. (".$tsDatabaseID.")<br />");
+                    try {
+                        printf("Deleting client from user database...");
+                        $db->delete('Users', array('tsDatabaseID' => $tsDatabaseID));
+                        printf("Done.<br><br>All operations completed successfully, \"" . $tsName . "\" has been removed.<br><br>");
+                        printf("<input type=\"button\" value=\"Back\" onclick=\"history.back(-2)\" />");
+                        $timestamp = gmdate('d.m.Y H:i');
+                        $entry = $_SESSION["EVEOTSusername"]." revoked Teamspeak access from \"".$tsName."\". (".$tsDatabaseID.")";
+                        AddLogEntry($db, $timestamp, $entry);
+                    } catch (Exception $ex) {
+                        printf("FAILED.<br />WARNING: Failed to remove \"".$tsName."\" from the database, entry ".$entryID.". You will need to remove manually. (Error: ".$e->getMessage().") (SQL: ". mysql_error() .") [A".__LINE__."]<br />");
+                    }
+                } else {
+                    printf("FAILED. (Error: ".$e->getMessage().") [A".__LINE__."]<br />");
+                }
+            }
+        }
         break;
     case "members_discrepancies":
         break;
