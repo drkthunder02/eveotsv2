@@ -31,6 +31,7 @@ class Config {
     private $bluegroup;
     private $banner;
     private $spacer;
+    private $salt;
     
     //ESI Configuration
     private $clientid;
@@ -64,6 +65,11 @@ class Config {
         $this->bluegroup = $eveots['bluegroup'];
         $this->banner = $eveots['banner'];
         $this->spacer = $eveots['spacer'];
+        $this->salt = $eveots['salt'];
+    }
+    
+    public function GetSalt() {
+        return $this->salt;
     }
     
     public function GetAdminID() {

@@ -27,8 +27,8 @@ $count = $db->getRowCount();
 if($count == 1) {
     $user = $db->fetchRow('SELECT * FROM Admins WHERE username= :user', array('user' => $username));
     $_SESSION["EVEOTSusername"] = $username;
-    $_SESSION["EVEOTSpassword"] = $password;
     $_SESSION["EVEOTSid"] = $user['id'];
+    $_SESSION["key"] = uniqid();
     header("location:admin_panel.php");
 } else {
     echo "Wrong Username or Password<br />";
