@@ -16,6 +16,7 @@ require_once __DIR__.'/../../functions/database/sqlchecknames.php';
 
 //Class Functions
 require_once __DIR__.'/../../functions/class/sessions.php';
+require_once __DIR__.'/../../functions/class/esi.php';
 
 //HTML Functions
 require_once __DIR__.'/../functions/html/printadminindexlogin.php';
