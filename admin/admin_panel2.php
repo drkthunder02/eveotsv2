@@ -391,13 +391,126 @@ switch($menu) {
         }
         break;
     case "members_discrepancies":
+        CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+        //Discrepancies
+        if(!isset($_GET['run'])) {
+            //Confirm run discrepancies
+            printf("Discrepancy check between the SQL user database and the Teamspeak user database for redundant entries and desynchronization.<br><br><strong>NOTE:</strong> For each member in the SQL database, the Teamspeak server will be contacted and asked if the entry is redundant. Depending on the amount of members you have, this can take time. Do not leave the page.<br /><br />");
+            $memberCount = 0;
+            $members = $db->fetchRowMany('SELECT * FROM Users');
+            $memberCount = $db->getRowCount();
+            printf("<ceenter><strong>" . $memberCount . "</strong> records will be checked for discrepancies.<br /> <a href=\"admin_panel.php?menu=members_discrepancies&run\"><input type=\"button\" value=\"Confirm\" /></a></center>");
+        } else {
+            //Run discrepancies
+            printf("Scanning for discrepancies...<br>");
+            printf("<div class=\"container\">");
+            //Get the TS3 connection ready
+            try {
+		$ts3_VirtualServer = TeamSpeak3::factory($config->GetTSServerQuery());
+            } catch (TeamSpeak3_Exception $e) {
+                printf("Error: ".$e->getMessage()." [A".__LINE__."]");
+                break;
+            }
+            //Discrepancies
+            $discrepancies = $db->fetchRowMany('SELECT * FROM Users ORDER BY id ASC');
+            $progress = 0;
+            $discrepancies = 0;
+            foreach($discrepancies as $dis) {
+                try {
+                    //Check if the user is in the database
+                    $ts3_VirtualServer->clientGetNameByDbid($dis['TSDatabaseID']);
+                } catch (TeamSpeak3_Exception $e) {
+                    if($e->getMessage() == "invalid clientID") {
+                        if($discrepancies == 0) {
+                            printf("<form action=\"admin_panel.php?menu=members_delete&discrepancies\" method=\"post\">");
+                            printf("<table width=\"100%\" border=\"0\"> <tr><td width=\"70\">SQL Entry</td> <td width=\"32\"></td> <td></td> <td width=\"110\">TS Database ID</td> <td align=\"center\" class=\"select-all-checkbox\"><input type=\"checkbox\" /></td></tr>");                            
+                        }
+                        if($dis['blue'] == true) {
+                            $icon = 'images/blue.png';
+                        } else {
+                            $icon = 'images/ally.png';
+                        }
+                            printf("<tr bgcolor=\"#151515\"><td>" . $dis['id'] . "</td> <td><img src=\"http://image.eveonline.com/Character/".$dis['CharacterID']."_32.jpg\" border=\"0\"></td> <td><img src=\"".$icon."\" border\"0\"> ".$dis['TSName']."<br /><font size=\"2\">Unique ID: ".$dis['TSUniqueID']."</font></td> <td align=\"center\">".$dis['TSDatabaseID']."</td> <td align=\"center\" class=\"select-checkbox\"><input type=\"checkbox\" name=\"discrepancyDelete[]\" value=\"" . $dis['id'] ."\" /></td></tr>");
+                            $discrepancies++;
+                    } else {
+                        printf("Error: " . $e->getMessage() . " [A" . __LINE__ . "]");
+                    }  
+                }
+            }
+            printf("</div>");
+            if($discrepancies > 0) {
+                printf("<tr><td align=\"right\" colspan=\"5\"><br /><input type=\"submit\" name=\"Submit\" value=\"Delete selected\" /></td></tr>");
+                printf("</table>");
+                printf("</form><br />");
+                printf($discrepancies." discrepancies found.");
+            } else {
+                printf("No discrepancies found, both databases appear to be synchronized");
+            }
+        }
         break;
     case "members_edit":
+        CheckSecurityLevel($db, $_SESSION['EVEOTSusername']);
+        $id = filter_input(INPUT_GET, 'id');
+        $editing = $db->fetchColumn('SELECT TSName FROM Users WHERE id= :id', array('id' => $id));
+        //Edit the member
+        printf("<strong>Editing user:</strong>" . $editing['TSName'] . "<br><br>");
+        //Change the TS Nickname
+        printf("<strong>Change Teamspeak Nickname:</strong><br>");
+        if(!isset($_POST['newNick'])) {
+            printf("<form class=\"form-group\" action=\"?menu=members_edit&id=" . $editing['id'] . "\" method=\"POST\">");
+            printf("<table>
+                        <tr>
+                            <td style=\"text-align: right;\"><font size=\"2\">Change to:</font></td>
+                            <td style=\"text-align: left;\"><input name=\"newNick\" size=\"40\" /></td>
+                            <td colspan=\"6\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Change\" /></td>
+                        </tr>
+                    </table>");
+            printf("</form>");
+        } else if(isset($_POST['newNick'])) {
+            //Change the TSName
+            $newNick = filter_input(INPUT_POST, 'newNick');
+            if($newNick == "") {
+                printf("Error: New nickname was blank.  Please enter  their new name including any tickers.<br><br>");
+                printf("<form class=\"form-control\" action=\"?menu=members_edit&id=\"" . $editing['id'] . "\" method=\"POST\">");
+                printf("<table>
+                            <tr>
+                                <td style=\"text-align: right;\"><font size=\"2\">Change to:</font></td>
+                                <td style=\"text-align: left;\"><input name=\"newNick\" size=\"40\" /></td>
+                                <td colspan=\"6\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Change\" /></td>
+                            </tr>
+                        </table>");
+                printf("</form>");
+                break;
+            } else {
+                printf("Changing members nickname...<br>");
+                if(strlen($newNick) > 30) {
+                    printf("Teamspeaks max nickname length exceeded (30 characters), cropping nickname...<br>");
+                }
+                $newNick = substr($newNick, 0, 30);
+                $oldNick = $db->fetchColumn('SELECT TSName FROM Users WHERE id= :id', array('id' => $id));
+                if($oldNick == $newNick) {
+                    printf($oldNick . "'s is already " . $newNick . ", nothing was changed.<br>");
+                } else {
+                    $db->update('Users', array('id' => $id), array('TSName' => $newNick));
+                    $timestamp = gmdate('d.m.Y H:i');
+                    $entry = $_SESSION['EVEOTSusername'] . " changed " . $editing . "'s Teamspeak name to " . $newNick . ".";
+                    AddLogEntry($db, $timestamp, $entry);
+                }
+                printf("<form class=\"form-group\" action=\"?menu=members_edit&id=" . $id . "\" method=\"POST\">");
+                printf("<table>
+                            <tr>
+                                <td style=\"text-align: right;\"><font size=\"2\">Change to:</font></td>
+                                <td style=\"text-align: left;\"><input name=\"newNick\" size=\"40\" /></td>
+                                <td colspan=\"6\" style=\"text-align: right;\"><input name=\"submit\" type=\"submit\" value=\"Change\" /></td>
+                            </tr>
+                        </table>");
+                printf("</form>");
+            }
+        }
         break;
     case "whitelist":
         //Print out the white list form
         PrintWhiteListForm();
-        
         //Build the white list to print out on the screen
         $whiteList = $db->fetchRowMany('SELECT * FROM Blues');
         PrintWhiteList($whiteList);
