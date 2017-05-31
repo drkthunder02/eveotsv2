@@ -191,8 +191,8 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     printf("<div class=\"container\">");
     printf("<div class=\"jumbotron\">");
     printf("<div class=\"container\">");
-    printf("<h1>Log into the teamspeak server with the name of:</h1><br>");
-    printf($name);
+    printf("<h2>Log into the teamspeak server with the name of:</h2><br>");
+    printf("<h2>" . $name . "</h2><br>");
     printf("</div>");
     printf("<form class=\"form-goup\" method=\"POST\" action=\"teamspeak.php\">
                 <input class=\"form-control\" type=\"hidden\" name=\"characterID\" value=\"" . $CharacterID . "\">
