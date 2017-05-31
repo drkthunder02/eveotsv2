@@ -45,7 +45,7 @@ switch($_REQUEST['action']) {
         printf("<p align=\"center\">");
         printf("<a href=\"https://login.eveonline.com/oauth/authorize/?response_type=code&redirect_uri=" . 
                 urldecode(GetSSOCallbackURL()) . "&client_id=" . 
-                $clientid . "&scope=publicData" . "&state=" . $_SESSION['state'] . "\">");
+                $clientid . "&state=" . $_SESSION['state'] . "\">");
         printf("<img src=\"images/EVE_SSO_Login_Buttons_Large_Black.png\">");
         printf("</a>");
         printf("</p>");
@@ -92,7 +92,7 @@ switch($_REQUEST['action']) {
         //Close the curl channel
         curl_close($ch);
         //Get the resultant data from the curl call and put it into array format
-        $data = json_decode($result);
+        $data = json_decode($result, true);
         $AccessToken = $data['access_token'];
         $RefreshToken = $data['refresh_token'];
         
@@ -117,8 +117,20 @@ switch($_REQUEST['action']) {
         $TokenType = $data['TokenType'];
         
         $character = $esi->GetESIInfo($CharacterID, 'Character');
+        if($character == null) {
+            printf("An error has occurred pulling the character esi information.<br>");
+            die();
+        }
         $corporation = $esi->GetESIInfo($character['corporation_id'], 'Corporation');
+        if($corporation == null) {
+            printf("An error has occurred pulling the corporation esi information.<br>");
+            die();
+        }
         $alliance = $esi->GetESIInfo($corporation['alliance_id'], 'Alliance');
+        if($alliance == null) {
+            printf("An error has ocurred pulling the alliance esi information.<br>");
+            die();
+        }
         
         StoreSSOData($CharacterID, $character, $corporation, $alliance);
      

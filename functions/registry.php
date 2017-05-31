@@ -25,6 +25,7 @@ require_once __DIR__.'/../functions/html/printssosuccess.php';
 
 //Process Functions
 require_once __DIR__.'/../functions/process/format.php';
+require_once __DIR__.'/../functions/process/storessodata.php';
 
 //SSO Functions
 require_once __DIR__.'/../functions/sso/getfooter.php';

@@ -26,9 +26,9 @@ class ESI {
     
     public function __construct() {
         //Parse the ini file configuration and load it into the class
-        $esi = parse_ini_file('/../configuration/esi.ini');
-        $this->clientId = $esi['clientid'];
-        $this->secretKey = $esi['secretkey'];
+        $esi = parse_ini_file(__DIR__.'/../configuration/esi.ini');
+        $this->clientId = $esi['client_id'];
+        $this->secretKey = $esi['secret'];
         $this->userAgent = $esi['useragent'];
     }
     
@@ -124,7 +124,7 @@ class ESI {
         $url = $this->BuildSingleUrl($type, $id);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
         curl_setopt($ch, CURLOPT_HTTPGET, true);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -182,11 +182,11 @@ class ESI {
         $lastPart = '/?datasource=tranquility';
         
         if($type == 'Character') {
-            $url = $firstPart . 'characters/' . $value . $lastPart;
+            $url = $firstPart . 'characters/' . $id . $lastPart;
         } else if ($type == 'Corporation') {
-            $url = $firstPart . 'corporations/' . $value . $lastPart;
+            $url = $firstPart . 'corporations/' . $id . $lastPart;
         } else if ($type == 'Alliance') {
-            $url = $firstPart . 'alliances/' . $value . $lastPart;
+            $url = $firstPart . 'alliances/' . $id . $lastPart;
         }
         
         return $url;
