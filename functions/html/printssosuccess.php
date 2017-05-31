@@ -41,7 +41,7 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     //Check if the person is part of the main alliance / corp
     if($CorporationID || $AllianceID == $usWhiteList) {
         $us = true;
-        $blue = true;
+        $blue = false;
     }
     
     //Check if the person is on the character whitelist
@@ -64,7 +64,7 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
         }
     } else if($usWhiteList == $CorporationID) {
         $us = true;
-        $blue = true;
+        $blue = false;
     }
     
     //Check if the person is on the alliance whitelist
@@ -77,13 +77,46 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
         }
     } else if($usWhiteList == $AllianceID) {
         $us = true;
-        $blue = true;
+        $blue = false;
     }
     
     //Print the header for the data below
     PrintHTMLHeader();
-    
-    if($blue == true) {
+    if($us == true && $blue == false) {
+        //If the user is part of the main corporation or alliance, let's build their name and information
+        $character = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :id', array('id' => $CharacterID));
+        $corporation = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $CorporationID));
+        //Now we need to build the teamspeak name
+        if($config->GetSpacer() != "") {
+            if($corporation != false && $character != false) {
+                $name = $corporation['Ticker'] . " " . $config->GetSpacer() . " " . $character['Character'];
+            } else if($character != false) {
+                $name = $character['Character'];
+            } else {
+                printf("<div class=\"container\">");
+                printf("<div class=\"jumbotron\">");
+                printf("<2>Your character was not found in the database.  Please try again later.</h2>");
+                printf("</div>");
+                printf("</div>");
+                DBClose($db);
+                return;
+            }
+        } else {
+            if($corporation != false && $character != false) {
+                $name = $corporation['Ticker'] . " " . $character['Character'];
+            } else if ($character != false) {
+                $name = $character['Character'];
+            } else {
+                printf("<div class=\"container\">");
+                printf("<div class=\"jumbotron\">");
+                printf("<2>Your character was not found in the database.  Please try again later.</h2>");
+                printf("</div>");
+                printf("</div>");
+                DBClose($db);
+                return;
+            }
+        }
+    }else if($us == false && $blue == true) {
         //If the user is blue, then let's build the alliance, corporation, and character information
         $character = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :id', array('id' => $CharacterID));
         $corporation = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $CorporationID));
@@ -108,8 +141,6 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
                 DBClose($db);
                 return;
             } 
-            
-            
         } else {
             //Form the name of the pilot
             if($alliance != false && $corporation != false && $character != false) {
