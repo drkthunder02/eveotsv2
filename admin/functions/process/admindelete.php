@@ -16,7 +16,7 @@ $session = new Custom\Sessions\session();
 $config = new EVEOTS\Config\Config();
 $esi = new EVEOTS\ESI\ESI('EVEOTS V2');
 
-//Encrypt the unique session id in the form of a key for the form
+//encrypt the unique session id in the form of a key for the form
 $unique = $_SESSION['key'] . $config->GetSalt();
 $unique = md5($unique);
 
@@ -62,39 +62,20 @@ if(isset($_POST['username'])) {
     $username = "";
 }
 
-if(isset($_POST['password'])) {
-    $password = filter_input(INPUT_POST, 'password');
-} else {
-    $password = "";
+if($username == "") {
+    printf("Error!<br>");
+    printf("Username to be deleted not provided.");
+    die();
 }
 
-if(isset($_POST['security'])) {
-    $security = filter_input(INPUT_POST, 'security');
-} else {
-    $security = "";
-}
-
-//Check if the user already has an admin account
-$verified = $db->fetchRow('SELECT * FROM Admins WHERE username= :user', array('user' => $username));
-if($verified != null) {
-    $location = 'http://' . $_SERVER['HTTP_HOST'];
-    $location = $location . dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=AdminAddFailDuplicate';
-    header("Location: $location");
-}
-
-$hashPass = md5($password);
-$db->insert('Admins', array(
-    'username' => $username,
-    'password' => $hashPass,
-    'securityLevel' => $security
-));
+$db->delete('Admins', array('username' => $username));
 
 $timestamp = gmdate('d.m.y H:i');
-$entry = $_SESSION['username'] . " added " . $username . "'s administrator account.";
+$entry = $_SESSION['username'] . " deleted " . $username . "'s administrator account.";
 AddLogEntry($db, $timestamp, $entry);
         
 $location = 'http://' . $_SERVER['HTTP_HOST'];
-$location = $location . dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=AdminAddSuccess';
+$location = $location . dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=AdminDeleteSuccess';
 header("Location: $location");
 
 ?>

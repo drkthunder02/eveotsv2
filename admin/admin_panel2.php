@@ -38,12 +38,7 @@ if($installAccount == true) {
 
 if(isset($_GET['msg'])) {
     $msg = filter_input(INPUT_GET, 'msg');
-    if($msg == 'AdminPasswordSuccess') {
-        printf("<div class=\"junbotron\">");
-        printf("<div class=\"container md-col-3\">");
-        printf("<h2>Admin Password successfully changed.</h2><br>");
-        printf("</div><div>");
-    }
+    AdminPanelMsg($msg);
 }
 
 printf("<div class=\"jumbotron\">");

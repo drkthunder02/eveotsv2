@@ -29,8 +29,5 @@ require_once __DIR__.'/../functions/html/printwhitelistform.php';
 
 //Process Functions
 require_once __DIR__.'/../functions/process/addlogentry.php';
-require_once __DIR__.'/../functions/process/adminchangepassword.php';
+require_once __DIR__.'/../functions/process/adminpanelmsg.php';
 require_once __DIR__.'/../functions/process/checksecuritylevel.php';
-require_once __DIR__.'/../functions/process/membersaudit.php';
-require_once __DIR__.'/../functions/process/whitelistadd.php';
-require_once __DIR__.'/../functions/process/whitelistdelete.php';

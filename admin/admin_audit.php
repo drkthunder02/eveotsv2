@@ -74,10 +74,26 @@ printf("<label for=\"security\">Security Level</label>");
 printf("<select class=\"form-control\" id=\"security\" name=\"security\">");
 printf("<option value=\"1\">1</option><option value=\"2\">2</option>");
 printf("</select>");
+printf("<input class=\"form-control\" type=\"hidden\" id=\"unique\" name=\"unique\" value=\"" . $unique . "\">");
 printf("<input class=\"form-control\" type=\"submit\" value=\"Modify Security Level\">");
 printf("</div></div>");
 //Delete Administrator Form
 printf("<div class=\"jumbotron\">");
 printf("<div class=\"container col-md-4\">");
-
+printf("<h1>Delete Administrator</h1><br>");
+printf("<strong>Note:  This action cannot be undone.</strong>");
+printf("<form class=\"form-group\" action=\"process/admindelete.php\" method=\"POST\">");
+printf("<label for=\"admin\">Admin</label>");
+printf("<select class=\"form-control\" id=\"admin\" name=\"admin\">");
+foreach($admins as $a) {
+    printf("<option value=\"" . $a['username'] . "\">" . $a['username'] . "</option>");
+}
+printf("</select>");
+printf("<input class=\"form-control\" type=\"hidden\" id=\"unique\" name=\"unique\" value=\"" . $unique . "\">");
+printf("<input class=\"form-control\" type=\"submit\" value=\"Delete Administrator\">");
+printf("</form>");
 printf("</div></div>");
+//Close the body and html tags
+printf("</body></html>");
+
+?>
