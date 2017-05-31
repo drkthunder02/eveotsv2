@@ -186,6 +186,10 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     //Print out the form to let the user update their own permissions on the teamspeak server
     printf("<div class=\"container\">");
     printf("<div class=\"jumbotron\">");
+    printf("<div class=\"container\">");
+    printf("<h1>Log into the teamspeak server with the name of:</h1><br>");
+    printf($name);
+    printf("</div>");
     printf("<form class=\"form-goup\" method=\"POST\" action=\"teamspeak.php\">
                 <input class=\"form-control\" type=\"hidden\" name=\"characterID\" value=\"" . $CharacterID . "\">
                 <input class=\"form-control\" type=\"hidden\" name=\"corporationID\" value=\"" . $CorporationID . "\">
