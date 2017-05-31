@@ -17,13 +17,10 @@ $db = DBOpen();
 //Declare variables
 $kicked = 0;
 $users = 0;
-//Get the configuration for the Teamspeak3 connection
-$tsInfo = $config->GetTSConfig();
 
 //Attempt to connect to Teamspeak3
 try {
-    $ts3_VirtualServer = TeamSpeak3::factory("serverquery://" . $tsInfo['tsname'] . ":" . $tsInfo['tspass'] . "@" . $tsInfo['tshost'] . 
-                                             ":" . $tsInfo['tsport'] . "/?server_port=" . $tsInfo['tscport']);
+    $ts3_VirtualServer = TeamSpeak3::factory($config->GetTSServerQuery());
 } catch (TeamSpeak3_Exception $e) {
     die("An error occured: ".$e->getMessage()." [B".__LINE__."]");
 }
@@ -40,7 +37,7 @@ foreach($clientList as $client) {
     //Get the client database id from the Teamspeak3 server
     $client_database_id = $client['client_database_id'];
     //Check if the user is already registered
-    $reg = $db->fetchRow('SELECT * FROM users WHERE TSDatabaseID= :id', array('id' => $client_database_id));
+    $reg = $db->fetchRow('SELECT * FROM Users WHERE TSDatabaseID= :id', array('id' => $client_database_id));
     $rowCount = $db->getRowCount();
     if($rowCount == 0) {
         format("Skipping user, not registered (" . $client['client_nickname'] . ")\n",

@@ -15,8 +15,6 @@ require_once __DIR__.'/../functions/curl/multicurl.php';
 //Database Functions
 require_once __DIR__.'/../functions/database/dbclose.php';
 require_once __DIR__.'/../functions/database/dbopen.php';
-require_once __DIR__.'/../functions/database/sqlcheck.php';
-require_once __DIR__.'/../functions/database/sqlchecknames.php';
 
 //ESI Functions
 require_once __DIR__.'/../functions/esi/storecharacterinfo.php';
@@ -24,9 +22,6 @@ require_once __DIR__.'/../functions/esi/storecharacterinfo.php';
 //HTML Functions
 require_once __DIR__.'/../functions/html/printhtmlheader.php';
 require_once __DIR__.'/../functions/html/printssosuccess.php';
-
-//Member Functions
-require_once __DIR__.'/../functions/members/savemember.php';
 
 //Process Functions
 require_once __DIR__.'/../functions/process/format.php';
