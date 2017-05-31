@@ -80,12 +80,14 @@ $usgroup = $config->GetMainGroup();
 try {
     $ts3_VirtualServer = TeamSpeak3::factory($config->GetTSServerQuery());
 } catch (TeamSpeak3_Exception $e) {
+    printf("Couldn't connect to the teamspeak server.");
     die("An error occured: ".$e->getMessage()." [B".__LINE__."]");
 }
 //Get the client list from the teamspeak server so we can update the database and add user to the correct group
 try {
     $clientList = $ts3_VirtualServer->clientList();
 } catch (TeamSpeak3_Exception $e) {
+    printf("Couldn't get the client list.");
     die("An error occured: ".$e->getMessage()." [B".__LINE__."]");
 }
 

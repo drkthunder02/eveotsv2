@@ -180,9 +180,10 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     
     //Insert the name if it's not '' into the Users table
     if($name != '') {
-        $db->insert('Users', array(
+        $db->replace('Users', array(
             'CharacterID' => $CharacterID,
             'Blue' => $blue,
+            'Us' => $us,
             'TSName' => $name
         ));   
     }
