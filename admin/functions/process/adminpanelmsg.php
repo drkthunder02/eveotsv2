@@ -23,6 +23,10 @@ function AdminPanelMsg($msg) {
     } else if ($msg == 'MemberDeleteTSFail') {
         printf("<h2>Deleted member from the database.</h2><br>");
         printf("<h2>Failed to kick member from teamspeak.</h2><br>");
+    } else if ($msg == 'WhiteListSuccess') {
+        printf("<h2>White List was successfully modified.</h2><br>");
+    } else if ($msg == 'WhiteListFail') {
+        printf("<h2>White List was not modified successfully.</h2><br>");
     }
     
     printf("</div></div>");

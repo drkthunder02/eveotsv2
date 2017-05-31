@@ -23,6 +23,7 @@ function PrintAdminNavBar($username) {
                             <span class=\"icon-bar\"></span>
                             <span class=\"icon-bar\"></span>
                             <span class=\"icon-bar\"></span>
+                            <span class=\"icon-bar\"></span>
                         </button>
                     </div>
                     <div class=\"collapse navbar-collapse pull-left\">
@@ -33,7 +34,8 @@ function PrintAdminNavBar($username) {
                             <li><a href=\"admin_audit.php\">Admin Audit</a></li>
                             <li><a href=\"member_audit.php\">Member Audit</a></li>
                             <li><a href=\"discrepancies.php\">Discrepancies</a></li>
-                            <li><a href=\"whitelist.php\">Whitelist</a></li>                        
+                            <li><a href=\"whitelistadd.php\">White List Add</a></li>
+                            <li><a href=\"whitelistdel.php\">White List Delete</a></li
                         </ul>
                     </div>
                     <div class=\"collapse navbar-collapse pull-right\">
@@ -49,11 +51,13 @@ function PrintAdminNavBar($username) {
                         <button class=\"navbar-toggle\" data-target=\".navbar-collapse\" data-toggle=\"collapse\" type=\"button\">
                             <span class=\"sr-only\">Toggle navigation</span>
                             <span class=\"icon-bar\"></span>
+                            <span class=\"icon-bar\"></span>
                         </button>
                     </div>
                     <div class=\"collapse navbar-collapse pull-left\">
                         <ul class=\"nav navbar-nav\">
-                            <li><a href=\"whitelist.php\">Whitelist</a></li>                        
+                            <li><a href=\"whitelistadd.php\">White List Add</a></li>                        
+                            <li><a href=\"whitelistdel.php\">White List Delete</a></li>
                         </ul>
                     </div>
                     <div class=\"collapse navbar-collapse pull-right\">

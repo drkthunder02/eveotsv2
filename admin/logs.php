@@ -16,6 +16,7 @@ $session = new Custom\Sessions\session();
 $config = new EVEOTS\Config\Config();
 
 //encrypt the unique session id in the form of a key for the form
+$_SESSION['key'] = uniqid();
 $unique = $_SESSION['key'] . $config->GetSalt();
 $unique = md5($unique);
 

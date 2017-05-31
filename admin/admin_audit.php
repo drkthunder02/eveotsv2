@@ -17,6 +17,7 @@ $config = new EVEOTS\Config\Config();
 $esi = new EVEOTS\ESI\ESI('EVEOTS V2');
 
 //encrypt the unique session id in the form of a key for the form
+$_SESSION['key'] = uniqid();
 $unique = $_SESSION['key'] . $config->GetSalt();
 $unique = md5($unique);
 
@@ -47,7 +48,7 @@ PrintAdminTable($admins, $esi);
 printf("<div class=\"jumbotron\">");
 printf("<div class=\"container col-md-4\">");
 printf("<h1>Add Administrator</h1><br>");
-printf("<form class=\"form-group\" action=\"process/addadmin.php\" method=\"POST\">");
+printf("<form class=\"form-group\" action=\"form/addadmin.php\" method=\"POST\">");
 printf("<label for=\"username\">Username</label>");
 printf("<input class=\"form-control\" type=\"text\" id=\"username\" name=\"username\">");
 printf("<label for=\"password\">Password</label>");
