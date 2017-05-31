@@ -32,6 +32,5 @@ require_once __DIR__.'/../functions/sso/getheader.php';
 require_once __DIR__.'/../functions/sso/getssocallbackurl.php';
 require_once __DIR__.'/../functions/sso/printssourl.php';
 require_once __DIR__.'/../functions/sso/redirecttonew.php';
-require_once __DIR__.'/../functions/sso/storessotoken.php';
 
 ?>

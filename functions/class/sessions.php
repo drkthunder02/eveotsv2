@@ -24,10 +24,10 @@ class session {
         $config = parse_ini_file(__DIR__.'/../configuration/database.ini');
         //Setup our db object
         $this->db = new \Simplon\Mysql\Mysql(
-            'localhost',
-            'root',
-            'P@55w0rd!',
-            'eveotsv2'
+            $config['server'],
+            $config['username'],
+            $config['password'],
+            $config['database']
         );
         
         if($this->db) {
