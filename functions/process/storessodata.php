@@ -19,7 +19,7 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
         ));
     } else { //If it is found, update the data
         $db->update('Characters', array('CharacterID' => $CharacterID), array(
-            'CoporationID' => $Character['corporation_id'],
+            'CorporationID' => $Character['corporation_id'],
             'Character' => $Character['name'],
             'CharacterID' => $CharacterID
         ));
@@ -46,7 +46,7 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
     }
     
     //Search the database to see if the alliance is already in the database
-    $allianceFound = $db->fetchRow('SELECT * FROM Alliances WEHERE AllianceID= :id', array('id' => $Corporation['alliance_id']));
+    $allianceFound = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $Corporation['alliance_id']));
     if($allianceFound == false) {
         $db->insert('Alliances', array(
             'Alliance' => $Alliance['alliance_name'],

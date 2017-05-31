@@ -17,8 +17,6 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     $main = false;
     $us = false;
     
-    //Start a new session
-    $session = new Custom\Sessions\session();
     $_SESSION['us'] = false;
     $_SESSION['blue'] = false;
     $_SESSION['CharacterId'] = $CharacterID;
@@ -32,6 +30,12 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     $charWhiteList = $db->fetchRowMany('SELECT * FROM Blues WHERE EntityType= :type', array('type' => 1));
     $corpWhiteList = $db->fetchRowMany('SELECT * FROM Blues WHERE EntityType= :type', array('type' => 2));
     $allyWhiteList = $db->fetchRowMany('SELECT * FROM Blues WHERE EntityType= :type', array('type' => 3));
+    var_dump($charWhiteList);
+    printf("<br>");
+    var_dump($corpWhiteList);
+    printf("<br>");
+    var_dump($allyWhiteList);
+    printf("<br>");
     $usWhiteList = $config->GetMainAlliance();
     
     //Check if the person is part of the main alliance / corp
@@ -41,26 +45,41 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     }
     
     //Check if the person is on the character whitelist
-    foreach($charWhiteList as $en) {
-        if($en['EntityID'] == $CharacterID) {
-            $blue = true;
-            break;
+    if($charWhiteList != null) {
+        foreach($charWhiteList as $en) {
+            if($en['EntityID'] == $CharacterID) {
+                $blue = true;
+                break;
+            }
         }
     }
+    
     //Check if the person is on the corporation whitelist
-    foreach($corpWhiteList as $en) {
-        if($en['EntityID'] == $CorporationID) {
-            $blue = true;
-            break;
+    if($corpWhiteList != null) {
+        foreach($corpWhiteList as $en) {
+            if($en['EntityID'] == $CorporationID) {
+                $blue = true;
+                break;
+            }
         }
+    } else if($usWhiteList == $CorporationID) {
+        $us = true;
+        $blue = true;
     }
+    
     //Check if the person is on the alliance whitelist
-    foreach($allyWhiteList as $en) {
-        if($en['EntityID'] == $AllianceID) {
-            $blue = true;
-            break;
+    if($allyWhiteList != null) {
+        foreach($allyWhiteList as $en) {
+            if($en['EntityID'] == $AllianceID) {
+                $blue = true;
+                break;
+            }
         }
+    } else if($usWhiteList == $AllianceID) {
+        $us = true;
+        $blue = true;
     }
+    
     //Print the header for the data below
     PrintHTMLHeader();
     
@@ -127,7 +146,7 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     //Insert the name if it's not '' into the Users table
     if($name != '') {
         $db->insert('Users', array(
-            'CharacterID' => $characterID,
+            'CharacterID' => $CharacterID,
             'Blue' => $blue,
             'TSName' => $name
         ));   
