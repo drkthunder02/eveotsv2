@@ -10,6 +10,24 @@ require_once __DIR__.'/functions/registry.php';
 //Declaration of variables
 $foundName = false;     //For if we have found the name of the client on the server
 
+$session = new Custom\Sessions\session();
+
+//Encrypt the unique session id in the form of a key for the form
+$unique = $_SESSION['key'] . $config->GetSalt();
+$unique = md5($unique);
+
+//Check our unique key to validate the form
+if(isset($_POST['key'])) {
+    $key = filter_input(INPUT_POST, 'key');
+} else {
+    $key = "";
+}
+
+if($unique != $key) {
+    printf("Error!");
+    die();
+}
+
 //Get our POST values from the previous form
 if(isset($_POST['characterID'])) {
     $characterID = filter_input(INPUT_POST, 'characterID');
@@ -31,6 +49,11 @@ if(isset($_POST['blue'])) {
 } else {
     $blue = false;
 }
+if(isset($_POST['us'])) {
+    $us = filter_input(INPUT_POST, 'us');
+} else {
+    $us = false;
+}
 if(isset($_POST['tsname'])) {
     $tsname = filter_input(INPUT_POST, 'tsname');
 } else {
@@ -40,7 +63,7 @@ if(isset($_POST['tsname'])) {
 //Open the database connection
 $db = DBOpen();
 //Check to make sure this is a blue and the name has some input
-if($blue == false || $tsname == '') {
+if($tsname == '' || ($us == false && $blue == false)) {
     printf("<div class=\"container\">
                 <div class=\"jumbotron\">
                     <h2>Error 001:  Please try again.</h2>

@@ -23,6 +23,10 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     $_SESSION['CorporationId'] = $CorporationID;
     $_SESSION['AllianceId'] = $AllianceID;
     
+    $_SESSION['key'] = uniqid();
+    $unique = $_SESSION['key'] . $config->GetSalt();
+    $unique = md5($unique);
+    
     //Open the database
     $db = DBOpen();
     
@@ -197,6 +201,7 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
                 <input class=\"form-control\" type=\"hidden\" name=\"us\" value=\"" . $us ."\">
                 <input class=\"form-control\" type=\"hidden\" name=\"blue\" value=\"" . $blue . "\">
                 <input class=\"form-control\" type=\"hidden\" name=\"tsname\" value=\"" . $name . "\">
+                <input class=\"form-control\" type=\"hidden\" name=\"key\" value=\"" . $unique . "\">
                 <input class=\"form-conotrol\" type=\"submit\" value=\"Update TS Permissions\">
             </form>");
     printf("</div>");
