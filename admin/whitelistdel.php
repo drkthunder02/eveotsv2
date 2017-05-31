@@ -44,11 +44,11 @@ printf("<form class=\"form-group\" action=\"process/whitelistdel.php\" method=\"
 printf("<label for=\"entity\">Entity</label>");
 printf("<input class=\"form-control\" type=\"text\" id=\"entity\" name=\"entity\">");
 printf("<select class=\"form-control\" id=\"type\" name=\"type\">");
-printf("<option value=\"Alliance\">Alliance</option>");
-printf("<option value=\"Corporation\">Corporation</option>");
-printf("<option value=\"Character\">Character</option>");
+printf("<option value=\"alliance\">Alliance</option>");
+printf("<option value=\"corporation\">Corporation</option>");
+printf("<option value=\"character\">Character</option>");
 printf("</select>");
-printf("<input class=\"form-control\" type=\"hidden\" value=\"" . $unique . "\">");
+printf("<input class=\"form-control\" type=\"hidden\" id=\"key\" name=\"key\" value=\"" . $unique . "\">");
 printf("<input class=\"form-control\" type=\"submit\" value=\"White List Delete\">");
 printf("</form>");
 printf("</div>");

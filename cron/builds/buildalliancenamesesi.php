@@ -13,10 +13,10 @@ $start = time();
 
 //Get the debug scope from the configuration file
 $config = new \EVEOTS\Config\Config();
-$esi = $config->GetESIConfig();
+$esi = new EVEOTS\ESI\ESI();
 $useragent = $esi['useragent'];
 $DEBUG = $config->GetDebugMode();
-$maxEntities = $config->GetMaxESICalls();
+$maxEntities = $esi->GetMaxESICalls();
 $urls = array();
 $data = array();
 $results = array();

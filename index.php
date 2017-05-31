@@ -20,13 +20,11 @@ require_once __DIR__.'/functions/registry.php';
 $session = new \Custom\Sessions\session();
 //Get the configuration data from the class
 $config = new \EVEOTS\Config\Config();
-$esiconfig = $config->GetESIConfig();
-$clientid = $esiconfig['clientid'];
-$secretkey = $esiconfig['secretkey'];
-$useragent = $esiconfig['useragent'];
-//Setup the ESI class
-$esi = new \EVEOTS\ESI\ESI($useragent);
-
+$esi = new EVEOTS\ESI\ESI();
+$esiConfig = $esi->GetESIConfig();
+$clientid = $esiConfig['clientid'];
+$secretkey = $esiConfig['secretkey'];
+$useragent = $esiConfig['useragent'];
 //If the state is not set then set it to NULL
 if(!isset($_SESSION['state'])) {
     $_SESSION['state'] = uniqid();

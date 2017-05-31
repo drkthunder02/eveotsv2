@@ -77,8 +77,11 @@ try {
 
 //Create the log entry
 $timestamp = gmdate('d.m.y H:i');
-$entry = $_SESSION['username'] . " deleted " . $userDelChar['Character'] . "'s teamspeak privileges.";
+$entry = $_SESSION['EVEOTSusername'] . " deleted " . $userDelChar['Character'] . "'s teamspeak privileges.";
 AddLogEntry($db, $timestamp, $entry);
+//Close the database connection
+DBClose($db);
+
 //Redirect back to the admin_panel
 $location = 'http://' . $_SERVER['HTTP_HOST'];
 $location = $location . dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=' . $msg;

@@ -9,9 +9,7 @@
 function StoreCharacterInfo($characterID) {
     //Get the configuration from the config class
     $config = new \EVEOTS\Config\Config();
-    $configVar = $config->GetESIConfig();
-    //Delcare the esi class to be able to get data without rewriting the functions
-    $esi = new \EVEOTS\ESI\ESI($configVar['useragent'], $configVar['clientid'], $configVar['secretkey']);    
+    $esi = new EVEOTS\ESI\ESI();   
     //Open the database connection
     $db = DBOpen();
     //Declare our variables before ESI attempts to write to them

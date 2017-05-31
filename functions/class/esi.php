@@ -16,16 +16,34 @@ class ESI {
     private $secretKey;
     private $userAgent;
     
+    private $maxCalls = 20.0;
+    
     protected $esi = array(
         'scheme' => 'https',
         'host' => 'esi.tech.ccp.is',
         'path' => 'latest'
     );
     
-    public function __construct($user, $client = null, $secret = null ) {
-        $this->clientId = $client;
-        $this->secretKey = $secret;
-        $this->userAgent = $user;
+    public function __construct() {
+        //Parse the ini file configuration and load it into the class
+        $esi = parse_ini_file('/../configuration/esi.ini');
+        $this->clientId = $esi['clientid'];
+        $this->secretKey = $esi['secretkey'];
+        $this->userAgent = $esi['useragent'];
+    }
+    
+    public function GetMaxESICalls() {
+        return $this->maxCalls;
+    }
+    
+    public function GetESIConfig() {
+        $data = array(
+            'clientid' => $this->clientId,
+            'secretkey' => $this->secretKey,
+            'useragent' => $this->userAgent
+        );
+        
+        return $data;
     }
     
     public function GetTokens() {
@@ -121,6 +139,41 @@ class ESI {
             $data = json_decode($result, true);
 
             return $data;
+        }
+    }
+    
+    public function SearchESIInfo($term, $type) {
+        //'https://esi.tech.ccp.is/latest/search/?categories=character&datasource=tranquility&language=en-us&search=Minerva%20Arbosa&strict=false'
+        //Encode the search term for putting into a link
+        $term = urlencode($term);
+        //Create the url
+        if($type == 'character') {
+            $url = 'https://esi.tech.ccp.is/latest/search/?categories=character&datasource=tranquility&language=en-us&search=' . $term . '&strict=false';
+        } else if ($type == 'corporation') {
+            $url = 'https://esi.tech.ccp.is/latest/search/?categories=corporation&datasource=tranquility&language=en-us&search=' . $term . '&strict=false';
+        } else if ($type == 'alliance') {
+            $url = 'https://esi.tech.ccp.is/latest/search/?categories=alliance&datasource=tranquility&language=en-us&search=' . $term . '&strict=false';
+        } else { //If nothing else assume character
+            $url = 'https://esi.tech.ccp.is/latest/search/?categories=character&datasource=tranquility&language=en-us&search=' . $term . '&strict=false';
+        }
+        
+        //Start the curl request
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->useragent);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+        curl_setopt($ch, CURLOPT_HTTPGET, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        $result = curl_exec($ch);
+        //Check for curl error
+        if(curl_error($ch)) {
+            return null;
+        } else {
+            curl_close($ch);
+            $data = json_decode($result, true);
+            return data;
         }
     }
     

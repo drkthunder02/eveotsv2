@@ -8,7 +8,7 @@
 require_once __DIR__.'/../../functions/registry.php';
 
 $config = new \EVEOTS\Config\Config();
-$esi = $config->GetESIConfig();
+$esi = new EVEOTS\ESI\ESI();
 $useragent = $esi['useragent'];
 
 //Open the database connection
