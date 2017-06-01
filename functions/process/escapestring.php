@@ -11,11 +11,10 @@ function EscapeString($data) {
     
     $dsn = 'mysql:' . $dbInfo['database'] . ':host=' . $dbInfo['server'];
     //$dsn = 'mysql:dbname=testdb;host=127.0.0.1';
-    $user = $dbInfo['username'];
+    $username = $dbInfo['username'];
     $password = $dbInfo['password'];
     
     $pdo = new PDO($dsn, $username, $password);
-    $data = $pdo->prepare($data);
     
     return $data;
 }

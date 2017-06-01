@@ -114,12 +114,18 @@ try {
 try {
     $tsDatabaseID = EscapeString($tsDatabaseID);
     $tsUniqueID = EscapeString($tsUniqueID);
+    //Store the info into the database.  Use PDO without the simplon wrapper for this operation
+    $dbInfo = parse_ini_file(__DIR__.'/functions/configuration/database.ini');
+    $dsn = 'mysql:' . $dbInfo['database'] . ':host=' . $dbInfo['server'];
+    //$dsn = 'mysql:dbname=testdb;host=127.0.0.1';
+    $username = $dbInfo['username'];
+    $password = $dbInfo['password'];
     
-    //Store the details in the database
-    $db->update('Users', array('CharacterID' => $characterID), array(
-        'TSDatabaseID' => $tsDatabaseID,
-        'TSUniqueID' => $tsUniqueID
-    ));
+    $pdo = new PDO($dsn, $username, $password);
+    $query = "UPDATE Users SET TSDatabaseID='" . $tsDatabaseID . "', TSUniqueID='" . $tsUniqueID . "' WHERE CharacterID=" . $characterID;
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    
 } catch (\Simplon\Mysql\MysqlException $e) {
     $tsClient->remServerGroup($usergroup);
     die("Error: Failed to INSERT new member. (Error: ".$e->getMessage()." [F".__LINE__."])");
