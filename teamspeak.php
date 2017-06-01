@@ -120,7 +120,7 @@ try {
     $password = $dbInfo['password'];
     
     $pdo = new PDO($dsn, $username, $password);
-    $query = "UPDATE Users SET TSDatabaseID='" . $tsDatabaseID . "', TSUniqueID='" . $tsUniqueID . "' WHERE CharacterID=" . $characterID;
+    $query = "UPDATE Users SET TSDatabaseID=" . $tsDatabaseID . ", TSUniqueID=" . $tsUniqueID . " WHERE CharacterID=" . $characterID;
     $stmt = $pdo->prepare($query);
     $stmt->execute();
     
