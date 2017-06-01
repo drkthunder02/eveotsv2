@@ -7,7 +7,7 @@
 
 function EscapeString($data) {
     
-    $dbInfo = parse_ini_file(__DIR__.'/functions/configuration/database.ini');
+    $dbInfo = parse_ini_file(__DIR__.'/../configuration/database.ini');
     
     $dsn = 'mysql:' . $dbInfo['database'] . ':host=' . $dbInfo['server'];
     //$dsn = 'mysql:dbname=testdb;host=127.0.0.1';
