@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS `Users` (
     `CharacterID` varchar(20) DEFAULT NULL,
     `Us` boolean DEFAULT FALSE,
     `Blue` boolean DEFAULT FALSE,
-    `TSDatabaseID` int(45) DEFAULT NULL,
+    `TSDatabaseID` varchar(255) DEFAULT NULL,
     `TSUniqueID` varchar(255) DEFAULT NULL,
     `TSName` varchar(255) DEFAULT NULL,
     PRIMARY KEY (`id`),

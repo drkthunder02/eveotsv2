@@ -110,12 +110,17 @@ try {
 } catch (TeamSpeak3_Exception $e) {
     die("Error: Could not find you on the server, your nickname should be exactly '" . $tsname . "'. Either that or you already have permissions. (Error: ".$e->getMessage()." [F".__LINE__."])");
 }
+try {
+    //Store the details in the database
+    $db->update('Users', array('CharacterID' => $characterID), array(
+        'TSDatabaseID' => $tsDatabaseID,
+        'TSUniqueID' => $tsUniqueID
+    ));
+} catch (\Simplon\Mysql\MysqlException $e) {
+    $tsClient->remServerGroup($usergroup);
+    die("Error: Failed to INSERT new member. (Error: ".$e->getMessage()." [F".__LINE__."])");
+}
 
-//Store the details in the database
-$db->update('Users', array('CharacterID' => $characterID), array(
-    'TSDatabaseID' => $tsDatabaseID,
-    'TSUniqueID' => $tsUniqueID
-));
 
 printf("<div class=\"jumbotron\">");
 printf("<div class=\"container\">");
