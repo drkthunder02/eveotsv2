@@ -112,8 +112,6 @@ try {
 }
 //Attempt to store the details of the user in the database
 try {
-    $tsDatabaseID = EscapeString($tsDatabaseID);
-    $tsUniqueID = EscapeString($tsUniqueID);
     //Store the info into the database.  Use PDO without the simplon wrapper for this operation
     $dbInfo = parse_ini_file(__DIR__.'/functions/configuration/database.ini');
     $dsn = 'mysql:' . $dbInfo['database'] . ':host=' . $dbInfo['server'];
