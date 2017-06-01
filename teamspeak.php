@@ -5,16 +5,25 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
+// PHP debug mode
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
+
+
 require_once __DIR__.'/functions/registry.php';
 
 //Declaration of variables
 $foundName = false;     //For if we have found the name of the client on the server
 
 $session = new Custom\Sessions\session();
+$config = new EVEOTS\Config\Config();
 
 //Encrypt the unique session id in the form of a key for the form
 $unique = $_SESSION['key'] . $config->GetSalt();
 $unique = md5($unique);
+
+PrintHTMLHeader();
+printf("<body>");
 
 //Check our unique key to validate the form
 if(isset($_POST['key'])) {
@@ -72,57 +81,45 @@ if($tsname == '' || ($us == false && $blue == false)) {
     die();
 }
 
-$config = new EVEOTS\Config\Config();
-$bluegroup = $config->GetBlueGroup();
-$usgroup = $config->GetMainGroup();
+
+if($us == true) {
+    $usergroup = $config->GetMainGroup();
+} else if($blue == true) {
+    $usergroup = $config->GetBlueGroup();
+}
 
 //Try to connect to the teamspeak server
 try {
     $ts3_VirtualServer = TeamSpeak3::factory($config->GetTSServerQuery());
+    printf("Connected to the teamspeak server.<br>");
 } catch (TeamSpeak3_Exception $e) {
     printf("Couldn't connect to the teamspeak server.");
     die("An error occured: ".$e->getMessage()." [B".__LINE__."]");
 }
-//Get the client list from the teamspeak server so we can update the database and add user to the correct group
+//Get the client by the nickname they should have on the server
 try {
-    $clientList = $ts3_VirtualServer->clientList();
+    $tsClient = $ts3_VirtualServer->clientGetByName($tsname);
+    $tsDatabaseID = $tsClient->client_database_id;
+    $tsUniqueID = $tsClient->client_unique_identifier;
+}  catch (TeamSpeak3_Exception $e) {
+    die("Error: Could not find you on the server, your nickname should be exactly \"$tsname\" (Error: ".$e->getMessage()." [F".__LINE__."])");
+}
+//Attempt to add them to the server group
+try {
+    $ts3_VirtualServer->clientGetByName($tsname)->addServerGroup($usergroup);
 } catch (TeamSpeak3_Exception $e) {
-    printf("Couldn't get the client list.");
-    die("An error occured: ".$e->getMessage()." [B".__LINE__."]");
+    die("Error: Could not find you on the server, your nickname should be exactly '" . $tsname . "'. Either that or you already have permissions. (Error: ".$e->getMessage()." [F".__LINE__."])");
 }
 
-//Find the user within the client List
-foreach($clientList as $client) {
-    if ($client['client_type']) continue;
-    //If we have found the name attempt to set permissions
-    if($client['client_nickname'] == $tsname) {
-        $tsDatabaseID = $client['client_database_id'];
-        $tsUniqueID = $client['client_unique_id'];
-        $db->update('Users', array('CharacterID' => $characterID), array('TSDatabaseID' => $tsDatabaseID, 'TSUniqueID' => $tsUniqueID));
-        $foundName = true;
-        break;
-    }
-}
-//Set the permissions for the teamspeak3 client
-if($foundName == true && $us == false && $blue == true) {
-    try {
-        $ts3_VirtualServer->serverGroupClientAdd($bluegroup, $tsDatabaseID);
-    } catch (TeamSpeak3_Exception $e) {
-        die("An error occured: ".$e->getMessage()." [B".__LINE__."]");
-    }
-} else if ($foundName == true && $us == true && $blue == false) {
-    try {
-        $ts3_VirtualServer->serverGroupClientAdd($usgroup, $tsDatabaseID);
-    } catch (TeamSpeak3_Exception $e) {
-        die("An error occured: " . $e->getMessage() . " [B".__LINE__."]");
-    }
-}
+//Store the details in the database
+$db->update('Users', array('CharacterID' => $characterID), array(
+    'TSDatabaseID' => $tsDatabaseID,
+    'TSUniqueID' => $tsUniqueID
+));
 
-//Print the header for the page
-PrintHTMLHeader();
-printf("<div class=\"container\">");
 printf("<div class=\"jumbotron\">");
-printf("<h2>You should now have the correct permissions on the Teamspeak3 server.</h2>");
+printf("<div class=\"container\">");
+printf("<h3>You should now have the correct permissions on the Teamspeak3 server.<br>");
 printf("</div>");
 printf("</div>");
 
