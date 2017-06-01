@@ -113,17 +113,11 @@ try {
 //Attempt to store the details of the user in the database
 try {
     //Store the info into the database.  Use PDO without the simplon wrapper for this operation
-    $dbInfo = parse_ini_file(__DIR__.'/functions/configuration/database.ini');
-    $dsn = 'mysql:' . $dbInfo['database'] . ':host=' . $dbInfo['server'];
-    //$dsn = 'mysql:dbname=testdb;host=127.0.0.1';
-    $username = $dbInfo['username'];
-    $password = $dbInfo['password'];
-    
-    $pdo = new PDO($dsn, $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
-    $sql = "UPDATE Users SET TSDatabaseID = ? WHERE CharacterID = ?";
-    $pdo->prepare($sql)->execute([$tsDatabaseID, $characterID]);
-    $sql = "UPDATE Users SET TSUniqueID = ? WHERE CharacterID= ?";
-    $pdo->prepare($sql)->execute([$tsUniqueID, $characterID]);
+    $tsUniqueID = "'" . $tsUniqueID . "'";
+    $db->update('Users', array('CharacterID' => $characterID), array(
+        'TSUniqueID' => $tsUniqueID,
+        'TSDatabaseID' => $tsDatabaseID
+    ));
     
 } catch (\Simplon\Mysql\MysqlException $e) {
     $tsClient->remServerGroup($usergroup);
