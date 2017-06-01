@@ -24,6 +24,7 @@ require_once __DIR__.'/../functions/html/printhtmlheader.php';
 require_once __DIR__.'/../functions/html/printssosuccess.php';
 
 //Process Functions
+require_once __DIR__.'/../functions/process/escapestring.php';
 require_once __DIR__.'/../functions/process/format.php';
 require_once __DIR__.'/../functions/process/storessodata.php';
 

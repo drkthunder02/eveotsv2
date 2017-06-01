@@ -110,6 +110,11 @@ try {
 } catch (TeamSpeak3_Exception $e) {
     die("Error: Could not find you on the server, your nickname should be exactly '" . $tsname . "'. Either that or you already have permissions. (Error: ".$e->getMessage()." [F".__LINE__."])");
 }
+//Attempt to store the details of the user in the database
+
+$tsDatabaseID = EscapeString($tsDatabaseID);
+$tsUniqueID = EscapeString($tsUniqueID);
+
 try {
     //Store the details in the database
     $db->update('Users', array('CharacterID' => $characterID), array(
