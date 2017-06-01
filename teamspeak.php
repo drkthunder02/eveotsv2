@@ -119,7 +119,7 @@ try {
     $username = $dbInfo['username'];
     $password = $dbInfo['password'];
     
-    $pdo = new PDO($dsn, $username, $password);
+    $pdo = new PDO($dsn, $username, $password, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"));
     $sql = "UPDATE Users SET TSDatabaseID = ? WHERE CharacterID = ?";
     $pdo->prepare($sql)->execute([$tsDatabaseID, $characterID]);
     $sql = "UPDATE Users SET TSUniqueID = ? WHERE CharacterID= ?";
