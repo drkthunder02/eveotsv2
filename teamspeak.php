@@ -120,9 +120,10 @@ try {
     $password = $dbInfo['password'];
     
     $pdo = new PDO($dsn, $username, $password);
-    $query = "UPDATE Users SET TSDatabaseID='" . $tsDatabaseID . "', TSUniqueID='" . $tsUniqueID . "' WHERE CharacterID='" . $characterID . "'";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
+    $sql = "UPDATE Users SET TSDatabaseID = ? WHERE CharacterID = ?";
+    $pdo->prepare($sql)->execute([$tsDatabaseID, $characterID]);
+    $sql = "UPDATE Users SET TSUniqueID = ? WHERE CharacterID= ?";
+    $pdo->prepare($sql)->execute([$tsUniqueID, $characterID]);
     
 } catch (\Simplon\Mysql\MysqlException $e) {
     $tsClient->remServerGroup($usergroup);
