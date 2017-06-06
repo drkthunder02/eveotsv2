@@ -67,6 +67,19 @@ function PrintAdminNavBar($db, $username) {
                         </ul>
                     </div>
                 </div>");
+    } else {
+        printf("<div class=\"navbar navbar-inverse navbar-fixed-top bg-inverse\" style=\"height: 60px;\" role=\"navigation\">
+                    <div class=\"navbar-header\">
+                        <button class=\"navbar-toggle\" data-target=\".navbar-collapse\" data-toggle=\"collapse\" type=\"button\">
+                            <span class=\"icon-bar\"></span>
+                        </button>
+                    <div class=\"collapse navbar-collapse pull-right\">
+                        <ul class=\"nav navbar-nav\">
+                            <li><h2>" .  $username . " </h2></li>
+                            <li><a href=\"logout.php\">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>");
     }
 }
 
