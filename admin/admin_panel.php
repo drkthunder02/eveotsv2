@@ -5,8 +5,9 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-//PHP Debug Mode
-error_reporting(E_ALL | E_STRICT);
+// PHP debug mode
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
 
 require_once __DIR__.'/functions/registry.php';
 
@@ -17,7 +18,7 @@ $session = new Custom\Sessions\session();
 $username = CheckLogin();
 
 PrintAdminHTMLHeader();
-PrintAdminNavBar($_SESSION['EVEOTSusername']);
+PrintAdminNavBar($db, $_SESSION['EVEOTSusername']);
 
 $queryAdmin = $db->fetchColumn('SELECT username FROM Admins WHERE username= :user', array('user' => 'admin'));
 if($queryAdmin != null) {

@@ -5,7 +5,7 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON DJ MAVERICK * ============ 
  */
 
-function PrintAdminNavBar($username) {
+function PrintAdminNavBar($db, $username) {
 
     //Check the security level of the user to see which menus they are displayed
     $securityLevel = CheckSecurityLevel($db, $username);
