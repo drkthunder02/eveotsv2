@@ -35,14 +35,13 @@ if($count == 1) {
     printf("<body>");
     printf("<div class=\"jumbotron col-md-6 col-md-offset-3\">");
     printf("<div class=\"container\">");
-    printf("Wrong Username or Password<br>");
+    printf("Wrong Username or Password<br><br>");
     if($config->GetDebugMode() == true) {
-        printf("Debug: Password: " . $password . "<br>");
+        printf("Debug: Password: " . $password . "<br><br>");
     }
-    printf("<button type=\"btn btn-default\" value=\"Back\" onclick=\"history.back(-1)\">");
+    printf("<button class=\"btn btn-default\" type=\"button\" onclick=\"history.back(-1)\">Back</button>");
     printf("</div>");
     printf("</div>");
-    printf("</body></html>");
 }
 
 ob_end_flush();
