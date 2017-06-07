@@ -15,6 +15,7 @@ $db = DBOpen();
 
 $session = new Custom\Sessions\session();
 $config = new EVEOTS\Config\Config();
+$esi = new EVEOTS\ESI\ESI();
 
 //encrypt the unique session id in the form of a key for the form
 $_SESSION['key'] = uniqid();
@@ -35,11 +36,14 @@ if($username == "") {
     die();
 }
 //Check the security level of the user to see if they are allowed access.
-$securityLevel = CheckSecurityLevel($db, $username);
-if($securityLevel != 1) {
-    printf("div class=\"jumbotron\">");
+$security = CheckSecurityLevel($db, $username);
+if($security['SecurityLevel'] != 1) {
+    printf("<div class=\"jumbotron\">");
     printf("<div class=\"container\">");
-    printf("<h1>You are not authorized to access this area.<br>");
+    printf("<h1>You are not authorized to access this area.</h1><br>");
+    printf("Current security level is: ");
+    var_dump($security['SecurityLevel']);
+    printf("<br>");
     printf("</div></div>");
     die();
 }
@@ -49,7 +53,7 @@ $admins = $db->fetchRowMany('SELECT * FROM Admins ORDER BY username');
 PrintAdminTable($admins, $esi);
 //Print the form to change the password an admin
 printf("<div class=\"container\">");
-printf("<form class=\"form-group\" action=\"process/changepass.php\" method=\"POST\">");
+printf("<form class=\"form-group\" action=\"functions/form/changepass.php\" method=\"POST\">");
 printf("<label for=\"username\">Admin Username</label>");
 printf("<input class=\"form-control\" type=\"text\" name=\"username\" id=\"username\">");
 printf("<label for=\"newPass\">New Password</label>");

@@ -5,8 +5,9 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-//PHP Debug Mode
-error_reporting(E_ALL | E_STRICT);
+// PHP debug mode
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
 
 require_once __DIR__.'/../functions/registry.php';
 
