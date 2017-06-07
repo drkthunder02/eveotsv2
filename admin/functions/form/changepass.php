@@ -9,7 +9,7 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
 
-require_once __DIR__.'/../functions/registry.php';
+require_once __DIR__.'/../../functions/registry.php';
 
 $db = DBOpen();
 
@@ -18,7 +18,7 @@ $config = new EVEOTS\Config\Config();
 
 //Create the md5 hash to see if it matches the value passed through the form
 $uniqueCheck = $_SESSION['key'] . $config->GetSalt();
-$uniqueCheck = md5($unique);
+$uniqueCheck = md5($uniqueCheck);
 //Get the unique key passed from the form
 if(isset($_POST['key'])) {
     $unique = filter_input(INPUT_POST, 'key');
@@ -49,7 +49,7 @@ if(isset($_POST['passConf'])) {
 }
 
 PrintAdminHTMLHeader();
-PrintAdminNavBar($_SESSION['EVEOTSusername']);
+PrintAdminNavBar($db, $_SESSION['EVEOTSusername']);
 
 //Check the passwords
 if($newPass == "" || $passConf == "") {
@@ -64,7 +64,7 @@ if($newPass == "" || $passConf == "") {
     printf("</div>");
 } else {
     $newPass = md5($newPass);
-    $db->update('Admins', array('username'), array('password' => $newPass));
+    $db->update('Admins', array('username' => $username), array('password' => $newPass));
     $timestamp = gmdate('d.m.Y H:i');
     $entry = $_SESSION['EVEOTSusername'] . " changed " . $username . "'s password.";
     AddLogEntry($db, $timestamp, $entry);
