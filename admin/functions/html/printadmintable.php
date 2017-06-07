@@ -20,7 +20,7 @@ function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
                         <td align=\"center\">Security Level</td>
                     </tr>
                 </thead>");
-        
+        printf("<tbody>");
         foreach($admins as $row) {
             if($row['characterID'] != "") {
                 $fetchCharacterInfo = $esi->GetESIInfo($row['characterID'], 'Character');
@@ -32,6 +32,7 @@ function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
                 $fetchCorporationInfo = "";
                 $fetchAllianceInfo = "";
             }
+            
             printf("<tr>");
             printf("<td width=\"32px\">");
             if($row['characterID'] != "") {
@@ -54,6 +55,7 @@ function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
             printf("<td align=\"center\">" . $row['securityLevel'] . "</td>");
             printf("</tr>");
         }
+        printf("</tbody>");
         printf("</table>");
         printf("</div>");
 }
