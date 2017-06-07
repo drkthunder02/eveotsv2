@@ -31,11 +31,18 @@ if($count == 1) {
     $_SESSION["key"] = uniqid();
     header("location:admin_panel.php");
 } else {
-    echo "Wrong Username or Password<br />";
-    if ($config->GetDebugMode() == true) {
-            echo "Debug: Password: ".$password."<br />";
+    PrintAdminHTMLHeader();
+    printf("<body>");
+    printf("<div class=\"jumbotron col-md-6 col-md-offset-3\">");
+    printf("<div class=\"container\">");
+    printf("Wrong Username or Password<br>");
+    if($config->GetDebugMode() == true) {
+        printf("Debug: Password: " . $password . "<br>");
     }
-    echo "<input type=\"button\" value=\"Back\" onclick=\"history.back(-1)\" />";
+    printf("<button type=\"btn btn-default\" value=\"Back\" onclick=\"history.back(-1)\">");
+    printf("</div>");
+    printf("</div>");
+    printf("</body></html>");
 }
 
 ob_end_flush();
