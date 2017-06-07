@@ -36,8 +36,8 @@ function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
             }
             printf("</td>");
             printf("<td>" . $row['username'] . "</td>");
-            printf("<td>" . $fetchCorporationInfo['name'] . "</td>");
-            printf("<td>" . $fetchAllianceInfo['name'] . "</td>");
+            printf("<td>" . $fetchCorporationInfo['corporation_name'] . "</td>");
+            printf("<td>" . $fetchAllianceInfo['alliance_name'] . "</td>");
             printf("<td align=\"center\">" . $row['securityLevel'] . "</td>");
             printf("</tr>");
         }
