@@ -12,6 +12,7 @@ function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
                         <td width=\"32px\"></td>
                         <td>Username</td>
                         <td align=\"center\">Corporation</td>
+                        <td align=\"center\">Alliance</td>
                         <td width=\"100px\">Security Level</td>
                     </tr>
                 </thead>");
