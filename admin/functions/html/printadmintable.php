@@ -5,7 +5,7 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-function PrintAdminTable($admins, $esi) {
+function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
     printf("<div class=\"container\">");
         printf("<thead>
                     <tr>
@@ -18,10 +18,10 @@ function PrintAdminTable($admins, $esi) {
         
         foreach($admins as $row) {
             if($row['characterID'] != "") {
-                $fetchCharacterInfo = $esi->GetCharacterInfo($row['characterID']);
-                $fetchCorporationInfo = $esi->GetCorporationInfo($fetchCharacterInfo['corporation_id']);
+                $fetchCharacterInfo = $esi->GetESIInfo($row['characterID'], 'Character');
+                $fetchCorporationInfo = $esi->GetESIInfo($fetchCharacterInfo['corporation_id'], 'Corporation');
                 if($fetchCorporationInfo['alliance_id']) {
-                    $fetchAllianceInfo = $esi->GetAllianceInfo($fetchCorporationInfo['alliance_id']);
+                    $fetchAllianceInfo = $esi->GetESIInfo($fetchCorporationInfo['alliance_id'], 'Alliance');
                 }
             } else {
                 $fetchCorporationInfo = "";

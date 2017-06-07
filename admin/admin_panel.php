@@ -14,6 +14,7 @@ require_once __DIR__.'/functions/registry.php';
 $db = DBOpen();
 
 $session = new Custom\Sessions\session();
+$esi = new EVEOTS\ESI\ESI();
 
 $username = CheckLogin();
 
