@@ -13,11 +13,11 @@ function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
     printf("<div class=\"container\">");
         printf("<thead>
                     <tr>
-                        <td width=\"32px\"></td>
+                        <td>Portrait</td>
                         <td>Username</td>
                         <td align=\"center\">Corporation</td>
                         <td align=\"center\">Alliance</td>
-                        <td width=\"100px\">Security Level</td>
+                        <td align=\"center\">Security Level</td>
                     </tr>
                 </thead>");
         
@@ -41,13 +41,16 @@ function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
             }
             printf("</td>");
             printf("<td>" . $row['username'] . "</td>");
-            printf("<td>" . $fetchCorporationInfo['corporation_name'] . "</td>");
-            if(isset($fetchAllianceInfo['alliance_name'])) {
-                printf("<td>" . $fetchAllianceInfo['alliance_name'] . "</td>");
+            if($row['corporationID'] != "") {
+                printf("<td><img src=\"http://image.eveonline.com/Corporation/" . $row['corporationID'] . "_32.jpg\" border=\"0\"></td>");
             } else {
                 printf("<td>N/A</td>");
             }
-            
+            if($row['allianceID'] != "") {
+                printf("<td><img src=\"http://image.eveonline.com/Alliance/" . $row['allianceID'] . "_32.jpg\" border=\"0\"></td>");
+            } else {
+                printf("<td>N/A</td>");
+            }          
             printf("<td align=\"center\">" . $row['securityLevel'] . "</td>");
             printf("</tr>");
         }

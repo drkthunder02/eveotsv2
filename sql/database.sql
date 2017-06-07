@@ -15,6 +15,8 @@ CREATE TABLE IF NOT EXISTS `Admins` (
     `username` varchar(65) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
     `password` varchar(65) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
     `characterID` int(11) DEFAULT NULL,
+    `corporationID` int(11) DEFAULT NULL,
+    `allianceID` int(11) DEFAULT NULL,
     `securityLevel` int(11) DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `id` (`id`)
