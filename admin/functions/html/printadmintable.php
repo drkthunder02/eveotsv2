@@ -6,6 +6,10 @@
  */
 
 function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
+    $fetchCharacterInfo = "";
+    $fetchCorporationInfo = "";
+    $fetchAllianceInfo = "";
+    
     printf("<div class=\"container\">");
         printf("<thead>
                     <tr>
@@ -21,7 +25,7 @@ function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
             if($row['characterID'] != "") {
                 $fetchCharacterInfo = $esi->GetESIInfo($row['characterID'], 'Character');
                 $fetchCorporationInfo = $esi->GetESIInfo($fetchCharacterInfo['corporation_id'], 'Corporation');
-                if($fetchCorporationInfo['alliance_id']) {
+                if(isset($fetchCorporationInfo['alliance_id'])) {
                     $fetchAllianceInfo = $esi->GetESIInfo($fetchCorporationInfo['alliance_id'], 'Alliance');
                 }
             } else {
@@ -38,7 +42,12 @@ function PrintAdminTable($admins, \EVEOTS\ESI\ESI $esi) {
             printf("</td>");
             printf("<td>" . $row['username'] . "</td>");
             printf("<td>" . $fetchCorporationInfo['corporation_name'] . "</td>");
-            printf("<td>" . $fetchAllianceInfo['alliance_name'] . "</td>");
+            if(isset($fetchAllianceInfo['alliance_name'])) {
+                printf("<td>" . $fetchAllianceInfo['alliance_name'] . "</td>");
+            } else {
+                printf("<td>N/A</td>");
+            }
+            
             printf("<td align=\"center\">" . $row['securityLevel'] . "</td>");
             printf("</tr>");
         }
