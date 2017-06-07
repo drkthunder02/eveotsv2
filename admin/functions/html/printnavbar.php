@@ -8,10 +8,10 @@
 function PrintAdminNavBar($db, $username) {
 
     //Check the security level of the user to see which menus they are displayed
-    $securityLevel = CheckSecurityLevel($db, $username);
+    $security = CheckSecurityLevel($db, $username);
 
-    if($securityLevel == 1) {
-        printf("<div class=\"navbar navbar-inverse navbar-fixed-top bg-inverse\" style=\"height: 60px;\" role=\"navigation\">
+    if($security['SecurityLevel'] == 1) {
+        printf("<div class=\"navbar navbar-default navbar-fixed-top bg-fade\" style=\"height: 60px;\" role=\"navigation\">
                     <div class=\"navbar-header\">
                         <button class=\"navbar-toggle\" data-target=\".navbar-collapse\" data-toggle=\"collapse\" type=\"button\">
                             <span class=\"sr-only\">Toggle navigation</span>
@@ -45,8 +45,8 @@ function PrintAdminNavBar($db, $username) {
                         </ul>
                     </div>
                 </div>");
-    } else if ($securityLevel == 2) {
-        printf("<div class=\"navbar navbar-inverse navbar-fixed-top bg-inverse\" style=\"height: 60px;\" role=\"navigation\">
+    } else if ($security['SecurityLevel'] == 2) {
+        printf("<div class=\"navbar navbar-default navbar-fixed-top bg-fade\" style=\"height: 60px;\" role=\"navigation\">
                     <div class=\"navbar-header\">
                         <button class=\"navbar-toggle\" data-target=\".navbar-collapse\" data-toggle=\"collapse\" type=\"button\">
                             <span class=\"sr-only\">Toggle navigation</span>
@@ -68,11 +68,12 @@ function PrintAdminNavBar($db, $username) {
                     </div>
                 </div>");
     } else {
-        printf("<div class=\"navbar navbar-inverse navbar-fixed-top bg-inverse\" style=\"height: 60px;\" role=\"navigation\">
+        printf("<div class=\"navbar navbar-default navbar-fixed-top bg-fade\" style=\"height: 60px;\" role=\"navigation\">
                     <div class=\"navbar-header\">
                         <button class=\"navbar-toggle\" data-target=\".navbar-collapse\" data-toggle=\"collapse\" type=\"button\">
                             <span class=\"icon-bar\"></span>
                         </button>
+                    </div>
                     <div class=\"collapse navbar-collapse pull-right\">
                         <ul class=\"nav navbar-nav\">
                             <li><h2>" .  $username . " </h2></li>

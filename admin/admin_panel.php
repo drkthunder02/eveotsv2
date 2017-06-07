@@ -18,6 +18,7 @@ $session = new Custom\Sessions\session();
 $username = CheckLogin();
 
 PrintAdminHTMLHeader();
+printf("<body style=\"padding-top: 70px\">");
 PrintAdminNavBar($db, $_SESSION['EVEOTSusername']);
 
 $queryAdmin = $db->fetchColumn('SELECT username FROM Admins WHERE username= :user', array('user' => 'admin'));
