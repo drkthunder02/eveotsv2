@@ -57,7 +57,7 @@ if($entity == "") {
 //Search CCP's ESI Database for the ID of the entity.
 //We are going to assume we don't have this in our own database
 $data = $esi->SearchESIInfo($entity, $type);
-$id = $data[$type];
+$id = $data[$type][0];
 
 if($type == 'alliance') {
     $entityType = 3;
