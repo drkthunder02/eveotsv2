@@ -70,7 +70,7 @@ printf("</div><!-- Security Level 1 -->");
 printf("<div class=\"form-group\">");
 printf("<label for=\"character\">Character Name</label>");
 printf("<input class=\"form-control\" type=\"text\" id=\"character\" name=\"character\">");
-printf("<input class=\"form-control\" type=\"hidden\" id=\"unique\" name=\"unique\" value=\"" . $unique . "\">");
+printf("<input class=\"form-control\" type=\"hidden\" id=\"key\" name=\"key\" value=\"" . $unique . "\">");
 printf("</div><!-- Character Name form group -->");
 printf("<button type=\"submit\" class=\"btn btn-default\">Add Admin</button>");
 printf("</form>");
@@ -96,7 +96,7 @@ printf("<label for=\"security\">Security Level</label>");
 printf("<select class=\"form-control\" id=\"security\" name=\"security\">");
 printf("<option value=\"1\">1</option><option value=\"2\">2</option>");
 printf("</select>");
-printf("<input class=\"form-control\" type=\"hidden\" id=\"unique\" name=\"unique\" value=\"" . $unique . "\">");
+printf("<input class=\"form-control\" type=\"hidden\" id=\"key\" name=\"key\" value=\"" . $unique . "\">");
 printf("</div><!-- Security Level form group -->");
 printf("<button type=\"submit\" class=\"btn btn-default\">Modify Secruity Level</button>");
 printf("</form>");
@@ -118,7 +118,7 @@ foreach($admins as $a) {
 }
 printf("</select>");
 printf("</div>");
-printf("<input class=\"form-control\" type=\"hidden\" id=\"unique\" name=\"unique\" value=\"" . $unique . "\">");
+printf("<input class=\"form-control\" type=\"hidden\" id=\"key\" name=\"key\" value=\"" . $unique . "\">");
 printf("<button type=\"type\" class=\"btn btn-default\">Delete Administrator</button>");
 printf("</form>");
 printf("</div>");
