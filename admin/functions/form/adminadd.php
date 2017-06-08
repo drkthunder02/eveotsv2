@@ -15,7 +15,7 @@ $db = DBOpen();
 
 $session = new Custom\Sessions\session();
 $config = new EVEOTS\Config\Config();
-$esi = new EVEOTS\ESI\ESI('EVEOTS V2');
+$esi = new EVEOTS\ESI\ESI();
 
 //Encrypt the unique session id in the form of a key for the form
 $unique = $_SESSION['key'] . $config->GetSalt();
