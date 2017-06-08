@@ -89,7 +89,8 @@ if($verified != null) {
     header("Location: $location");
 }
 
-$characterId = $esi->SearchESIInfo($character, 'character');
+$Character = $esi->SearchESIInfo($character, 'character');
+$characterId = $Character['character'][0];
 $corporation = $esi->GetESIInfo($characterId, 'Corporation');
 $alliance = $esi->GetESIInfo($corporation['alliance_id'], 'Alliance');
 
