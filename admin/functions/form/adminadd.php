@@ -62,6 +62,12 @@ if(isset($_POST['username'])) {
     $username = "";
 }
 
+if(isset($_POST['character'])) {
+    $character = filter_input(INPUT_POST, 'character');
+} else {
+    $character = "";
+}
+
 if(isset($_POST['password'])) {
     $password = filter_input(INPUT_POST, 'password');
 } else {
@@ -82,10 +88,17 @@ if($verified != null) {
     header("Location: $location");
 }
 
+$characterId = $esi->SearchESIInfo($character, 'character');
+$corporation = $esi->GetESIInfo($characterId, 'Corporation');
+$alliance = $esi->GetESIInfo($corporation['alliance_id'], 'Alliance');
+
 $hashPass = md5($password);
 $db->insert('Admins', array(
     'username' => $username,
     'password' => $hashPass,
+    'characterID' => $characterId,
+    'corporationID' => $corporation['corporation_id'],
+    'allianceID' => $alliance['alliance_id'],
     'securityLevel' => $security
 ));
 
