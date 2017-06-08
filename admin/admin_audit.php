@@ -51,8 +51,8 @@ if($security['SecurityLevel'] != 1) {
 $admins = $db->fetchRowMany('SELECT * FROM Admins ORDER BY username');
 PrintAdminTable($admins, $esi);
 //Add Administrator Form
+printf("<div class=\"container\">");
 printf("<div class=\"jumbotron\">");
-printf("<div class=\"col-md-4 col-md-offset-4\">");
 printf("<h1>Add Administrator</h1><br>");
 printf("<form action=\"form/addadmin.php\" method=\"POST\">");
 printf("<div class=\"form-group\">");
@@ -79,8 +79,8 @@ printf("</div>");
 
 
 //Edit Administrator Form
+printf("<div class=\"container\">");
 printf("<div class=\"jumbotron\">");
-printf("<div class=\"container col-md-4 col-md-offset-4\">");
 printf("<h1>Edit Administrator</h1><br>");
 printf("<form action=\"process/adminedit.php\" method=\"POST\">");
 printf("<div class=\"form-group\">");
@@ -100,12 +100,13 @@ printf("<input class=\"form-control\" type=\"hidden\" id=\"unique\" name=\"uniqu
 printf("</div><!-- Security Level form group -->");
 printf("<button type=\"submit\" class=\"btn btn-default\">Modify Secruity Level</button>");
 printf("</form>");
-printf("</div></div>");
+printf("</div>");
+printf("</div>");
 
 
 //Delete Administrator Form
+printf("<div class=\"container\">");
 printf("<div class=\"jumbotron\">");
-printf("<div class=\"container col-md-4 col-md-offset-4\">");
 printf("<h1>Delete Administrator</h1><br>");
 printf("<strong>Note:  This action cannot be undone.</strong><br>");
 printf("<form action=\"process/admindelete.php\" method=\"POST\">");
@@ -121,7 +122,9 @@ printf("<input class=\"form-control\" type=\"hidden\" id=\"unique\" name=\"uniqu
 printf("<button type=\"type\" class=\"btn btn-default\">Delete Administrator</button>");
 printf("<input class=\"form-control\" type=\"submit\" value=\"Delete Administrator\">");
 printf("</form>");
-printf("</div></div>");
+printf("</div>");
+printf("</div>");
+
 //Close the body and html tags
 printf("</body></html>");
 
