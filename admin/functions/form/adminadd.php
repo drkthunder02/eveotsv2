@@ -33,8 +33,8 @@ if($user == "") {
     die();
 }
 //Check the security level of the user to see if they are allowed access.
-$securityLevel = CheckSecurityLevel($db, $username);
-if($securityLevel != 1) {
+$security = CheckSecurityLevel($db, $username);
+if($security['SecurityLevel'] != 1) {
     PrintHTMLHeader();
     PrintAdminNavBar($user);
     printf("div class=\"jumbotron\">");

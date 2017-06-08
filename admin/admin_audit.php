@@ -38,8 +38,8 @@ if($username == "") {
     die();
 }
 //Check the security level of the user to see if they are allowed access.
-$securityLevel = CheckSecurityLevel($db, $username);
-if($securityLevel != 1) {
+$security = CheckSecurityLevel($db, $username);
+if($security['SecurityLevel'] != 1) {
     printf("div class=\"jumbotron\">");
     printf("<div class=\"container\">");
     printf("<h1>You are not authorized to access this area.<br>");
