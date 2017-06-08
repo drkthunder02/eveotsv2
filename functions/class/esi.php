@@ -173,7 +173,7 @@ class ESI {
         } else {
             curl_close($ch);
             $data = json_decode($result, true);
-            return data;
+            return $data;
         }
     }
     
