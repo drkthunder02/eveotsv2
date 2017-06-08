@@ -42,7 +42,7 @@ printf("</div>");
 printf("</div>");
 printf("<div class=\"container\">");
 printf("<h1>White List Add Form</h1><br>");
-printf("<form action=\"process/whitelistadd.php\" method=\"POST\">");
+printf("<form action=\"functions/form/whitelistadd.php\" method=\"POST\">");
 printf("<div class=\"form-group\">");
 printf("<label for=\"entity\">Entity</label>");
 printf("<input class=\"form-control\" type=\"text\" id=\"entity\" name=\"entity\">");
