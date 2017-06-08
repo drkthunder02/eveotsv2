@@ -57,8 +57,8 @@ if($unique != $key) {
     die();
 }
 
-if(isset($_POST['username'])) {
-    $username = filter_input(INPUT_POST, 'username');
+if(isset($_POST['admin'])) {
+    $username = filter_input(INPUT_POST, 'admin');
 } else {
     $username = "";
 }

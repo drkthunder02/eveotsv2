@@ -27,6 +27,8 @@ function AdminPanelMsg($msg) {
         printf("<h4>White List was successfully modified.</h4>");
     } else if ($msg == 'WhiteListFail') {
         printf("<h4>White List was not modified successfully.</h4>");
+    } else if ($msg == 'AdminAddSuccess') {
+        printf("<h4>A new Administrator was added to the database.</h4>");
     }
     
     printf("</div></div>");
