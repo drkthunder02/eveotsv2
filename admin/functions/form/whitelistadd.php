@@ -40,7 +40,7 @@ if(isset($_POST['type'])) {
     $type = "";
 }
 
-if(iiset($_POST['entity'])) {
+if(isset($_POST['entity'])) {
     $entity = filter_input(INPUT_POST, 'entity', FILTER_SANITIZE_SPECIAL_CHARS);
 } else {
     $entity = "";

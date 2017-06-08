@@ -98,11 +98,10 @@ CREATE TABLE IF NOT EXISTS `Users` (
 --
 
 CREATE TABLE IF NOT EXISTS `Blues` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
     `EntityID` varchar(20) DEFAULT NULL,
     `EntityType` tinyint(1) DEFAULT 0,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `id` (`id`)
+    PRIMARY KEY (`EntityID`),
+    UNIQUE KEY `EntityID` (`EntityID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
