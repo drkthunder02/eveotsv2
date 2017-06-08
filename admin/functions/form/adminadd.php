@@ -93,15 +93,14 @@ $Character = $esi->SearchESIInfo($character, 'character');
 $characterId = $Character['character'][0];
 $character = $esi->GetESIInfo($characterId, 'Character');
 $corporation = $esi->GetESIInfo($character['corporation_id'], 'Corporation');
-$alliance = $esi->GetESIInfo($corporation['alliance_id'], 'Alliance');
 
 $hashPass = md5($password);
 $db->insert('Admins', array(
     'username' => $username,
     'password' => $hashPass,
     'characterID' => $characterId,
-    'corporationID' => $corporation['corporation_id'],
-    'allianceID' => $alliance['alliance_id'],
+    'corporationID' => $character['corporation_id'],
+    'allianceID' => $corporation['alliance_id'],
     'securityLevel' => $security
 ));
 

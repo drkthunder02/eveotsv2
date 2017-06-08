@@ -36,15 +36,16 @@ if($username == "") {
     printf("</div></div>");
     die();
 }
-
-printf("<div class=\"jumbotron\">");
 printf("<div class=\"container\">");
+printf("<div class=\"jumbotron\">");
 printf("<h1>Search for Members</h1><br>");
 printf("<h3><strong>NOTE:</strong> This is an UNRESTRICTED search, ALL hits will be displayed on one page.</h3>");
-printf("<form class=\"form-group\" action=\"process/membersearch.php\" method=\"POST\">");
+printf("<form action=\"process/membersearch.php\" method=\"POST\">");
+printf("<div class=\"form-group\">");
 printf("<label for=\"search\">Character Search</label>");
 printf("<input class=\"form-control\" type=\"text\" id=\"search\" name=\"search\">");
-printf("<input class=\"form-control\" id=\"submit\" value=\"Search\">");
+printf("</div>");
+printf("<button class=\"btn btn-default\" type=\"submit\">Search</button>");
 printf("</form>");
 printf("</div>");
 printf("</div>");
