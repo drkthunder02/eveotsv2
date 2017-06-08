@@ -5,41 +5,33 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-function PrintWhiteList($whiteList) {
-    $allyList = array();
-    $corpList = array();
-    $charList = array();
-    $allyNum = 0;
-    $corpNum = 0;
-    $charNum = 0;
-    foreach($whiteList as $list) {
-        if($list['EntityType'] == 3) {
-            $allyList[$allyNum] = $list['EntityID'];
-            $allyNum++;
-        } else if($list['EntityType'] == 2) {
-            $corpList[$corpNum] = $list['EntityID'];
-            $corpNum++;
-        } else if($list['EntityType'] ==1) {
-            $charList[$charNum] = $list['EntityID'];
-            $charNum++;
-        }
-    }
+function PrintWhiteList($entities) {
+
     printf("<div class=\"container\">");
-    printf("<table class=\"table-striped\">");
-    printf("<tr><td><Type/td><td>Name</td><td>Members</td></tr>");
-    for($i = 0; $i < $allyNum; $i++) {
-        $ally = $db->fetchRow('SELECT Alliance,Members FROM Alliances WHERE AllianceID= :id', array('id' => $allyList[$i]));
-        printf("<tr><td>Alliance</td><td>" . $ally['Alliance'] . "</td><td>" . $ally['Members'] . "</td></tr>");
+    printf("<div class=\"jumbotron\">");
+    printf("<table class=\"table table-striped\">");
+    printf("<thead>");
+    printf("<tr>");
+    printf("<td>Name</td><td>Character</td><td>Corporation</td><td>Alliance</td>");
+    printf("</tr>");
+    printf("<tbody>");
+    foreach($entities as $entity) {
+        printf("<tr>");
+        if($entity['EntityType'] == 1) {
+            $name = $esi->GetESIInfo($entity['EntityID'], 'Character');
+            printf("<td>" . $name['name'] . "</td><td>X</td><td></td><td></td>");
+        } else if($entity['EntityType'] == 2) {
+            $name = $esi->GetESIInfo($entity['EntityID'], 'Corporation');
+            printf("<td>" . $name['corporation_name'] . "</td><td></td><td>X</td><td></td>");
+        } else if($entity['EntityType'] == 3) {
+            $name = $esi->GetESIInfo($entity['EntityID'], 'Alliance');
+            printf("<td>" . $name['alliance_name'] . "</td><td></td><td></td><td>X</td>");
+        }
+        printf("</tr>");
     }
-    for($i = 0; $i < $corpNum; $i++) {
-        $corp = $db->fetchRow('SELECT Corporation,Members FROM Corporations WHERE CorporationID= :id', array('id' => $corpList[$i]));
-        printf("<tr><td>Corporation</td><td>" . $corp['Corporation'] . "</td><td>" . $corp['Members'] . "</td></tr>");
-    }
-    for($i = 0; $i < $charNum; $i++) {
-        $char = $db->fetchColumn('SELECT Character FROM Characters WHERE CharacterID= :id', array('id' => $charList[$i]));
-        printf("<tr><td>Character</td><td>" . $char . "</td><td>N/A</td></tr>.");
-    }
+    printf("<tbody>");
     printf("</table>");
+    printf("</div>");
     printf("</div>");
 }
 

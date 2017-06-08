@@ -35,6 +35,9 @@ if($username == "") {
     die();
 }
 
+$entities = $db->fetchRowMany('SELECT * FROM Blues');
+PrintWhiteList($entities);
+
 printf("<div class=\"container\">");
 printf("<div class=\"jumbotron\">");
 printf("<h2>If a corporation is in an alliance it is advised <em>not</em> to give the corporation access, but to give the alliance the access. Also remember to keep an eye out for corporations with access joining alliances that shouldn't have it, you should remove these corporations.<br /><strong>TL;DR:</strong> All corporations in your corporation list should NOT be in an alliance.</h2>");
