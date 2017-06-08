@@ -54,7 +54,7 @@ PrintAdminTable($admins, $esi);
 printf("<div class=\"container\">");
 printf("<div class=\"jumbotron\">");
 printf("<h1>Add Administrator</h1><br>");
-printf("<form action=\"functions/form/addadmin.php\" method=\"POST\">");
+printf("<form action=\"functions/form/adminadd.php\" method=\"POST\">");
 printf("<div class=\"form-group\">");
 printf("<label for=\"username\">Username</label>");
 printf("<input class=\"form-control\" type=\"text\" id=\"username\" name=\"username\">");
