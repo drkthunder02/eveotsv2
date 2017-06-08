@@ -27,10 +27,12 @@ PrintAdminNavBar($db, $_SESSION['EVEOTSusername']);
 
 if($_SESSION['EVEOTSid'] == $config->GetAdminID()) {
     printf("<div class=\"container\">");
-    printf("<form class=\"form-group\" action=\"process/clearlogs.php\" method=\"POST\">");
+    printf("<form action=\"functions/form/clearlogs.php\" method=\"POST\">");
+    printf("<div class=\"form-group\">");
     printf("<label>Clear Logs</label>");
     printf("<input class=\"form-control\" type=\"hidden\" id=\"key\" value=\"" . $unique . "\">");
-    printf("<input class=\"form-control\" type=\"submit\" value=\"Clear Logs\">");
+    printf("</div>");
+    printf("<button type=\"submit\" class=\"btn btn-default\">Clear Logs</button>");
     printf("</form>");
 }
 

@@ -30,3 +30,4 @@ require_once __DIR__.'/../functions/process/addlogentry.php';
 require_once __DIR__.'/../functions/process/adminpanelmsg.php';
 require_once __DIR__.'/../functions/process/checklogin.php';
 require_once __DIR__.'/../functions/process/checksecuritylevel.php';
+require_once __DIR__.'/../functions/process/serverprotocol.php';
