@@ -5,10 +5,11 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-//PHP Debug Mode
-error_reporting(E_ALL | E_STRICT);
+// PHP debug mode
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
 
-require_once __DIR__.'/../functions/registry.php';
+require_once __DIR__.'/../../functions/registry.php';
 
 $db = DBOpen();
 
@@ -20,8 +21,6 @@ $esi = new EVEOTS\ESI\ESI();
 $unique = $_SESSION['key'] . $config->GetSalt();
 $unique = md5($unique);
 
-PrintAdminHTMLHeader();
-PrintAdminNavBar($_SESSION['EVEOTSusername']);
 
 if(isset($_POST['key'])) {
     $key = filter_input(INPUT_POST, 'key');
