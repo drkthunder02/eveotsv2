@@ -91,7 +91,8 @@ if($verified != null) {
 
 $Character = $esi->SearchESIInfo($character, 'character');
 $characterId = $Character['character'][0];
-$corporation = $esi->GetESIInfo($characterId, 'Corporation');
+$character = $esi->GetESIInfo($characterId, 'Character');
+$corporation = $esi->GetESIInfo($character['corporation_id'], 'Corporation');
 $alliance = $esi->GetESIInfo($corporation['alliance_id'], 'Alliance');
 
 $hashPass = md5($password);
