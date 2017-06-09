@@ -33,7 +33,7 @@ if($unique != $key) {
     die();
 }
 
-if(iiset($_POST['entity'])) {
+if(isset($_POST['entity'])) {
     $Entity = filter_input(INPUT_POST, 'entity');
 } else {
     $Entity = "";

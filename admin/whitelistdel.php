@@ -48,7 +48,8 @@ printf("<label for=\"entity\">Entity</label>");
 printf("<select class=\"form-control\" id=\"entity\" name=\"entity\">");
 foreach($entities as $entity) {
     //Serealize the data into json first
-    $formData = json_encode(array('EntityID' => $entity['EntityID'], 'EntityType' => $entity['EntityType']));
+    $data = array('EntityID' => $entity['EntityID'], 'EntityType' => $entity['EntityType']);
+    $formData = json_encode($data);
     if($entity['EntityType'] == 1) {
         //Character
         $dbChar = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :id', array('id' => $entity['EntityID']));
