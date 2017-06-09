@@ -1,3 +1,8 @@
+## Description
+
+EVEOTS V2 is built to work with the ESI API for EVE Online.  Those that need to secure their Teamspeak3 servers can utilize this application to allow certain people or groups to have access.
+This application automatically assigns certain groups to certain users based on the settings in the configuration file.
+
 ## Installation Guide
 
 * Go into the eveotsv2 directory and run the command "composer install"
