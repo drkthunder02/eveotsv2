@@ -21,9 +21,6 @@ $esi = new EVEOTS\ESI\ESI();
 $unique = $_SESSION['key'] . $config->GetSalt();
 $unique = md5($unique);
 
-PrintAdminHTMLHeader();
-PrintAdminNavBar($_SESSION['EVEOTSusername']);
-
 if(isset($_POST['key'])) {
     $key = filter_input(INPUT_POST, 'key');
 } else {
@@ -32,7 +29,7 @@ if(isset($_POST['key'])) {
 
 //Check to make sure the form is correct
 if($unique != $key) {
-    printf("Error!");
+    printf("Error!  Invalid verification key.<br>");
     die();
 }
 
