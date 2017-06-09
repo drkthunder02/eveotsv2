@@ -91,7 +91,6 @@ if($us == true) {
 //Try to connect to the teamspeak server
 try {
     $ts3_VirtualServer = TeamSpeak3::factory($config->GetTSServerQuery());
-    printf("Connected to the teamspeak server.<br>");
 } catch (TeamSpeak3_Exception $e) {
     printf("Couldn't connect to the teamspeak server.");
     die("An error occured: ".$e->getMessage()." [B".__LINE__."]");
