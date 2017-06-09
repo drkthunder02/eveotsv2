@@ -6,6 +6,8 @@
  */
 
 function PrintWhiteList($entities) {
+    
+    $esi = new EVEOTS\ESI\ESI();
 
     printf("<div class=\"container\">");
     printf("<div class=\"jumbotron\">");

@@ -5,8 +5,9 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-//PHP Debug Mode
-error_reporting(E_ALL | E_STRICT);
+// PHP debug mode
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
 
 require_once __DIR__.'/../../functions/registry.php';
 
@@ -14,6 +15,7 @@ $db = DBOpen();
 
 $session = new Custom\Sessions\session();
 $config = new EVEOTS\Config\Config();
+$esi = new EVEOTS\ESI\ESI();
 
 //Encryt the unique session id in the form of a key to verify the form
 $unique = $_SESSION['key'] . $config->GetSalt();
@@ -34,49 +36,24 @@ if($unique != $key) {
     die();
 }
 
-if(isset($_POST['type'])) {
-    $type = filter_input(INPUT_POST, 'type');
-} else {
-    $type = "";
-}
-
 if(iiset($_POST['entity'])) {
-    $entity = filter_input(INPUT_POST, 'entity', FILTER_SANITIZE_SPECIAL_CHARS);
+    $Entity = filter_input(INPUT_POST, 'entity');
 } else {
-    $entity = "";
+    $Entity = "";
 }
 
-if($entity == "") {
+if($Entity == "") {
     $location = ServerProtocol() . $_SERVER['HTTP_HOST'];
     $location = $location . dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=WhiteListFail';
     header("Location: $location");
     exit;
 }
 
-//First search for the entity in our own database
-if($type == 'character') {
-    $found = $db->fetchRow('SELECT * FROM Characters WHERE Character= :en', array('en' => $entity));
-} else if ($type == 'corporation') {
-    $found = $db->fetchRow('SELECT * FROM Corporations WHERE Corporation= :en', array('en' => $entity));
-} else if ($type == 'alliance') {
-    $found = $db->fetchRow('SELECT * FROM Alliances WHERE Alliance= :en', array('en' => $entity));
-}
+$data = json_decode($Entity, true);
+$entityID = $data['EntityID'];
+$type = $data['EntityType'];
 
-if($found == false || $found == null) {
-    $location = ServerProtocol() . $_SERVER['HTTP_HOST'];
-    $location = $location. dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=WhiteListFail';
-    header("Location: $location");
-    exit;
-}
-
-//If the entity was found delete them from the Blue list
-if($type == 'character') {
-    $db->delete('Blues', array('EntityID' => $found['CharacterID']));
-} else if ($type == 'corporation') {
-    $db->delete('Blues', array('EntityID' => $found['CorporationID']));
-} else if($type == 'alliance') {
-    $db->delete('Blues', array('EntityID' => $found['AllianceID']));
-}
+$db->delete('Blues', array('EntityID' => $entityID, 'EntityType' => $type));
 
 $timestamp = gmdate('d.m.y H:i');
 $entry = $_SESSION['EVEOTSusername'] . " deleted " . $entity . " from the server's white list.";

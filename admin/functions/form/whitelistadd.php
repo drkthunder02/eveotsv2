@@ -60,10 +60,28 @@ $id = $data[$type][0];
 
 if($type == 'alliance') {
     $entityType = 3;
+    $foundAlly = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $id));
+    if($foundAlly == false) {
+        $db->insert('Alliances', array(
+            'AllianceID' => $id
+        ));
+    }
 } else if ($type == 'corporation') {
     $entityType = 2;
+    $foundCorp = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $id));
+    if($foundCorp == false) {
+        $db->insert('Corporations', array(
+            'CorporationID' => $id
+        ));
+    }
 } else if ($type == 'character') {
     $entityType = 1;
+    $foundChar = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :id', array('id' => $id));
+    if($foundChar == false) {
+        $db->insert('Characters', array(
+            'CharacterID' => $id
+        ));
+    }
 }
 
 //Add the entity into the Blue table in the database

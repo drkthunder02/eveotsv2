@@ -29,11 +29,10 @@ INSERT INTO `Admins` VALUES(1, 'admin', '21232f297a57a5a743894a0e4a801fc3', NULL
 --
 
 CREATE TABLE IF NOT EXISTS `Alliances` (
-    `id` int(11) AUTO_INCREMENT,
     `Alliance` varchar(255) DEFAULT "",
     `AllianceID` int(11) DEFAULT 0,
     `Ticker` varchar(10) DEFAULT "",
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`AllianceID`),
     UNIQUE KEY `AllianceID` (`AllianceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -42,13 +41,12 @@ CREATE TABLE IF NOT EXISTS `Alliances` (
 --
 
 CREATE TABLE IF NOT EXISTS `Corporations` (
-    `id` int(11) AUTO_INCREMENT,
     `AllianceID` varchar(20) DEFAULT "0",
     `Corporation` varchar(255) DEFAULT "",
     `CorporationID` varchar(20) DEFAULT "",
     `MemberCount` int(11) DEFAULT NULL,
     `Ticker` varchar(20) DEFAULT "",
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`CorporationID`),
     UNIQUE KEY `CorporationID` (`CorporationID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -57,11 +55,10 @@ CREATE TABLE IF NOT EXISTS `Corporations` (
 --
 
 CREATE TABLE IF NOT EXISTS `Characters` (
-    `id` int(11) AUTO_INCREMENT,
     `CorporationID` varchar(20) DEFAULT "0",
     `Character` varchar(255) DEFAULT "",
     `CharacterID` varchar(20) DEFAULT "0",
-    PRIMARY KEY (`id`),
+    PRIMARY KEY (`CharacterID`),
     UNIQUE KEY `CharacterID` (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
