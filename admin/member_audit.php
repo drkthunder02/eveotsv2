@@ -74,13 +74,13 @@ if(isset($_GET['page'])) {
 }
 
 //Get the rows to populate the table
-$rows = $db->fetchRowMany('SELECT * FROM Users ORDER BY TSName AND ASC LIMIT ' . $listFrom . ',' . $listAmount);
+$rows = $db->fetchRowMany('SELECT * FROM Users ORDER BY TSName ASC LIMIT ' . $listFrom . ',' . $listAmount);
 
 //Print the table of members
 printf("<div class=\"container\">");
 printf($userCount . " Registered members.<br>");
 printf($userCountMinusBlues . " Excluding blues.<br><br>");
-printf("<form class=\"form-group\" action=\"process/memberedit\" method=\"POST\">");
+printf("<form class=\"form-group\" action=\"process/memberedit.php\" method=\"POST\">");
 printf("<table class=\"table table-striped\">");
 foreach($rows as $row) {
     $id = $row['id'];

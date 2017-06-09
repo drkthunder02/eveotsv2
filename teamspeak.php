@@ -112,7 +112,7 @@ try {
 }
 //Attempt to store the details of the user in the database
 try {
-    //Store the info into the database.  Use PDO without the simplon wrapper for this operation
+    //Store the info into the database.
     $tsUniqueID = "'" . $tsUniqueID . "'";
     $db->update('Users', array('CharacterID' => $characterID), array(
         'TSUniqueID' => $tsUniqueID,

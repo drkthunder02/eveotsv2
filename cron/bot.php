@@ -4,8 +4,8 @@
 ========== * EVE ONLINE TEAMSPEAK V2 BASED ON DJ MAVERICK * ==========
 */
 // PHP debug mode
-//ini_set('display_errors', 'On');
-//error_reporting(E_ALL | E_STRICT);
+ini_set('display_errors', 'On');
+error_reporting(E_ALL | E_STRICT);
 // Required files
 require_once __DIR__.'/functions/registry.php';
 
