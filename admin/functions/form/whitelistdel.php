@@ -53,7 +53,7 @@ $type = $data['EntityType'];
 $db->delete('Blues', array('EntityID' => $entityID, 'EntityType' => $type));
 
 $timestamp = gmdate('d.m.y H:i');
-$entry = $_SESSION['EVEOTSusername'] . " deleted " . $entity . " from the server's white list.";
+$entry = $_SESSION['EVEOTSusername'] . " deleted " . $entityID . " from the server's white list.";
 AddLogEntry($db, $timestamp, $entry);
 DBClose($db);
 

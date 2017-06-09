@@ -50,7 +50,6 @@ foreach($entities as $entity) {
     //Serealize the data into json first
     $data = array('EntityID' => $entity['EntityID'], 'EntityType' => $entity['EntityType']);
     $formData = json_encode($data);
-    $formData = str_replace('"', '\"', $formData);
     if($entity['EntityType'] == 1) {
         //Character
         $dbChar = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :id', array('id' => $entity['EntityID']));
