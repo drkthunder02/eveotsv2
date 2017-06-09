@@ -49,7 +49,10 @@ if($security['SecurityLevel'] != 1) {
 
 //Print the table of Administrators
 $admins = $db->fetchRowMany('SELECT * FROM Admins ORDER BY username');
-PrintAdminTable($admins, $esi);
+if($admins != false || $admins != null) {
+    PrintAdminTable($admins, $esi);
+}
+
 //Add Administrator Form
 printf("<div class=\"container\">");
 printf("<div class=\"jumbotron\">");

@@ -52,7 +52,7 @@ printf("</div>");
 
 $listAmount = 50;
 $userCount = $db->fetchColumn('SELECT COUNT(id) FROM Users');
-$blueCount = $db->fetchColumn('SELECT COUNT(id) FROM Users WHERE Blue=\"1\">');
+$blueCount = $db->fetchColumn('SELECT COUNT(id) FROM Users WHERE Blue=\"true\">');
 $userCountMinusBlues = $userCount - $blueCount;
 $exactPages = $userCount / $listAmount;
 $maxPages = ceil($exactPages);

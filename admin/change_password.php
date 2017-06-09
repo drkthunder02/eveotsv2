@@ -50,7 +50,9 @@ if($security['SecurityLevel'] != 1) {
 
 //Print the list of Admins and their ids
 $admins = $db->fetchRowMany('SELECT * FROM Admins ORDER BY username');
-PrintAdminTable($admins, $esi);
+if($admins != false || $admins != null) {
+    PrintAdminTable($admins, $esi);
+}
 //Print the form to change the password an admin
 printf("<div class=\"container\">");
 printf("<form class=\"form-group\" action=\"functions/form/changepass.php\" method=\"POST\">");
