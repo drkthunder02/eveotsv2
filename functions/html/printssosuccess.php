@@ -34,12 +34,6 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     $charWhiteList = $db->fetchRowMany('SELECT * FROM Blues WHERE EntityType= :type', array('type' => 1));
     $corpWhiteList = $db->fetchRowMany('SELECT * FROM Blues WHERE EntityType= :type', array('type' => 2));
     $allyWhiteList = $db->fetchRowMany('SELECT * FROM Blues WHERE EntityType= :type', array('type' => 3));
-    var_dump($charWhiteList);
-    printf("<br>");
-    var_dump($corpWhiteList);
-    printf("<br>");
-    var_dump($allyWhiteList);
-    printf("<br>");
     $usWhiteList = $config->GetMainAlliance();
     
     //Check if the person is part of the main alliance / corp

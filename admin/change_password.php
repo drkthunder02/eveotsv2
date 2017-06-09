@@ -41,9 +41,7 @@ if($security['SecurityLevel'] != 1) {
     printf("<div class=\"jumbotron\">");
     printf("<div class=\"container\">");
     printf("<h1>You are not authorized to access this area.</h1><br>");
-    printf("Current security level is: ");
-    var_dump($security['SecurityLevel']);
-    printf("<br>");
+    printf("Current security level is: " . $security['SecurityLevel']);
     printf("</div></div>");
     die();
 }
