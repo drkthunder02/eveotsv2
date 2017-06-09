@@ -37,7 +37,9 @@ if($username == "") {
 }
 
 $entities = $db->fetchRowMany('SELECT * FROM Blues');
-PrintWhiteList($entities);
+if($entities != false || $entities != null) {
+    PrintWhiteList($entities);
+}
 
 printf("<div class=\"container\">");
 printf("<div class=\"jumbotron\">");
@@ -46,36 +48,38 @@ printf("<form action=\"functions/form/whitelistdel.php\" method=\"POST\">");
 printf("<div class=\"form-group\">");
 printf("<label for=\"entity\">Entity</label>");
 printf("<select class=\"form-control\" id=\"entity\" name=\"entity\">");
-foreach($entities as $entity) {
-    //Serealize the data into json first
-    $data = array('EntityID' => $entity['EntityID'], 'EntityType' => $entity['EntityType']);
-    $formData = json_encode($data);
-    if($entity['EntityType'] == 1) {
-        //Character
-        $dbChar = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :id', array('id' => $entity['EntityID']));
-        if($dbChar['Character'] == "") {
-            $data = $esi->GetESIInfo($entity['EntityID'], 'Character');
-            printf("<option value=\"" . $formData . "\">" . $data['name'] . "</option>");
-        } else {
-            printf("<option value=\"" . $formData . "\">" . $dbChar['Character'] . "</option>");
-        }
-    } else if($entity['EntityType'] == 2) {
-        //Corporation
-        $dbCorp = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $entity['EntityID']));
-        if($dbCorp['Corporation'] == "") {
-            $data = $esi->GetESIInfo($entity['EntityID'], 'Corporation');
-            printf("<option value=\"" . $formData . "\">" . $data['corporation_name'] . "</option>");
-        } else {
-            printf("<option value=\"" . $formData . "\">" . $dbCorp['Corporation'] . "</option>");
-        }
-    } else if ($entity['EntityType'] == 3) {
-        //Alliance
-        $dbAlly = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $entity['EntityID']));
-        if($dbAlly['Alliance'] == "") {
-            $data = $esi->GetESIInfo($entity['EntityID'], 'Alliance');
-            printf("<option value=\"" . $formData . "\">" . $data['alliance_name'] . "</option>");
-        } else {
-            printf("<option value=\"" . $formData . "\">" . $dbAlly['Alliance'] . "</option>");
+if($entities != false || $entities != null) {
+    foreach($entities as $entity) {
+        //Serealize the data into json first
+        $data = array('EntityID' => $entity['EntityID'], 'EntityType' => $entity['EntityType']);
+        $formData = json_encode($data);
+        if($entity['EntityType'] == 1) {
+            //Character
+            $dbChar = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :id', array('id' => $entity['EntityID']));
+            if($dbChar['Character'] == "") {
+                $data = $esi->GetESIInfo($entity['EntityID'], 'Character');
+                printf("<option value=" . $formData . ">" . $data['name'] . "</option>");
+            } else {
+                printf("<option value=" . $formData . ">" . $dbChar['Character'] . "</option>");
+            }
+        } else if($entity['EntityType'] == 2) {
+            //Corporation
+            $dbCorp = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $entity['EntityID']));
+            if($dbCorp['Corporation'] == "") {
+                $data = $esi->GetESIInfo($entity['EntityID'], 'Corporation');
+                printf("<option value=" . $formData . ">" . $data['corporation_name'] . "</option>");
+            } else {
+                printf("<option value=" . $formData . ">" . $dbCorp['Corporation'] . "</option>");
+            }
+        } else if ($entity['EntityType'] == 3) {
+            //Alliance
+            $dbAlly = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $entity['EntityID']));
+            if($dbAlly['Alliance'] == "") {
+                $data = $esi->GetESIInfo($entity['EntityID'], 'Alliance');
+                printf("<option value=" . $formData . ">" . $data['alliance_name'] . "</option>");
+            } else {
+                printf("<option value=" . $formData . ">" . $dbAlly['Alliance'] . "</option>");
+            }
         }
     }
 }

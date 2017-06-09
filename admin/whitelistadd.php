@@ -37,7 +37,9 @@ if($username == "") {
 }
 
 $entities = $db->fetchRowMany('SELECT * FROM Blues');
-PrintWhiteList($entities);
+if($entities != false || $entities != null) {
+    PrintWhiteList($entities);
+}
 
 printf("<div class=\"container\">");
 printf("<div class=\"jumbotron\">");
