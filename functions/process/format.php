@@ -7,7 +7,7 @@
 
 // don't put html in a cron jobs output
 function Format($php, $html) {
-    if ($_SERVER['HTTP_USER_AGENT'] == false) {
+    if (!isset($_SERVER['HTTP_USER_AGENT'])) {
         echo $php;
     } else {
         echo $html;
