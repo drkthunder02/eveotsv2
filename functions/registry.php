@@ -16,15 +16,11 @@ require_once __DIR__.'/../functions/curl/multicurl.php';
 require_once __DIR__.'/../functions/database/dbclose.php';
 require_once __DIR__.'/../functions/database/dbopen.php';
 
-//ESI Functions
-require_once __DIR__.'/../functions/esi/storecharacterinfo.php';
-
 //HTML Functions
 require_once __DIR__.'/../functions/html/printhtmlheader.php';
 require_once __DIR__.'/../functions/html/printssosuccess.php';
 
 //Process Functions
-require_once __DIR__.'/../functions/process/escapestring.php';
 require_once __DIR__.'/../functions/process/format.php';
 require_once __DIR__.'/../functions/process/storessodata.php';
 

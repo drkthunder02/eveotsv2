@@ -40,21 +40,29 @@ foreach($clientList as $client) {
     $reg = $db->fetchRow('SELECT * FROM Users WHERE TSDatabaseID= :id', array('id' => $client_database_id));
     $rowCount = $db->getRowCount();
     if($rowCount == 0) {
-        format("Skipping user, not registered (" . $client['client_nickname'] . ")\n",
+        $log = Format("Skipping user, not registered (" . $client['client_nickname'] . ")\n",
                "Skipping user, not registered (" . $client['client_nickname'] . "<br>");
+        $date = gmdate('m.d.Y H:i');
+        printf($date . ": " . $log);
     } else {
         $tsDatabaseID = $reg['TSDatabaseID'];
         $tsUniqueID = $reg['TSUniqueID'];
         $tsName = $reg['TSName'];
-        Format("Processing: " . $tsName . "\n", "Processing: " . $tsName . "<br>");
+        $log = Format("Processing: " . $tsName . "\n", "Processing: " . $tsName . "<br>");
+        $date = gmdate('m.d.Y H:i');
+        printf($date . ": " . $log);
         $users++;
         if($client['client_nickname'] != $tsName && $client['client_nickname'] != $tsName . "1") {
             try {
                 $ts3_VirtualServer->clientGetByUid($tsUniqueID)->Kick(TeamSpeak3::KICK_SERVER, "SecurityBot: Your nickname should be exactly ".$tsName);
-                Format(">>> Kicked user ".$tsName.", their name was ".$client['client_nickname']."\n","Kicked user ".$tsName.", their name was ".$client['client_nickname']."<br />");
+                $log = Format(">>> Kicked user ".$tsName.", their name was ".$client['client_nickname']."\n","Kicked user ".$tsName.", their name was ".$client['client_nickname']."<br />");
+                $date = gmdate('m.d.Y H:i');
+                printf($date . ": " . $log);
                 $kicked++;
             } catch (TeamSpeak3_Exception $e) {
-                format("Debug: User ".$tsName." could not be kicked. (Error: ".$e->getMessage().")\n", "Debug: User ".$tsName." could not be kicked. Probably wasn't connected in the first place. (Error: ".$e->getMessage().")<br />");
+                $log = Format("Debug: User ".$tsName." could not be kicked. (Error: ".$e->getMessage().")\n", "Debug: User ".$tsName." could not be kicked. Probably wasn't connected in the first place. (Error: ".$e->getMessage().")<br />");
+                $date = gmdate('m.d.Y H:i');
+                printf($date . ": " . $log);
             }
         }
     }
@@ -64,6 +72,7 @@ foreach($clientList as $client) {
 DBClose($db);
 
 //Log the details of the bot operation
-echo "$users users checked, $kicked users kicked.";
+$date = gmdate('m.d.Y H:i');
+printf($date . ": " . $users . " users checked, " . $kicked . " users kicked.");
 
 ?>

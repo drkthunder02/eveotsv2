@@ -1,0 +1,1 @@
+* * * * * /usr/bin/php /var/www/eveotsv2/cron/bot.php >> /var/www/eveotsv2/cron/log/bot.log 2>&1
