@@ -9,7 +9,7 @@
     ],
     "require": {
         "PHP": ">=7.0",
-        "simplon/mysql": "2.1.8",
+        "simplon/mysql": "1.4.2",
         "planetteamspeak/ts3-php-framework": "1.1.25",
         "twbs/bootstrap": "4.0.0-alpha.6"
     }
