@@ -38,7 +38,7 @@ for($i = 0; $i < $pages; $i++) {
     for($j = 0; $j < $maxEntities; $j++) {
         //Calculate the index being curently built
         $urlIndex = ($i * $maxEntities) + $j;
-        if($urlIndex == $maxAllianceRow) {
+        if($urlIndex == $maxCharacterRow) {
             break;
         }
         //Add the url index to the data to be sent
