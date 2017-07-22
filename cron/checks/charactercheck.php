@@ -9,8 +9,9 @@ require_once __DIR__.'/../../functions/registry.php';
 
 $start = time();
 $configClass = new \EVEOTS\Config\Config();
-$config = $configClass->GetESIConfig();
-$useragent = $config['useragent'];
+$esiClass = new \EVEOTS\ESI\ESI();
+$esiConfig = $esiClass->GetESIConfig();
+$useragent = $esiConfig['useragent'];
 $DEBUG = $configClass->GetDebugMode();
 $maxEntities = $configClass->GetMaxESICalls();
 
