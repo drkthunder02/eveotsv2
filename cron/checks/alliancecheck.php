@@ -5,7 +5,7 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-require_once __DIR__.'/../functions/registry.php';
+require_once __DIR__.'/../../functions/registry.php';
 
 $start = time();
 $configClass = new \EVEOTS\Config\Config();

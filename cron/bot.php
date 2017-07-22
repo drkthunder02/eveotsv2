@@ -7,7 +7,7 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ALL | E_STRICT);
 // Required files
-require_once __DIR__.'/functions/registry.php';
+require_once __DIR__.'/../functions/registry.php';
 
 //Activate the configuration class
 $config = new \EVEOTS\Config\Config();
