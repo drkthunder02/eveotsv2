@@ -30,7 +30,7 @@ $pages = ceil(sizeof($Alliances) / $maxEntities);
 
 //Build the urls to be sent to the api server
 for($i = 0; $i < sizeof($Alliances); $i++) {
-    $urls[$i] = 'https://esi.tech.ccp.is/latset/alliances/' . $Alliances[$i]['AllianceID'] . '/?datasource=tranquility';  
+    $urls[$i] = 'https://esi.tech.ccp.is/latest/alliances/' . $Alliances[$i]['AllianceID'] . '/?datasource=tranquility';  
 }
 
 //Send 20 at a time to the server to be processed
@@ -50,7 +50,7 @@ for($i = 0; $i < $pages; $i++) {
     //Insert the data into the database
     for($j = 0; $j < $maxEntities; $j++) {
         $index = ($i * $maxEntities) + $j;
-        if($index == $maxAllianceId) {
+        if($index == $maxAllianceRow) {
             break;
         }
         //Update the alliance information
