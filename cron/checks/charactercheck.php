@@ -13,7 +13,7 @@ $esiClass = new \EVEOTS\ESI\ESI();
 $esiConfig = $esiClass->GetESIConfig();
 $useragent = $esiConfig['useragent'];
 $DEBUG = $configClass->GetDebugMode();
-$maxEntities = $configClass->GetMaxESICalls();
+$maxEntities = $esiClass->GetMaxESICalls();
 
 //Open the database connection
 $db = DBOpen();
