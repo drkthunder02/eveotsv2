@@ -108,7 +108,7 @@ $timestamp = gmdate('d.m.y H:i');
 $entry = $_SESSION['username'] . " added " . $username . "'s administrator account.";
 AddLogEntry($db, $timestamp, $entry);
         
-$location = 'http://' . $_SERVER['HTTP_HOST'];
+$location = ServerProtocol() . $_SERVER['HTTP_HOST'];
 $location = $location . dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=AdminAddSuccess';
 header("Location: $location");
 

@@ -83,7 +83,7 @@ AddLogEntry($db, $timestamp, $entry);
 DBClose($db);
 
 //Redirect back to the admin_panel
-$location = 'http://' . $_SERVER['HTTP_HOST'];
+$location = ServerProtocol() . $_SERVER['HTTP_HOST'];
 $location = $location . dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=' . $msg;
 header("Location: $location");
 
