@@ -208,7 +208,7 @@ class ESI {
         //then add them to the multi-handle for curl
         foreach($data as $key => $value) {
             $curls[$key] = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url[$key]);
+            curl_setopt($ch, CURLOPT_URL, $urls[$key]);
             curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
             curl_setopt($ch, CURLOPT_HTTPGET, true);
