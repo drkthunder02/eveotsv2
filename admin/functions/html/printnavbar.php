@@ -23,7 +23,6 @@ function PrintAdminNavBar($db, $username) {
                             <span class=\"icon-bar\"></span>
                             <span class=\"icon-bar\"></span>
                             <span class=\"icon-bar\"></span>
-                            <span class=\"icon-bar\"></span>
                         </button>
                     </div>
                     <div class=\"collapse navbar-collapse pull-left\">
@@ -33,7 +32,6 @@ function PrintAdminNavBar($db, $username) {
                             <li><a href=\"logs.php\">Logs</a></li>
                             <li><a href=\"admin_audit.php\">Admin Audit</a></li>
                             <li><a href=\"member_audit.php\">Member Audit</a></li>
-                            <li><a href=\"discrepancies.php\">Discrepancies</a></li>
                             <li><a href=\"whitelistadd.php\">White List Add</a></li>
                             <li><a href=\"whitelistdel.php\">White List Delete</a></li
                         </ul>
