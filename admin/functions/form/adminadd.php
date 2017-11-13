@@ -89,18 +89,29 @@ if($verified != null) {
     header("Location: $location");
 }
 
-$Character = $esi->SearchESIInfo($character, 'character');
-$characterId = $Character['character'][0];
-$character = $esi->GetESIInfo($characterId, 'Character');
-$corporation = $esi->GetESIInfo($character['corporation_id'], 'Corporation');
+$Characters = $esi->SearchESIInfo($character, 'character');
+foreach($Characters as $param) {
+    $char = $esi->GetESIInfo($param, 'Character');
+    if($char['name'] == $character) {
+        $characterId = $param;
+        $corporationId = $char['corporation_id'];
+        $corporation = $esi->GetESIInfo($char['corporation_id'], 'Corporation');
+        if(isset($corporation['alliance_id'])) {
+            $allianceId = $corporation['alliance_id'];
+        } else {
+            $allianceId = 0;
+        }
+        break;
+    }
+}
 
 $hashPass = md5($password);
 $db->insert('Admins', array(
     'username' => $username,
     'password' => $hashPass,
     'characterID' => $characterId,
-    'corporationID' => $character['corporation_id'],
-    'allianceID' => $corporation['alliance_id'],
+    'corporationID' => $corporationId,
+    'allianceID' => $allianceId,
     'securityLevel' => $security
 ));
 
