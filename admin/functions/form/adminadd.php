@@ -90,7 +90,7 @@ if($verified != null) {
 }
 
 $Characters = $esi->SearchESIInfo($character, 'character');
-foreach($Characters as $param) {
+foreach($Characters['character'] as $param) {
     $char = $esi->GetESIInfo($param, 'Character');
     if($char['name'] == $character) {
         $characterId = $param;
