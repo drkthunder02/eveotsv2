@@ -65,6 +65,9 @@ if(isset($_POST['us'])) {
 }
 if(isset($_POST['tsname'])) {
     $tsname = filter_input(INPUT_POST, 'tsname');
+    if(strlen($tsname)>30) {
+        $tsname = substr($tsname,0,30);
+    }
 } else {
     $tsname = '';
 }
