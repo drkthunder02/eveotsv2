@@ -53,11 +53,28 @@ for($i = 0; $i < $pages; $i++) {
         if($index == $maxCharacterRow) {
             break;
         }
-        //Update the character's data in the database
-        $db->update('Characters', array('CharacterID' => $Characters[$index]['CharacterID']), array(
-            'Character' => $results[$j]['name'],
-            'CorporationID' => $results[$j]['corporation_id']
-        ));
+        if(!isset($results[$j]['error'])) {
+            //Update the character's data in the database
+            $db->update('Characters', array('CharacterID' => $Characters[$index]['CharacterID']), array(
+                'Character' => $results[$j]['name'],
+                'CorporationID' => $results[$j]['corporation_id']
+            ));
+            //Insert our log into the ESI Logs
+            $db->insert('ESILogs', array(
+                'Time' => gmdate('d.m.Y H:i:s'),
+                'Type' => 'CharacterCheck',
+                'Call' => 'charactercheck.php',
+                'Entry' => 'Updated Character of ID ' . $Characters[$index]['CharacterID'] . '.'
+            ));
+        } else {
+            $db->insert('ESILogs', array(
+                'Time' => gmdate('d.m.Y H:i:s'),
+                'Type' => 'CharacterCheck',
+                'Call' => 'charactercheck.php',
+                'Entry' => 'Error pulling ESI data from server.'
+            ));
+        }
+        
         //Update the last row modified for ESI
         if($nextCharacterRow == $maxCharacterRow) {
             $db->replace('ESICallsCharacter', array('NextCharacterIdCheck' => 1));
@@ -65,13 +82,7 @@ for($i = 0; $i < $pages; $i++) {
             $nextCharacterRow++;
             $db->replace('ESICallsCharacter', array('NextCharacterIdCheck' => $nextCharacterRow));
         }
-        //Insert our log into the ESI Logs
-        $db->insert('ESILogs', array(
-            'Time' => gmdate('d.m.Y H:i:s'),
-            'Type' => 'CharacterCheck',
-            'Call' => 'charactercheck.php',
-            'Entry' => 'Updated Character of ID ' . $Characters[$index]['CharacterID'] . '.'
-        ));
+        
     }
 }
 

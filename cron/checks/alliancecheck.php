@@ -53,18 +53,28 @@ for($i = 0; $i < $pages; $i++) {
         if($index == $maxAllianceRow) {
             break;
         }
-        //Update the alliance information
-        $db->update('Alliances', array('AllianceID' => $Alliances[$index]['AllianceID']), array(
-            'Alliance' => $results[$j]['alliance_name'],
-            'Ticker' => $results[$j]['ticker']
-        ));
-        //Add an entry to the ESI Logs
-        $db->insert('ESILogs', array(
-            'Time' => gmdate('d.m.Y H:is'),
-            'Type' => 'AllianceCheck',
-            'Call' => 'alliancecheck.php',
-            'Entry' => 'Updated Alliance of ID ' . $Alliances[$index]['AllianceID'] . '.'
-        ));
+        if(!isset($results[$j]['error'])) {
+            //Update the alliance information
+            $db->update('Alliances', array('AllianceID' => $Alliances[$index]['AllianceID']), array(
+                'Alliance' => $results[$j]['alliance_name'],
+                'Ticker' => $results[$j]['ticker']
+            ));
+            //Add an entry to the ESI Logs
+            $db->insert('ESILogs', array(
+                'Time' => gmdate('d.m.Y H:is'),
+                'Type' => 'AllianceCheck',
+                'Call' => 'alliancecheck.php',
+                'Entry' => 'Updated Alliance of ID ' . $Alliances[$index]['AllianceID'] . '.'
+            ));
+        } else {
+            $db->insert('ESILogs', array(
+                'Time' => gmdate('d.m.Y H:i:s'),
+                'Type' => 'AllianceCheck',
+                'Call' => 'alliancecheck.php',
+                'Entry' => 'Error pulling ESI data from server.'
+            ));
+        }
+        
         //Update the last row modified for ESI
         if($nextAllianceRow == $maxAllianceRow) {
             $db->replace('ESICallsAlliance', array('NextAllianceIdCheck' => 1));
