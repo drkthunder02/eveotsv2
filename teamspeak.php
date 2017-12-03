@@ -115,7 +115,7 @@ try {
 
         } catch (\Simplon\Mysql\MysqlException $e) {
             $tsClient->remServerGroup($usergroup);
-            die("Error: Failed to INSERT new member. (Error: ".$e->getMessage()." [F".__LINE__."])");
+            die("Error: Failed to INSERT or UPDATE member. (Error: ".$e->getMessage()." [F".__LINE__."])");
         }
     }
 }  catch (TeamSpeak3_Exception $e) {
@@ -125,7 +125,18 @@ try {
 try {
     $ts3_VirtualServer->clientGetByName($tsname)->addServerGroup($usergroup);
 } catch (TeamSpeak3_Exception $e) {
-    die("Error: Could not find you on the server, your nickname should be exactly '" . $tsname . "'. Either that or you already have permissions. (Error: ".$e->getMessage()." [F".__LINE__."])");
+    $ts3_VirtualServer->clientGetByName($tsname)->remServerGroup($usergroup);
+    $ts3_VirtualServer->clientGetByName($tsname)->addServerGroup($usergroup);
+    printf("<div class=\"jumbotron\">");
+    printf("<div class=\"container\">");
+    printf("One of two things happened.<br>");
+    printf("1.)  We found you were already registered.<br>");
+    printf("2.)  Your name didn't match, and your nickname should be exactly '" . $tsname . "'.<br>");
+    printf("If you were already registered, please do not try again.  You should have successfully received the correct permissions.<br>");
+    printf("Error: " . $e->getMessage() . " [F" . __LINE__ . "]");
+    printf("</div>");
+    printf("</div>");
+    die();
 }
 
 printf("<div class=\"jumbotron\">");
