@@ -19,5 +19,5 @@ DBClose($db);
 
 //Redirect back to the admin panel
 $location = ServerProtocol() . $_SERVER['HTTP_HOST'];
-$location = $location . dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=WhiteListSuccess';
+$location = $location . dirname($_SERVER['PHP_SELF']) . '/../../admin_panel.php?msg=ClearLogsSuccess';
 header("Location: $location");
