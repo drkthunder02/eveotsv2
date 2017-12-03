@@ -103,6 +103,21 @@ try {
     $tsClient = $ts3_VirtualServer->clientGetByName($tsname);
     $tsDatabaseID = $tsClient->client_database_id;
     $tsUniqueID = $tsClient->client_unique_identifier;
+    if($tsUniqueID != NULL && $tsUniqueID != NULL) {
+        //Attempt to store the details of the user in the database
+        try {
+            //Store the info into the database.
+            $tsUniqueID = "'" . $tsUniqueID . "'";
+            $db->update('Users', array('CharacterID' => $characterID), array(
+                'TSUniqueID' => $tsUniqueID,
+                'TSDatabaseID' => $tsDatabaseID
+            ));
+
+        } catch (\Simplon\Mysql\MysqlException $e) {
+            $tsClient->remServerGroup($usergroup);
+            die("Error: Failed to INSERT new member. (Error: ".$e->getMessage()." [F".__LINE__."])");
+        }
+    }
 }  catch (TeamSpeak3_Exception $e) {
     die("Error: Could not find you on the server, your nickname should be exactly \"$tsname\" (Error: ".$e->getMessage()." [F".__LINE__."])");
 }
@@ -112,20 +127,6 @@ try {
 } catch (TeamSpeak3_Exception $e) {
     die("Error: Could not find you on the server, your nickname should be exactly '" . $tsname . "'. Either that or you already have permissions. (Error: ".$e->getMessage()." [F".__LINE__."])");
 }
-//Attempt to store the details of the user in the database
-try {
-    //Store the info into the database.
-    $tsUniqueID = "'" . $tsUniqueID . "'";
-    $db->update('Users', array('CharacterID' => $characterID), array(
-        'TSUniqueID' => $tsUniqueID,
-        'TSDatabaseID' => $tsDatabaseID
-    ));
-    
-} catch (\Simplon\Mysql\MysqlException $e) {
-    $tsClient->remServerGroup($usergroup);
-    die("Error: Failed to INSERT new member. (Error: ".$e->getMessage()." [F".__LINE__."])");
-}
-
 
 printf("<div class=\"jumbotron\">");
 printf("<div class=\"container\">");

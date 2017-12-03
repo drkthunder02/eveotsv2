@@ -54,6 +54,7 @@ foreach($clientList as $client) {
         $users++;
         if($client['client_nickname'] != $tsName && $client['client_nickname'] != $tsName . "1") {
             try {
+                $tsUnqiueID = str_replace("'", "", $tsUniqueID);
                 $ts3_VirtualServer->clientGetByUid($tsUniqueID)->Kick(TeamSpeak3::KICK_SERVER, "SecurityBot: Your nickname should be exactly ".$tsName);
                 $log = Format(">>> Kicked user ".$tsName.", their name was ".$client['client_nickname']."\n","Kicked user ".$tsName.", their name was ".$client['client_nickname']."<br />");
                 $date = gmdate('m.d.Y H:i');

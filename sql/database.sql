@@ -89,8 +89,8 @@ CREATE TABLE IF NOT EXISTS `Users` (
     `TSDatabaseID` varchar(255) DEFAULT NULL,
     `TSUniqueID` varchar(255) DEFAULT NULL,
     `TSName` varchar(255) DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `id` (`id`)
+    PRIMARY KEY (`CharacterID`),
+    UNIQUE KEY `CharacterID` (`CharacterID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
