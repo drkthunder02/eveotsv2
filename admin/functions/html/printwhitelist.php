@@ -24,10 +24,10 @@ function PrintWhiteList($entities) {
             printf("<td>" . $name['name'] . "</td><td>X</td><td></td><td></td>");
         } else if($entity['EntityType'] == 2) {
             $name = $esi->GetESIInfo($entity['EntityID'], 'Corporation');
-            printf("<td>" . $name['corporation_name'] . "</td><td></td><td>X</td><td></td>");
+            printf("<td>" . $name['name'] . "</td><td></td><td>X</td><td></td>");
         } else if($entity['EntityType'] == 3) {
             $name = $esi->GetESIInfo($entity['EntityID'], 'Alliance');
-            printf("<td>" . $name['alliance_name'] . "</td><td></td><td></td><td>X</td>");
+            printf("<td>" . $name['name'] . "</td><td></td><td></td><td>X</td>");
         }
         printf("</tr>");
     }

@@ -56,7 +56,7 @@ for($i = 0; $i < $pages; $i++) {
         if(!isset($results[$j]['error'])) {
             //Update the alliance information
             $db->update('Alliances', array('AllianceID' => $Alliances[$index]['AllianceID']), array(
-                'Alliance' => $results[$j]['alliance_name'],
+                'Alliance' => $results[$j]['name'],
                 'Ticker' => $results[$j]['ticker']
             ));
             //Add an entry to the ESI Logs

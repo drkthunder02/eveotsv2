@@ -30,7 +30,7 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
     if($corpFound == false) { //If it is not found, insert into the database
         $db->insert('Corporations', array(
             'AllianceID' => $Corporation['alliance_id'],
-            'Corporation' => $Corporation['corporation_name'],
+            'Corporation' => $Corporation['name'],
             'CorporationID' => $Character['corporation_id'],
             'MemberCount' => $Corporation['member_count'],
             'Ticker' => $Corporation['ticker']
@@ -38,7 +38,7 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
     } else { //If it is found, update the data
         $db->update('Corporations', array('CorporationID' => $Character['corporation_id']), array(
             'AllianceID' => $Corporation['alliance_id'],
-            'Corporation' => $Corporation['corporation_name'],
+            'Corporation' => $Corporation['name'],
             'CorporationID' => $Character['corporation_id'],
             'MemberCount' => $Corporation['member_count'],
             'Ticker' => $Corporation['ticker']
@@ -49,13 +49,13 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
     $allianceFound = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $Corporation['alliance_id']));
     if($allianceFound == false) {
         $db->insert('Alliances', array(
-            'Alliance' => $Alliance['alliance_name'],
+            'Alliance' => $Alliance['name'],
             'AllianceID' => $Corporation['alliance_id'],
             'Ticker' => $Alliance['ticker']
         ));
     } else {
         $db->update('Alliances', array('AllianceID' => $Corporation['alliance_id']), array(
-            'Alliance' => $Alliance['alliance_name'],
+            'Alliance' => $Alliance['name'],
             'AllianceID' => $Corporation['alliance_id'],
             'Ticker' => $Alliance['ticker']
         ));

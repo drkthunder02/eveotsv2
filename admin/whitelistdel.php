@@ -67,7 +67,7 @@ if($entities != false || $entities != null) {
             $dbCorp = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $entity['EntityID']));
             if($dbCorp['Corporation'] == "") {
                 $data = $esi->GetESIInfo($entity['EntityID'], 'Corporation');
-                printf("<option value=" . $formData . ">" . $data['corporation_name'] . "</option>");
+                printf("<option value=" . $formData . ">" . $data['name'] . "</option>");
             } else {
                 printf("<option value=" . $formData . ">" . $dbCorp['Corporation'] . "</option>");
             }
@@ -76,7 +76,7 @@ if($entities != false || $entities != null) {
             $dbAlly = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $entity['EntityID']));
             if($dbAlly['Alliance'] == "") {
                 $data = $esi->GetESIInfo($entity['EntityID'], 'Alliance');
-                printf("<option value=" . $formData . ">" . $data['alliance_name'] . "</option>");
+                printf("<option value=" . $formData . ">" . $data['name'] . "</option>");
             } else {
                 printf("<option value=" . $formData . ">" . $dbAlly['Alliance'] . "</option>");
             }

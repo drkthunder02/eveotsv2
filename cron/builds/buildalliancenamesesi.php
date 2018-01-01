@@ -59,7 +59,7 @@ for($i = 0; $i < $pages; $i++) {
             break;
         }
         $db->update('Alliances', array('AllianceID' => $Alliances[$allianceIndex]['AllianceID']), array(
-            'Alliance' => $results[$j]['alliance_name'],
+            'Alliance' => $results[$j]['name'],
             'Ticker' => $results[$j]['ticker']
         ));
         
@@ -75,7 +75,7 @@ for($i = 0; $i < $pages; $i++) {
             'Time' => gmdate('d.m.Y H:i'),
             'Type' => 'BuildAlliances', 
             'Call' => 'buildalliancenamesesi.php', 
-            'Entry' => 'Alliance of name ' . $results[$j]['alliance_name'] . ' added to the database.'
+            'Entry' => 'Alliance of name ' . $results[$j]['name'] . ' added to the database.'
         ));
     }
     //Check if we need to display stuff for debugging purposes

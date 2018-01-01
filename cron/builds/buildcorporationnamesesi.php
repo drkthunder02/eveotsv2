@@ -59,7 +59,7 @@ for($i = 0; $i < $pages; $i++) {
             break;
         }
         $db->update('Corporations', array('CorporationID' => $Corporations[$row]['CorporationID']), array(
-            'Corporation' => $results[$j]['corporation_name'],
+            'Corporation' => $results[$j]['name'],
             'MemberCount' => $results[$j]['member_count'],
             'Ticker' => $results[$j]['ticker']
         ));
@@ -78,7 +78,7 @@ for($i = 0; $i < $pages; $i++) {
             'Time' => gmdate('d.m.Y H:i'),
             'Type' => 'BuildCorporation',
             'Call' => 'buildcorporationnamesesi.php',
-            'Entry' => 'Corporation of name ' . $results[$j]['corporation_name'] . ' updated in the database.'
+            'Entry' => 'Corporation of name ' . $results[$j]['name'] . ' updated in the database.'
         ));
     }
     //Display our debug information if debug is set

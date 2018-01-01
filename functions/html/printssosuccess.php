@@ -171,6 +171,8 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     //Set the name in the session
     $_SESSION['name'] = $name;
     
+    //Shorten the name to print if necessary
+    $name = substr($name,0,30);
     
     //Insert the name if it's not '' into the Users table
     if($name != '') {
@@ -181,7 +183,7 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
             'TSName' => $name
         ));   
     }
-    
+     
     //Print out the form to let the user update their own permissions on the teamspeak server
     printf("<div class=\"container\">");
     printf("<div class=\"jumbotron\">");

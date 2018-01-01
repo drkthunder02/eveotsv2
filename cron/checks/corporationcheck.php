@@ -57,14 +57,14 @@ for($i = 0; $i < $pages; $i++) {
             if(isset($results[$j['alliance_id']])) {
                 $db->update('Corporations', array('CorporationID' => $Corporations[$index]['CorporationID']), array(
                     'AllianceID' => $results[$j]['alliance_id'],
-                    'Corporation' => $results[$j]['corporation_name'],
+                    'Corporation' => $results[$j]['name'],
                     'MemberCount' => $results[$j]['member_count'],
                     'Ticker' => $results[$j]['ticker']
                 ));
             } else {
                 $db->update('Corporations', array('CorporationID' => $Corporations[$index]['CorporationID']), array(
                     'AllianceID' => 0,
-                    'Corporation' => $results[$j]['corporation_name'],
+                    'Corporation' => $results[$j]['name'],
                     'MemberCount' => $results[$j]['member_count'],
                     'Ticker' => $results[$j]['ticker']
                 ));
