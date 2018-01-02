@@ -28,21 +28,41 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
     //Search the database to see if the corporation is already in the database
     $corpFound = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $Character['corporation_id']));
     if($corpFound == false) { //If it is not found, insert into the database
-        $db->insert('Corporations', array(
-            'AllianceID' => $Corporation['alliance_id'],
-            'Corporation' => $Corporation['name'],
-            'CorporationID' => $Character['corporation_id'],
-            'MemberCount' => $Corporation['member_count'],
-            'Ticker' => $Corporation['ticker']
-        ));
+        if($alliance != null) {
+            $db->insert('Corporations', array(
+                'AllianceID' => $Corporation['alliance_id'],
+                'Corporation' => $Corporation['name'],
+                'CorporationID' => $Character['corporation_id'],
+                'MemberCount' => $Corporation['member_count'],
+                'Ticker' => $Corporation['ticker']
+            ));
+        } else {
+            $db->insert('Corporations', array(
+                'Corporation' => $Corporation['name'],
+                'CorporationID' => $Character['corporation_id'],
+                'MemberCount' => $Corporation['member_count'],
+                'Ticker' => $Corporation['ticker']
+            ));
+        }
+        
     } else { //If it is found, update the data
-        $db->update('Corporations', array('CorporationID' => $Character['corporation_id']), array(
-            'AllianceID' => $Corporation['alliance_id'],
-            'Corporation' => $Corporation['name'],
-            'CorporationID' => $Character['corporation_id'],
-            'MemberCount' => $Corporation['member_count'],
-            'Ticker' => $Corporation['ticker']
-        ));
+        if($alliance != null) {
+            $db->update('Corporations', array('CorporationID' => $Character['corporation_id']), array(
+                'AllianceID' => $Corporation['alliance_id'],
+                'Corporation' => $Corporation['name'],
+                'CorporationID' => $Character['corporation_id'],
+                'MemberCount' => $Corporation['member_count'],
+                'Ticker' => $Corporation['ticker']
+            ));
+        } else {
+            $db->update('Corporations', array('CorporationID' => $Character['corporation_id']), array(
+                'Corporation' => $Corporation['name'],
+                'CorporationID' => $Character['corporation_id'],
+                'MemberCount' => $Corporation['member_count'],
+                'Ticker' => $Corporation['ticker']
+            ));
+        }
+        
     }
     
     //Search the database to see if the alliance is already in the database

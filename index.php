@@ -126,15 +126,24 @@ switch($_REQUEST['action']) {
             printf("An error has occurred pulling the corporation esi information.<br>");
             die();
         }
-        $alliance = $esi->GetESIInfo($corporation['alliance_id'], 'Alliance');
-        if($alliance == null) {
-            printf("An error has ocurred pulling the alliance esi information.<br>");
-            die();
+        if(isset($corporatoin['alliance_id'])) {
+            $alliance = $esi->GetESIInfo($corporation['alliance_id'], 'Alliance');
+            if($alliance == null) {
+                printf("An error has ocurred pulling the alliance esi information.<br>");
+                die();
+            }
+        } else {
+            $alliance = null;
         }
         
+        
         StoreSSOData($CharacterID, $character, $corporation, $alliance);
-     
-        PrintSSOSuccess($CharacterID, $character['corporation_id'], $corporation['alliance_id']);
+        if(isset($corporation['alliance_id'])) {
+            PrintSSOSuccess($CharacterID, $character['corporation_id'], $corporation['alliance_id']);
+        } else {
+            PrintSSOSuccess($CharacterID, $character['corporation_id'], null);
+        }
+        
         break;
     //If we don't know what state we are in then go back to the beginning
     default:
