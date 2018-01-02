@@ -37,7 +37,7 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     $usWhiteList = $config->GetMainAlliance();
     
     //Check if the person is part of the main alliance / corp
-    if($CorporationID || $AllianceID == $usWhiteList) {
+    if($CorporationID == $usWhiteList || $AllianceID == $usWhiteList) {
         $us = true;
         $blue = false;
     }
