@@ -28,7 +28,7 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
     //Search the database to see if the corporation is already in the database
     $corpFound = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $Character['corporation_id']));
     if($corpFound == false) { //If it is not found, insert into the database
-        if($alliance != null) {
+        if($Alliance != null) {
             $db->insert('Corporations', array(
                 'AllianceID' => $Corporation['alliance_id'],
                 'Corporation' => $Corporation['name'],
@@ -46,7 +46,7 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
         }
         
     } else { //If it is found, update the data
-        if($alliance != null) {
+        if($Alliance != null) {
             $db->update('Corporations', array('CorporationID' => $Character['corporation_id']), array(
                 'AllianceID' => $Corporation['alliance_id'],
                 'Corporation' => $Corporation['name'],
@@ -66,20 +66,23 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
     }
     
     //Search the database to see if the alliance is already in the database
-    $allianceFound = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $Corporation['alliance_id']));
-    if($allianceFound == false) {
-        $db->insert('Alliances', array(
-            'Alliance' => $Alliance['name'],
-            'AllianceID' => $Corporation['alliance_id'],
-            'Ticker' => $Alliance['ticker']
-        ));
-    } else {
-        $db->update('Alliances', array('AllianceID' => $Corporation['alliance_id']), array(
-            'Alliance' => $Alliance['name'],
-            'AllianceID' => $Corporation['alliance_id'],
-            'Ticker' => $Alliance['ticker']
-        ));
+    if($Alliance != null) {
+        $allianceFound = $db->fetchRow('SELECT * FROM Alliances WHERE AllianceID= :id', array('id' => $Corporation['alliance_id']));
+        if($allianceFound == false) {
+            $db->insert('Alliances', array(
+                'Alliance' => $Alliance['name'],
+                'AllianceID' => $Corporation['alliance_id'],
+                'Ticker' => $Alliance['ticker']
+            ));
+        } else {
+            $db->update('Alliances', array('AllianceID' => $Corporation['alliance_id']), array(
+                'Alliance' => $Alliance['name'],
+                'AllianceID' => $Corporation['alliance_id'],
+                'Ticker' => $Alliance['ticker']
+            ));
+        }
     }
+    
     
     //Close the database connection
     DBClose($db);
