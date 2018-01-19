@@ -42,6 +42,8 @@ foreach($clientList as $client) {
     $reg = $db->fetchRow('SELECT * FROM Users WHERE TSDatabaseID= :id', array('id' => $client_database_id));
     $rowCount = $db->getRowCount();
     if($rowCount == 0) {
+        //Send a message to the user not registered, to register on teamspeak
+        //$ts3_VirtualServer->clientGetByName($client['client_nickname'])->poke("Please register on the teamspeak server.");
         $log = Format("Skipping user, not registered (" . $client['client_nickname'] . ")\n",
                "Skipping user, not registered (" . $client['client_nickname'] . "<br>");
         $date = gmdate('m.d.Y H:i');
