@@ -75,7 +75,7 @@ if(isset($_POST['tsname'])) {
 //Open the database connection
 $db = DBOpen();
 //Check to make sure this is a blue and the name has some input
-if($tsname == '' || ($us == 'false' && $blue == 'false')) {
+if($tsname == '' || ($us == false && $blue == false)) {
     printf("<div class=\"container\">
                 <div class=\"jumbotron\">
                     <h2>Error 001:  Please try again.</h2>
@@ -85,10 +85,12 @@ if($tsname == '' || ($us == 'false' && $blue == 'false')) {
 }
 
 
-if($us == 'true') {
+if($us == true) {
     $usergroup = $config->GetMainGroup();
-} else if($blue == 'true') {
+} else if($blue == true) {
     $usergroup = $config->GetBlueGroup();
+} else {
+    $usergroup = $config->GetNoAccessGroup();
 }
 
 //Try to connect to the teamspeak server

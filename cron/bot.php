@@ -31,6 +31,8 @@ try {
     die("An error occured: " . $e->getMessage() . " [B" .__LINE__ . "]");
 }
 
+//For each person in the Teamspeak3 client, check versus the database and perform the appropriate
+//action and log such actions
 foreach($clientList as $client) {
     //If we have a valid client type from the Teamspeak3 server
     if($client['client_type']) continue;
@@ -61,6 +63,18 @@ foreach($clientList as $client) {
                 printf($date . ": " . $log);
                 $kicked++;
             } catch (TeamSpeak3_Exception $e) {
+                try {
+                    $ts3_VirtualServer->clientGetByName($client['client_nickname'])->Kick(Teamspeak3::KICK_SERVER, "SecurityBot: Your nickname should be exactly " . $tsName);
+                    $log = Format(">>> Kicked user ".$tsName.", their name was ".$client['client_nickname']."\n","Kicked user ".$tsName.", their name was ".$client['client_nickname']."<br />");
+                    $date = gmdate('m.d.Y H:i');
+                    printf($date . ": " . $log);
+                    $kicked++;
+                } catch (TeamSpeak_Exception $ex) {
+                    $log = Format("Debug: User ".$tsName." could not be kicked. (Error: ".$e->getMessage().")\n", "Debug: User ".$tsName." could not be kicked. Probably wasn't connected in the first place. (Error: ".$e->getMessage().")<br />");
+                    $date = gmdate('m.d.Y H:i');
+                    printf($date . ": " . $log);
+                }
+                
                 $log = Format("Debug: User ".$tsName." could not be kicked. (Error: ".$e->getMessage().")\n", "Debug: User ".$tsName." could not be kicked. Probably wasn't connected in the first place. (Error: ".$e->getMessage().")<br />");
                 $date = gmdate('m.d.Y H:i');
                 printf($date . ": " . $log);

@@ -29,6 +29,7 @@ class Config {
     private $verbose;
     private $group;
     private $bluegroup;
+    private $noaccessgroup;
     private $banner;
     private $spacer;
     private $salt;
@@ -75,6 +76,10 @@ class Config {
     
     public function GetMainGroup() {
         return $this->group;
+    }
+    
+    public function GetNoAccessGroup() {
+        return $this->noaccessgroup;
     }
     
     public function GetBanner() {
