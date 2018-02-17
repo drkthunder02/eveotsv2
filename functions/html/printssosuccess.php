@@ -172,16 +172,27 @@ function PrintSSOSuccess($CharacterID, $CorporationID, $AllianceID) {
     $_SESSION['name'] = $name;
     
     //Shorten the name to print if necessary
-    $name = substr($name,0,30);
+    if(strlen($name) > 30) {
+        $name = substr($name, 0, 30);
+    }
     
     //Insert the name if it's not '' into the Users table
-    if($name != '') {
-        $db->replace('Users', array(
-            'CharacterID' => $CharacterID,
-            'Blue' => $blue,
-            'Us' => $us,
-            'TSName' => $name
-        ));   
+    if($name != null) {
+        $check = $db->fetchRow('SELECT * FROM Users WHERE CharacterID= :char', array('char' => $CharacterID));
+        if($db->getRowCount() > 0) {
+            $db->update('Users', array('CharacterID' => $CharacterID), array(
+                'Blue' => $blue,
+                'Us' => $us,
+                'TSName' => $name
+            ));
+        } else {
+            $db->insert('Users', array(
+                'CharacterID' => $CharacterID,
+                'Blue' => $blue,
+                'Us' => $us,
+                'TSName' => $name
+            ));
+        }  
     }
      
     //Print out the form to let the user update their own permissions on the teamspeak server

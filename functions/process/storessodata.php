@@ -28,7 +28,7 @@ function StoreSSOData($CharacterID, $Character, $Corporation, $Alliance) {
     //Search the database to see if the corporation is already in the database
     $corpFound = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :id', array('id' => $Character['corporation_id']));
     if($corpFound == false) { //If it is not found, insert into the database
-        if($Alliance != null) {
+        if($Corporation != null) {
             $db->insert('Corporations', array(
                 'AllianceID' => $Corporation['alliance_id'],
                 'Corporation' => $Corporation['name'],

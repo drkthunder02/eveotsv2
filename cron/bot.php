@@ -43,7 +43,9 @@ foreach($clientList as $client) {
     $rowCount = $db->getRowCount();
     if($rowCount == 0) {
         //Send a message to the user not registered, to register on teamspeak
-        //$ts3_VirtualServer->clientGetByName($client['client_nickname'])->poke("Please register on the teamspeak server.");
+        $ts3_VirtualServer->clientGetByName($client['client_nickname'])->poke("Please register on the teamspeak server.");
+        //Move the user to the AFK channel
+        //$ts3_VirtualServer->clientGetByName($client['client_nickname'])
         $log = Format("Skipping user, not registered (" . $client['client_nickname'] . ")\n",
                "Skipping user, not registered (" . $client['client_nickname'] . "<br>");
         $date = gmdate('m.d.Y H:i');
@@ -56,7 +58,8 @@ foreach($clientList as $client) {
         $date = gmdate('m.d.Y H:i');
         printf($date . ": " . $log);
         $users++;
-        if($client['client_nickname'] != $tsName && $client['client_nickname'] != $tsName . "1") {
+        //if($client['client_nickname'] != $tsName && $client['client_nickname'] != $tsName . "1") {
+        if($client['client_nickname'] != $tsName) {
             try {
                 $tsUnqiueID = str_replace("'", "", $tsUniqueID);
                 $ts3_VirtualServer->clientGetByUid($tsUniqueID)->Kick(TeamSpeak3::KICK_SERVER, "SecurityBot: Your nickname should be exactly ".$tsName);
