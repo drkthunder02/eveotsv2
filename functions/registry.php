@@ -31,4 +31,7 @@ require_once __DIR__.'/../functions/sso/getssocallbackurl.php';
 require_once __DIR__.'/../functions/sso/printssourl.php';
 require_once __DIR__.'/../functions/sso/redirecttonew.php';
 
+//Cron Functions
+require_once __DIR__.'/../functions/cron/checkblue.php';
+
 ?>

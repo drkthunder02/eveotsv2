@@ -10,10 +10,12 @@ This application automatically assigns certain groups to certain users based on 
 * Load the database.sql file into the sql database
 * Setup scheduled tasks or cron for the files in the eveotsv2/cron directory:
 
-    bot.php (Recommended 5 minute interval)
+*    bot.php (Recommended 5 minute interval)
 
-    checks/alliancecheck.php (Recommended 1 hour interval)
+*    checks/alliancecheck.php (Recommended 1 hour interval)
 
-    checks/corporationcheck.php (Recommended 1 hour interval)
+*    checks/corporationcheck.php (Recommended 1 hour interval)
 
-    checks/charactercheck.php (Recommended 1 hour interval)
+*    checks/charactercheck.php (Recommended 1 hour interval)
+
+*    checks/characterremoval.php (Recommended 1 hour interval)

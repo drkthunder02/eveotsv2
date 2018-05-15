@@ -2,3 +2,4 @@
 5 * * * * /usr/bin/php /var/www/eveotsv2/cron/checks/charactercheck.php >> /var/www/eveotsv2/cron/log/cron.log 2>&1
 7 * * * * /usr/bin/php /var/www/eveotsv2/cron/checks/corporationcheck.php >> /var/www/eveotsv2/cron/log/cron.log 2>&1
 9 * * * * /usr/bin/php /var/www/eveotsv2/cron/checks/alliancecheck.php >> /var/www/eveotsv2/cron/log/cron.log 2>&1
+11 * * * * /usr/bin/php /var/www/eveotsv2/cron/checks/characterremoval.php >> /var/www/eveotsv2/cron/log/cron.log 2>&1

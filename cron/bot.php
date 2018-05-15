@@ -45,9 +45,9 @@ foreach($clientList as $client) {
         //Send a message to the user not registered, to register on teamspeak
         $ts3_VirtualServer->clientGetByName($client['client_nickname'])->poke("Please register on the teamspeak server.");
         //Move the user to the AFK channel
-        //$ts3_VirtualServer->clientGetByName($client['client_nickname'])
-        $log = Format("Skipping user, not registered (" . $client['client_nickname'] . ")\n",
-               "Skipping user, not registered (" . $client['client_nickname'] . "<br>");
+        $ts3_VirtualServer->clientGetByName($client['client_nickname'])->Kick(Teamspeak3::KICK_SERVER, "SecurityBot: Your are not registered on the server.");
+        $log = Format("User, " . $client['client_nickname'] . ", not registered on the server\n",
+                      "User, " . $client['client_nickname'] , ", not registered on the server<br>");
         $date = gmdate('m.d.Y H:i');
         printf($date . ": " . $log);
     } else {
