@@ -5,16 +5,19 @@
  * ========== * EVE ONLINE TEAMSPEAK V2 BASED ON MJ MAVERICK * ============ 
  */
 
-function CheckBlueStatus($Blues, $usWhiteList, $characterId, $corporationId) {
+function CheckBlueStatus($Blues, $usWhiteList, $characterId, $corporationId, $allianceId) {
     $remove = true;
     
     foreach($Blues as $blue) {
-        if(($char['CharacterID'] == $blue['EntityID']) || ($char['CharacterID'] == $usWhiteList)) {
+        if(($characterId == $blue['EntityID']) || ($characterId == $usWhiteList)) {
             $remove = false;
-        } else if(($corp['CorporationID'] == $blue['EntityID']) || ($char['CharacterID'] == $usWhiteList)) {
+            break;
+        } else if(($corporationId == $blue['EntityID']) || ($corporationId == $usWhiteList)) {
             $remove = false;
-        } else if(($corp['AllianceID'] == $blue['EntityID']) || ($char['CharacterID'] == $usWhiteList)) {
+            break;
+        } else if(($allianceId == $blue['EntityID']) || ($allianceId == $usWhiteList)) {
             $remove = false;
+            break;
         } else {
             $remove = true;
         }

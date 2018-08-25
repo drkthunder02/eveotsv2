@@ -33,7 +33,7 @@ function PrintAdminNavBar($db, $username) {
                             <li><a href=\"admin_audit.php\">Admin Audit</a></li>
                             <li><a href=\"member_audit.php\">Member Audit</a></li>
                             <li><a href=\"whitelistadd.php\">White List Add</a></li>
-                            <li><a href=\"whitelistdel.php\">White List Delete</a></li
+                            <li><a href=\"whitelistdel.php\">White List Delete</a></li>
                         </ul>
                     </div>
                     <div class=\"collapse navbar-collapse pull-right\">

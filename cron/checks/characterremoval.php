@@ -10,6 +10,7 @@ require_once __DIR__.'/../../functions/registry.php';
 $start = time();
 $configClass = new \EVEOTS\Config\Config();
 $DEBUG = $configClass->GetDebugMode();
+$esiClass = new \EVEOTS\ESI\ESI();
 $maxEntities = $esiClass->GetMaxESICalls();
 
 $usWhiteList = $config->GetMainAlliance();
@@ -26,8 +27,11 @@ foreach($Users as $user) {
     $char = $db->fetchRow('SELECT * FROM Characters WHERE CharacterID= :char', array('char' => $user['CharacterID']));
     $corp = $db->fetchRow('SELECT * FROM Corporations WHERE CorporationID= :corp', array('corp' => $char['CorporationID']));
     
+    $alliance = $esiClass->GetESIInfo($char['CorporationID'], 'Corporation');
+    $allianceId = $alliance['alliance_id'];
+    
     //Check whether the user should be removed or not
-    $remove = CheckBlueStatus($Blues, $usWhiteList, $characterId, $corporationId);
+    $remove = CheckBlueStatus($Blues, $usWhiteList, $char['CharacterID'], $corp['CorporationID'], $allianceId);
     
     if($remove == true) {
         $db->delete('Users', array(
@@ -39,9 +43,4 @@ foreach($Users as $user) {
             'entry' => 'User, ' . $user['CharacterId'] . 'deleted from user list by scheduled task.'
         ));
     }
-    
-    
-    
-    
 }
-
